@@ -1,38 +1,47 @@
 package edu.wpi.cs.proteus.model;
 
 public class User {
-	String Name;
-	String Email;
-	String Password;
-
+	String name;
+	String email;
+	String password;
+	String role;
 	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public String getEmail() {
-		return Email;
+		return email;
 	}
 
-	public void setEmail(String email) {
-		Email = email;
+	public void setemail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
-	public User (String n, String e,String p) {
-		this.Name = n;
-		this.Email = e;
-		this.Password = p;
+	public User (String n, String e,String p,String r) {
+		this.name = n;
+		this.email = e;
+		this.password = p;
+		this.role = r;
 	}
 	
 	public User() {

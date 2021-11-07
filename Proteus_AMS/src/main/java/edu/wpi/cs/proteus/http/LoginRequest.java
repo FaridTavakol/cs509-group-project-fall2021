@@ -1,19 +1,11 @@
 package edu.wpi.cs.proteus.http;
 
-public class RegisterRequest {
-	String name;
+public class LoginRequest {
+
 	String email;
 	String password;
 
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -30,15 +22,12 @@ public class RegisterRequest {
 		this.password = password;
 	}
 
-
-	
-	public RegisterRequest (String n, String e,String p) {
-		this.name = n;
+	public LoginRequest (String e,String p) {
 		this.email = e;
 		this.password = p;
 	}
 	
-	public RegisterRequest() {
+	public LoginRequest() {
 	}
 
 }
