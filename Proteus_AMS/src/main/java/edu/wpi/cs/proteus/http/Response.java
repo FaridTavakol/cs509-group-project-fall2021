@@ -1,13 +1,11 @@
 package edu.wpi.cs.proteus.http;
 
-public class RegisterResponse {
+public class Response {
 	public String Message;
 	public int statusCode;
-		
-	public RegisterResponse (int statusCode, String errorMessage) {
+	
+	public Response (int statusCode, String errorMessage) {
 		this.statusCode = statusCode;
 		this.Message = errorMessage;
 	}
-
-
 }
