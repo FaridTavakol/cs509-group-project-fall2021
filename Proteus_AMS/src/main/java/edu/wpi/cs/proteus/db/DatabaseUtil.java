@@ -33,9 +33,8 @@ public class DatabaseUtil {
 	 * Singleton access to DB connection to share resources effectively across multiple accesses.
 	 */
 	protected static Connection connect() throws Exception {
-		if (conn != null) { return conn; }
+		if (conn != null) { conn.close();} //return conn; }
 		
-		boolean useTestDB = System.getenv("TESTING") != null;
 		
 		// this is resistant to any SQL-injection attack since we choose one of two possible ones.
 		String schemaName = dbName;
@@ -54,13 +53,13 @@ public class DatabaseUtil {
 		}
 		
 		try {
-			//System.out.println("start connecting......");
+			System.out.println("start connecting......");
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
 			conn = DriverManager.getConnection(
 					jdbcTag + rdsMySqlDatabaseUrl + ":" + rdsMySqlDatabasePort + "/" + schemaName + multiQueries,
 					dbUsername,
 					dbPassword);
-			//System.out.println("Database has been connected successfully.");
+			System.out.println("Database has been connected successfully.");
 			return conn;
 		} catch (Exception ex) {
 			ex.printStackTrace();
