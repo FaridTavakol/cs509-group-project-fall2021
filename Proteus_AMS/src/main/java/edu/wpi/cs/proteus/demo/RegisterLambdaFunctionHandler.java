@@ -42,7 +42,7 @@ public class RegisterLambdaFunctionHandler implements RequestHandler<RegisterReq
 				boolean result = dao.addUser(newUser);
 				if(result==true)
 				{
-					response = new RegisterResponse(200, input.getEmail());
+					response = new RegisterResponse(200, newUser.getRole());
 					
 				}
 				

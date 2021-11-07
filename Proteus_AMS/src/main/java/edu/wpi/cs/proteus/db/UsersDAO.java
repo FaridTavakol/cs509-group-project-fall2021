@@ -50,6 +50,32 @@ public class UsersDAO {
 			throw new Exception("Failed in getting User: " + e.getMessage());
 		}
 	}
+	public User getUserCredentials(String email, String password) throws Exception {
+
+		try {
+			User user = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE email=? and password=?;");
+			ps.setString(1, email);
+			ps.setString(2, password);
+			ResultSet resultSet = ps.executeQuery();
+
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					user = generateUser(resultSet);
+				}
+				resultSet.close();
+				ps.close();
+				return user;
+			}
+
+			else
+				return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Failed in getting User: " + e.getMessage());
+		}
+	}
 
 	public boolean addUser(User newUser) throws Exception {
 		try {
@@ -72,7 +98,8 @@ public class UsersDAO {
 		String email = resultSet.getString("email");
 		String password = resultSet.getString("password");
 		String name = resultSet.getString("name");
-		return new User(name, email, password, "register");
+		String role = resultSet.getString("Role");
+		return new User(name, email, password, role);
 	}
 
 }

@@ -27,10 +27,10 @@ public class LoginLambdaFunctionHandler implements RequestHandler<LoginRequest, 
 		Response response=null;
 		
 		try {
-			User u = loadUserFromRDSIFExists(input.getEmail());
+			User u = loadUserFromRDSIFExists(input.getEmail(),input.getPassword());
 			if(u!=null)
 			{
-				response = new Response(200, input.getEmail());
+				response = new Response(200,u.getRole());
 				
 			}
 			else
@@ -50,14 +50,14 @@ public class LoginLambdaFunctionHandler implements RequestHandler<LoginRequest, 
     }
     
     
-	User loadUserFromRDSIFExists(String email) throws Exception {
+	User loadUserFromRDSIFExists(String email,String password) throws Exception {
 		if (logger != null) {
 			logger.log("in loadValue");
 		}
 		UsersDAO dao = new UsersDAO();
 		if (logger != null) {
 			logger.log("retrieved DAO");}
-		User user = dao.getUser(email);
+		User user = dao.getUserCredentials(email,password);
 		if (logger != null) {
 			logger.log("retrieved User");
 		}

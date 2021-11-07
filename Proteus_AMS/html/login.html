@@ -1,7 +1,7 @@
 <html>
 <head>
 <script type="text/javascript">
-	var login_url = "https://9n2isxxye7.execute-api.us-east-2.amazonaws.com/login/login";
+	var login_url = "https://lu5g32p10j.execute-api.us-east-2.amazonaws.com/beta/login";
 
 	function notEmpty() {
 		var form = document.loginForm;
@@ -25,13 +25,19 @@
 		console.log("result:" + result);
 		var js = JSON.parse(result);
 
-		var message = js["Message"];
+		var role = js["Message"];
 		var statusCode = js["statusCode"];
 
 		if (statusCode == 200) {
 
-			sessionStorage.setItem("username", message);
-			window.location.href = "Home.html";
+			sessionStorage.setItem("username", document.loginForm.email.value);
+			sessionStorage.setItem("role", role);
+			if (role === 'Admin') {
+				window.location.href = "Admin.html";
+			} else {
+				window.location.href = "Registered.html";
+			}
+
 		} else {
 			// Update computation result
 			var msg = document.getElementById("msg");
@@ -45,18 +51,18 @@
 		var password = form.password.value;
 
 		if (notEmpty() && ValidateEmail()) {
-			
+
 			var data = {};
-			data["name"] = 'NA';
 			data["email"] = email;
 			data["password"] = password;
 
-			
+			var js = JSON.stringify(data);
+			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", login_url, true);
 
 			// send the collected data as JSON
-			xhr.send(null);
+			xhr.send(js);
 
 			// This will process results and update HTML as appropriate. 
 			xhr.onloadend = function() {

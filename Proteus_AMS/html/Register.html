@@ -1,7 +1,7 @@
 <html>
 <head>
 <script type="text/javascript">
-	var add_url = "https://o9j8wkl6g2.execute-api.us-east-2.amazonaws.com/beta/register";
+	var add_url = "https://lu5g32p10j.execute-api.us-east-2.amazonaws.com/beta/register";
 
 	function notEmpty() {
 		var form = document.registerForm;
@@ -27,13 +27,20 @@
 		console.log("result:" + result);
 		var js = JSON.parse(result);
 
-		var message = js["Message"];
+		var role = js["Message"];
 		var statusCode = js["statusCode"];
 
 		if (statusCode == 200) {
 
-			sessionStorage.setItem("username", message);
-			window.location.href = "login.html";
+			sessionStorage.setItem("username",
+					document.registerForm.email.value);
+			sessionStorage.setItem("role", role);
+			if (role === 'Admin') {
+				window.location.href = "Admin.html";
+			} else {
+				window.location.href = "Registered.html";
+			}
+
 		} else {
 			// Update computation result
 			var msg = document.getElementById("msg");
