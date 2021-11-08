@@ -1,22 +1,20 @@
 <html>
 <head>
 <script type="text/javascript">
-	var add_url = "https://lu5g32p10j.execute-api.us-east-2.amazonaws.com/beta/register";
+	var login_url = "https://lu5g32p10j.execute-api.us-east-2.amazonaws.com/beta/login";
 
 	function notEmpty() {
-		var form = document.registerForm;
-		var name = form.name.value;
+		var form = document.loginForm;
 		var email = form.email.value;
 		var password = form.password.value;
-
-		if (name === "" || email === "" || password === "")
+		if (email === "" || password === "")
 			return false;
 		return true;
 	}
 	function ValidateEmail() {
 		var form = document.registerForm;
 		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-				.test(document.registerForm.email.value))
+				.test(document.loginForm.email.value))
 			return true;
 
 		return false;
@@ -32,8 +30,7 @@
 
 		if (statusCode == 200) {
 
-			sessionStorage.setItem("username",
-					document.registerForm.email.value);
+			sessionStorage.setItem("username", document.loginForm.email.value);
 			sessionStorage.setItem("role", role);
 			if (role === 'Admin') {
 				window.location.href = "Admin.html";
@@ -46,26 +43,23 @@
 			var msg = document.getElementById("msg");
 			msg.innerHTML = js["Message"];
 		}
-
 	}
 
 	function handleClick(e) {
-		var form = document.registerForm;
-		var name = form.name.value;
+		var form = document.loginForm;
 		var email = form.email.value;
 		var password = form.password.value;
 
 		if (notEmpty() && ValidateEmail()) {
 
 			var data = {};
-			data["name"] = name;
 			data["email"] = email;
 			data["password"] = password;
 
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", add_url, true);
+			xhr.open("POST", login_url, true);
 
 			// send the collected data as JSON
 			xhr.send(js);
@@ -128,14 +122,10 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Register</div>
+					<div class="card-header">Login</div>
 					<div class="card-body">
-						<form name="registerForm" method="post"
+						<form name="loginForm" method="get"
 							onsubmit="return ValidateEmail()">
-							<div class="mb-3">
-								<label class="form-label">Name</label> <input name="name"
-									value="" class="form-control" />
-							</div>
 							<div class="mb-3">
 								<label class="form-label">Email address</label> <input
 									name="email" value="" class="form-control"
