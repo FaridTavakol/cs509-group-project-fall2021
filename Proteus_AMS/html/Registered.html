@@ -1,11 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Algorithm Managment System</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    </head>
+    <body>
 
+ <nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Add</a></li>
+	    <li><a class="dropdown-item" href="#">Get</a></li>
+            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="#">Merge</a></li>
+            <li><a class="dropdown-item" href="#">Remove</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Add</a></li>
+            <li><a class="dropdown-item" href="#">Get</a></li>
+	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	  <li><a class="dropdown-item" href="#">Add</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Upload</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+	   <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>           
+          </ul>
+        </li>
+  <ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
 
-<html>
-<body>
-<h1>Registered</h1>
-</body>
-<script>
-alert(sessionStorage.getItem("username"));
-alert(sessionStorage.getItem("role"));
-</script>
+  <header class="py-3 mb-4 border-bottom bg-dark">
+    <div class="container d-flex flex-wrap justify-content-center">
+      <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+        <span class="fs-4 text-white">Algorithm Management System</span>
+      </a>
+
+    </div>
+  </header>
+        <!-- Header-->
+        <header class="py-5">
+            <div class="container px-lg-5">
+                <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                    <div class="m-4 m-lg-5">
+                        <h1 class="display-5 fw-bold">A warm welcome!</h1>
+                        <p class="fs-4">A Platform to present solutions to the same task in as many different languages as possible, to demonstrate how languages are similar and different, and to aid a person with a grounding in one approach to a problem in learning another. </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Page Content-->
+        <section class="pt-4">
+            <div class="container px-lg-5">
+                <!-- Page Features-->
+                <div class="row gx-lg-5">
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-patch-check-fill"></i></div>
+                                <h2 class="fs-4 fw-bold">Classification</h2>
+                                <p class="mb-0">A set of Concepts and Categories in the subject Area!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-search"></i></div>
+                                <h2 class="fs-4 fw-bold">Find Algorithms</h2>
+                                <p class="mb-0">Get the algorithms for a specific concept in the subject area</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-n4"><i class="bi bi-card-heading"></i></div>
+                                <h2 class="fs-4 fw-bold">Get Implementations</h2>
+                                <p class="mb-0">Get the implementations in any language and problem instance</p>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-4 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright@ Team-Proteus 2021</p></div>
+        </footer>
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    
+    </body>
 </html>

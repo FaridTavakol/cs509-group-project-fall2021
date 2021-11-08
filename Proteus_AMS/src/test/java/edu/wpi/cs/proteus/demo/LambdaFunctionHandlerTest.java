@@ -8,12 +8,15 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.cs.proteus.http.RegisterRequest;
+import edu.wpi.cs.proteus.http.RegisterResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class LambdaFunctionHandlerTest {
 
-    private static Object input;
+    private static RegisterRequest input;
 
     @BeforeClass
     public static void createInput() throws IOException {
@@ -32,10 +35,10 @@ public class LambdaFunctionHandlerTest {
 
     @Test
     public void testLambdaFunctionHandler() {
-        LambdaFunctionHandler handler = new LambdaFunctionHandler();
+        RegisterLambdaFunctionHandler handler = new RegisterLambdaFunctionHandler();
         Context ctx = createContext();
 
-        String output = handler.handleRequest(input, ctx);
+        RegisterResponse output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);
