@@ -40,7 +40,7 @@ public class AllAlgorithmHandler implements RequestHandler<Object, AllAlgorithms
 			response = new AllAlgorithmsResponse(list, 200);
 		} catch (Exception e)
 		{
-			response = new AllAlgorithmsResponse(400, e.getMessage());
+			response = new AllAlgorithmsResponse(e.getMessage(), 400);
 		}
 
 		return response;
