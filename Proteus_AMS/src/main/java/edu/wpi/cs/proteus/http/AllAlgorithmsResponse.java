@@ -18,7 +18,7 @@ public class AllAlgorithmsResponse {
 		this.error = "";
 	}
 
-	public AllAlgorithmsResponse(int code, String errorMessage)
+	public AllAlgorithmsResponse(String errorMessage, int code)
 	{
 		this.list = new ArrayList<Algorithm>();
 		this.statusCode = code;
