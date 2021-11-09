@@ -1,124 +1,145 @@
 package edu.wpi.cs.proteus.db;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.proteus.model.Implementation;
 import edu.wpi.cs.proteus.model.Algorithm;
 
-/**
- * Note that CAPITALIZATION matters regarding the table name. If you create with
- * a capital "Constants" then it must be "Constants" in the SQL queries.
- * 
- * @author heineman
- *
- */
 public class AlgorithmsDAO {
 
+	// Members
 	public java.sql.Connection conn;
+	final String tblName = "Algorithms";
 
-	final String tblName = "Benchmark"; // Exact capitalization
-
-	public AlgorithmsDAO() {
-		try {
+	// Constructor
+	public AlgorithmsDAO()
+	{
+		try
+		{
 			conn = DatabaseUtil.connect();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			conn = null;
 		}
 	}
 
-	public List<Implementation> getAlgorithms() throws Exception {
-		try {
-			Statement stmt = conn.createStatement();
-			String query = "SELECT * FROM " + tblName;
-			ResultSet resultSet = stmt.executeQuery(query);
-			List<Implementation> implementations = new ArrayList<>();
+	// Methods //
 
-			if (resultSet != null) {
-				while (resultSet.next()) {
-					Implementation implementation = generateAlgorithm(resultSet);
-					implementations.add(implementation);
-				}
-				resultSet.close();
-				stmt.close();
-			}
+	public Algorithm getAlgorithm(String name) throws Exception
+	{
 
-			return implementations;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Failed in getting implementations: " + e.getMessage());
-		}
-	}
-
-	public Algorithm getAlgorithm(String algorithmName) throws Exception {
-		try {
-			Implementation implementation = null;
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE implementationID=?;");
-			ps.setString(1, algorithmName);
+		try
+		{
+			Algorithm algorithm = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmName=?;");
+			ps.setString(1, name);
 			ResultSet resultSet = ps.executeQuery();
 
-			if (resultSet != null) {
-				while (resultSet.next()) {
-					implementation = generateAlgorithm(resultSet);
-				}
+			while (resultSet.next())
+			{
+				algorithm = generateAlgorithm(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+
+			return algorithm;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("Failed in getting playlist: " + e.getMessage());
+		}
+	}
+
+	public List<Algorithm> getAllAlgorithms() throws Exception
+	{
+		List<Algorithm> algorithms = new ArrayList<>();
+		try
+		{
+
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM " + tblName;
+			ResultSet resultSet = statement.executeQuery(query);
+			resultSet.getFetchSize();
+
+			while (resultSet.next())
+			{
+				Algorithm a = generateAlgorithm(resultSet);
+				algorithms.add(a);
+			}
+			resultSet.close();
+			statement.close();
+
+			return algorithms;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("Failed in getting all Algorithms: " + e.getMessage());
+		}
+	}
+
+	public boolean addAlgorithm(Algorithm algorithm_) throws Exception
+	{
+
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmId = ?;");
+			ps.setString(1, algorithm_.getAlgorithmId());
+			ResultSet resultSet = ps.executeQuery();
+
+			// IF Algorithm already exists
+			while (resultSet.next())
+			{
+				Algorithm a = generateAlgorithm(resultSet);
 				resultSet.close();
-				ps.close();
-				return new Algorithm("TODO: REPLACE, this is a placeholder");
+				return false;
 			}
 
-			else
-				return null;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Failed in getting implementation: " + e.getMessage());
-		}
-	}
-
-	public boolean addAlgorithm(Implementation newImplementation) throws Exception {
-		try {
-			PreparedStatement ps = conn
-					.prepareStatement("INSERT INTO " + tblName + " (implementationID,algorithmID,implementationName,url,language,details) values(?,?,?,?,?,?);");
-			ps.setString(1, newImplementation.getId());
-			ps.setString(2, newImplementation.getAlgorithm().getId());
-			ps.setString(3, newImplementation.getName());
-			ps.setString(4, newImplementation.getUrl());
-			ps.setString(5, newImplementation.getLanguage());
-			ps.setString(6, newImplementation.getDetails());
-
+			ps = conn.prepareStatement(
+					"INSERT INTO " + tblName + " (algorithmName, classificationId, algorithmId) values(?,?,?);");
+			ps.setString(1, algorithm_.getAlgorithmName());
+			ps.setString(2, algorithm_.getClassificationId());
+			ps.setString(3, algorithm_.getAlgorithmId());
 			ps.execute();
 			return true;
 
-		} catch (Exception e) {
-			throw new Exception("Failed to insert constant: " + e.getMessage());
+		} catch (Exception e)
+		{
+			throw new Exception("Failed to add Algorithm: " + e.getMessage());
 		}
 	}
 
-	// TODO UpdateImplementation
+	public boolean deleteAlgorithm(Algorithm algorithm_) throws Exception
+	{
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE algorithmId = ?;");
+			ps.setString(1, algorithm_.getAlgorithmId());
+			ps.executeUpdate();
+			ps.close();
 
-	public boolean removeAlgorithm(Implementation implementation) throws Exception {
-		try {
-			PreparedStatement ps = conn
-					.prepareStatement("DELETE FROM " + tblName + " WHERE implementationID = ? AND algorithmName = ?");
-			ps.setString(1, implementation.getId());
-			ps.setString(2, implementation.getAlgorithm().getName());
-			ps.execute();
+//			PreparedStatement ps1 = conn.prepareStatement("DELETE FROM Classification WHERE classificationId = ?;");
+//			ps1.setString(1, algorithm_.getClassificationId());
+//			ps1.executeUpdate();
+//			ps1.close();
+
 			return true;
-		} catch (Exception e) {
-			throw new Exception("Failed to remove implementation: " + implementation.getId() + ". " + e.getMessage());
-		} 
+
+		} catch (Exception e)
+		{
+			throw new Exception("Failed to delete algorithm: " + e.getMessage());
+		}
 	}
 
-	private Implementation generateAlgorithm(ResultSet resultSet) throws Exception {
-		String id = resultSet.getString("implementationID");
-		String url = resultSet.getString("url");
-		String name = resultSet.getString("implementationName");
-		String details = resultSet.getString("details");
-		String language = resultSet.getString("language");
-		String algorithmID = resultSet.getString("algorithmID");
-		return new Implementation(id, url, name, details, language, new Algorithm(algorithmID));
+	private Algorithm generateAlgorithm(ResultSet resultSet) throws Exception
+	{
+		String algorithmName = resultSet.getString("algorithmName");
+		String classificationId = resultSet.getString("classificationId");
+		String algorithmId = resultSet.getString("algorithmId");
+		return new Algorithm(algorithmName, classificationId, algorithmId);
 	}
-
 }

@@ -1,18 +1,54 @@
+//*****************
 package edu.wpi.cs.proteus.model;
 
 public class Algorithm {
-	String id;
-	String name;
-	
-	public String getId() {
-		return this.id;
+
+	public Algorithm(String algorithmName_, String classificationId_, String AlgorithmId_)
+	{
+		this.algorithmName = algorithmName_;
+		this.classificationId = classificationId_;
+		this.algorithmId = AlgorithmId_;
+//		this.algorithmDescription = description;
 	}
 
-	public String getName() {
-		return this.name;
+	public Algorithm()
+	{
 	}
-	
-	public Algorithm(String name) {
-		this.name = name;
+
+	// Members
+	String algorithmName;
+	String classificationId;
+	String algorithmId;
+	// String algorithmDescription;
+
+	// Methods
+	public String getAlgorithmName()
+	{
+		return this.algorithmName;
 	}
-}
+
+	public void setAlgorithmName(String name_)
+	{
+		this.algorithmName = name_;
+	}
+
+	public String getClassificationId()
+	{
+		return this.classificationId;
+	}
+
+	public void setClassificationId(String classificationId_)
+	{
+		this.classificationId = classificationId_;
+	}
+
+	public void setAlgorithmId(String algorithmId_)
+	{
+		this.algorithmId = algorithmId_;
+	}
+
+	public String getAlgorithmId()
+	{
+		return this.algorithmId;
+	}
+

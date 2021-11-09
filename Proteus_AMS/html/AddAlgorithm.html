@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <script type="text/javascript">
+        var add_url = "https://o9j8wkl6g2.execute-api.us-east-2.amazonaws.com/beta/register";
+
+        function notEmpty() {
+            var form = document.registerForm;
+            var name = form.name.value;
+            var email = form.email.value;
+            var password = form.password.value;
+
+            if (name === "" || email === "" || password === "")
+                return false;
+            return true;
+        }
+        function ValidateEmail() {
+            var form = document.registerForm;
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+                .test(document.registerForm.email.value))
+                return true;
+
+            return false;
+        }
+        function processResponse(result) {
+            // Can grab any DIV or SPAN HTML element and can then manipulate its
+            // contents dynamically via javascript
+            console.log("result:" + result);
+            var js = JSON.parse(result);
+
+            var message = js["Message"];
+            var statusCode = js["statusCode"];
+
+            if (statusCode == 200) {
+
+                sessionStorage.setItem("username", message);
+                window.location.href = "login.html";
+            } else {
+                // Update computation result
+                var msg = document.getElementById("msg");
+                msg.innerHTML = js["Message"];
+            }
+
+        }
+
+        function handleClick(e) {
+            var form = document.registerForm;
+            var name = form.name.value;
+            var email = form.email.value;
+            var password = form.password.value;
+
+            if (notEmpty() && ValidateEmail()) {
+
+                var data = {};
+                data["name"] = name;
+                data["email"] = email;
+                data["password"] = password;
+
+                var js = JSON.stringify(data);
+                console.log("JS:" + js);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", add_url, true);
+
+                // send the collected data as JSON
+                xhr.send(js);
+
+                // This will process results and update HTML as appropriate. 
+                xhr.onloadend = function () {
+                    console.log(xhr);
+                    console.log(xhr.request);
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            console.log("XHR:" + xhr.responseText);
+                            processResponse(xhr.responseText);
+                        } else if (xhr.status == 400) {
+                            alert("unable to process request");
+                        }
+                    } else {
+                        processResponse("N/A");
+                    }
+                };
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "Kindly Check your Inputs. All inputs are required and email should be valid";
+            }
+        }
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+    <title>Algorithm Management System</title>
+</head>
+
+<body>
+    <!--<nav class="py-2 bg-light border-bottom">
+    <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto">
+     
+      </ul>
+      <ul class="nav">
+        <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Login</a></li>
+        <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Sign up</a></li>
+      </ul>
+    </div>
+  </nav>-->
+    <header class="py-3 mb-4 border-bottom bg-dark">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Add algorithm for [name of classification]</span>
+            </a>
+
+        </div>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header">Add Algorithm</div>
+                    <div class="card-body">
+                        <form name="registerForm" method="post" onsubmit="return ValidateEmail()">
+                            <div class="mb-3">
+                                <label class="form-label">Name of Algorithm:</label> <input name="name" value=""
+                                    class="form-control" placeholder="For example: A* algorithm" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Name of Classification:</label> <input name="name" value=""
+                                    class="form-control" placeholder="For example: Search" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Algorithm Description:</label> <input name="email" value=""
+                                    class="form-control"
+                                    placeholder="(Optional) Write a short description of what this algorithm does" />
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <input type="button" value="Add" class="btn btn-primary"
+                                    onClick="JavaScript:handleClick(this)">
+                            </div>
+                            <div class="mb-3">
+                                <label id="msg" class="form-label"></label>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

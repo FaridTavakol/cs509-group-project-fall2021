@@ -1,11 +1,15 @@
 package edu.wpi.cs.proteus.http;
 
-public class Response {
+public class AddAlgorithmResponse {
+
 	public String Message;
 	public int statusCode;
-	
-	public Response (int statusCode, String errorMessage) {
+
+	public AddAlgorithmResponse(int statusCode, String errorMessage)
+	{
+
 		this.statusCode = statusCode;
 		this.Message = errorMessage;
 	}
+
 }
