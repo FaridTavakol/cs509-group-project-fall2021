@@ -19,12 +19,14 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 		AddAlgorithmResponse response;
 		try
 		{
-			if (addAlgorithm(input.getAlgorithmName()))
+
+			if (addAlgorithm(input.getAlgorithmName(), input.getClassificationId()))
 			{
 				response = new AddAlgorithmResponse(input.getAlgorithmName());
+
 			} else
 			{
-				response = new AddAlgorithmResponse(input.getAlgorithmName(), 400);
+				response = new AddAlgorithmResponse(input.getAlgorithmName(), 422);
 			}
 		} catch (Exception e)
 		{
@@ -32,20 +34,44 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 		}
 		return response;
 	}
+//
+//	boolean addAlgorithm(String AlgorithmName_, String classificationId_, String AlgorithmId_) throws Exception
+//	{
+//		if (logger != null)
+//		{
+//			logger.log("in addAlgorithm");
+//		}
+//		AlgorithmsDAO dao = new AlgorithmsDAO();
+//		System.out.println("connected to DB");
+//
+//		// check if present
+//		Algorithm exist = dao.getAlgorithm(AlgorithmName_);
+//		Algorithm algorithm = new Algorithm(AlgorithmName_, classificationId_, AlgorithmId_);
+//		if (exist == null)
+//		{
+//			System.out.println("handler - add classification");
+//			return dao.addAlgorithm(algorithm);
+//		} else
+//		{
+//			return false;
+//		}
+//	}
 
-	boolean addAlgorithm(String name) throws Exception
+	boolean addAlgorithm(String AlgorithmName_, String classificationId_) throws Exception
 	{
 		if (logger != null)
 		{
 			logger.log("in addAlgorithm");
 		}
 		AlgorithmsDAO dao = new AlgorithmsDAO();
+		System.out.println("connected to DB");
 
 		// check if present
-		Algorithm exist = dao.getAlgorithm(name);
-		Algorithm algorithm = new Algorithm(name);
+		Algorithm exist = dao.getAlgorithm(AlgorithmName_);
+		Algorithm algorithm = new Algorithm(AlgorithmName_, classificationId_);
 		if (exist == null)
 		{
+			System.out.println("handler - add Algorithm");
 			return dao.addAlgorithm(algorithm);
 		} else
 		{
