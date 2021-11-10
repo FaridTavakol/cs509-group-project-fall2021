@@ -46,13 +46,25 @@ public class ClassificationDAO {
     	}
     }
 	
-	public boolean addClassification(Classification classification) throws Exception {
+	public boolean addClassification(String classificationName, String superClass) throws Exception {
 		try {
-			System.out.println("prepared statement-add classification");
+			Statement statement = conn.createStatement();
+            String query = "SELECT * FROM Classification ORDER BY classificationID DESC LIMIT 1";
+            ResultSet resultSet = statement.executeQuery(query);
+            
+            String id = "";
+            
+            while (resultSet.next()) {
+                Classification c = generateClassification(resultSet);
+                id = Integer.toString(Integer.parseInt(c.getClassificationID()) + 1);
+            }
+            resultSet.close();
+            statement.close();
+			
             PreparedStatement ps = conn.prepareStatement("INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?);");
-            ps.setString(1,  classification.getClassificationID());
-            ps.setString(2,  classification.getClassificationName());
-            ps.setString(3,  classification.getSuperClassification());
+            ps.setString(1,  id);
+            ps.setString(2,  classificationName);
+            ps.setString(3,  superClass);
             ps.execute();
             return true;
 
@@ -61,11 +73,11 @@ public class ClassificationDAO {
 		}
 	}
 	
-	public Classification getClassification(String classificationID) throws Exception {
+	public Classification getClassification(String classificationName) throws Exception {
     	try {
             Classification classification = null;
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationID=?;");
-            ps.setString(1,  classificationID);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
+            ps.setString(1,  classificationName);
             ResultSet resultSet = ps.executeQuery();
             
             while (resultSet.next()) {
