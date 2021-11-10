@@ -106,8 +106,7 @@ public class BenchmarksDAO {
 			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO " + tblName + " (implementationID,algorithmID,implementationName,url,language,details) values(?,?,?,?,?,?);");
 			ps.setString(1, newImplementation.getId());
-			ps.setString(2, newImplementation.getAlgorithm().getId());
-			ps.setString(3, newImplementation.getName());
+			ps.setString(2, "");
 			ps.setString(4, newImplementation.getUrl());
 			ps.setString(5, newImplementation.getLanguage());
 			ps.setString(6, newImplementation.getDetails());
@@ -127,7 +126,7 @@ public class BenchmarksDAO {
 			PreparedStatement ps = conn
 					.prepareStatement("DELETE FROM " + tblName + " WHERE implementationID = ? AND algorithmName = ?");
 			ps.setString(1, implementation.getId());
-			ps.setString(2, implementation.getAlgorithm().getName());
+			ps.setString(2, "");
 			ps.execute();
 			return true;
 		} catch (Exception e) {
@@ -142,7 +141,7 @@ public class BenchmarksDAO {
 		String details = resultSet.getString("details");
 		String language = resultSet.getString("language");
 		String algorithmID = resultSet.getString("algorithmID");
-		return new Implementation(id, url, name, details, language, new Algorithm(algorithmID));
+		return new Implementation(id, url, details, language, null, null);
 	}
 
 }

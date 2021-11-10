@@ -51,4 +51,4 @@ public class Algorithm {
 	{
 		return this.algorithmId;
 	}
-
+}

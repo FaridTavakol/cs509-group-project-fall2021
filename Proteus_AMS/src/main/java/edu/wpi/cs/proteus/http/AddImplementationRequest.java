@@ -1,26 +1,37 @@
 package edu.wpi.cs.proteus.http;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AddImplementationRequest {
-	String algorithmName;
-	String language;
-	String details;
+	@JsonProperty("algorithmID") String algorithmID;
+	@JsonProperty("language") String language;
+	@JsonProperty("details") String details;
+	@JsonProperty("url") String url;
 
-	public AddImplementationRequest(String algorithmName, String language) {
-		this.algorithmName = algorithmName;
-		this.language = language;
-	}
-
-	public AddImplementationRequest(String algorithmName, String language, String details) {
-		this.algorithmName = algorithmName;
+	@JsonCreator
+	public AddImplementationRequest(@JsonProperty("algorithmID") String algorithmID, @JsonProperty("language") String language, 
+			@JsonProperty("details") String details, @JsonProperty("url") String url) {
+		this.algorithmID = algorithmID;
 		this.language = language;
 		this.details = details;
+		this.url = url;
+	}
+	
+	public AddImplementationRequest() {
+		
+	}
+	
+	@Override
+	public String toString() {
+		return "AlgorimthID: " + this.algorithmID + ". Language: " + this.language + ". Details: " + this.details + ". URL: " + this.url;
 	}
 
-	public String getAlgorithmName() {
-		return algorithmName;
+	public String getAlgorithmID() {
+		return algorithmID;
 	}
-	public void setAlgorithmName(String algorithmName) {
-		this.algorithmName = algorithmName;
+	public void setAlgorithmID(String algorithmID) {
+		this.algorithmID = algorithmID;
 	}
 	public String getLanguage() {
 		return language;
@@ -33,5 +44,11 @@ public class AddImplementationRequest {
 	}
 	public void setDetails(String details) {
 		this.details = details;
+	}
+	public String getUrl() {
+		return this.url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

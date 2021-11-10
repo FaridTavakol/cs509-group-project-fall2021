@@ -8,30 +8,31 @@ public class Implementation {
 	String url;
 	String details;
 	String language;
-	Algorithm algorithm;
-	List<Benchmark> benchmarks;
+	String algorithmID;
+	List<String> benchmarkIDs;
 
-	public Implementation(String id, String url, String language, Algorithm algorithm,
-			List<Benchmark> benchmarks) {
-		this.id = id;
-		this.url = url;
-		this.language = language;
-		this.algorithm = algorithm;
-		this.benchmarks = benchmarks;
-	}
 
-	public Implementation(String id, String url, String details, String language, Algorithm algorithm,
-			List<Benchmark> benchmarks) {
+	public Implementation(String id, String url, String details, String language, String algorithmID,
+			List<String> benchmarkIDs) {
 		this.id = id;
 		this.url = url;
 		this.details = details;
 		this.language = language;
-		this.algorithm = algorithm;
-		this.benchmarks = benchmarks;
+		this.algorithmID = algorithmID;
+		this.benchmarkIDs = benchmarkIDs;
+	}
+	
+	@Override
+	public String toString() {
+		String implementation = "implementationID=" + this.id + ",algorithmID=" + this.algorithmID + ",url=" + this.url + ",details=" + this.details + ",benchmarkIDs=";
+		for (String s : this.benchmarkIDs) {
+			implementation = implementation + s + "/";
+		}
+		return implementation;
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(String id) {
@@ -39,7 +40,7 @@ public class Implementation {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -47,7 +48,7 @@ public class Implementation {
 	}
 
 	public String getDetails() {
-		return details;
+		return this.details;
 	}
 
 	public void setDetails(String details) {
@@ -55,27 +56,26 @@ public class Implementation {
 	}
 
 	public String getLanguage() {
-		return language;
+		return this.language;
 	}
 
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
-	public Algorithm getAlgorithm() {
-		return algorithm;
+	public String getAlgorithmID() {
+		return this.algorithmID;
 	}
 
-	public void setAlgorithm(Algorithm algorithm) {
-		this.algorithm = algorithm;
+	public void setAlgorithmID(String algorithmID) {
+		this.algorithmID = algorithmID;
 	}
 
-	public List<Benchmark> getBenchmarks() {
-		return benchmarks;
+	public List<String> getBenchmarkIDs() {
+		return this.benchmarkIDs;
 	}
 
-	public void setBenchmarks(List<Benchmark> benchmarks) {
-		this.benchmarks = benchmarks;
+	public void setBenchmarkIDs(List<String> benchmarkIDs) {
+		this.benchmarkIDs = benchmarkIDs;
 	}
-
 }

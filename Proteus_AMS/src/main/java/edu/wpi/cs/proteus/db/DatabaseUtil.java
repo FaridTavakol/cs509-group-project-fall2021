@@ -55,12 +55,10 @@ public class DatabaseUtil {
 		try {
 			System.out.println("start connecting......");
 			Class.forName("com.mysql.cj.jdbc.Driver"); 
-			conn = DriverManager.getConnection(
+			return DriverManager.getConnection(
 					jdbcTag + rdsMySqlDatabaseUrl + ":" + rdsMySqlDatabasePort + "/" + schemaName + multiQueries,
 					dbUsername,
 					dbPassword);
-			System.out.println("Database has been connected successfully.");
-			return conn;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new Exception("Failed in database connection");
