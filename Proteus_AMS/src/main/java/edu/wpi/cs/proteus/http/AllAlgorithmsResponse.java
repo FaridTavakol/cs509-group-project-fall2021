@@ -15,7 +15,7 @@ public class AllAlgorithmsResponse {
 	{
 		this.list = list;
 		this.statusCode = code;
-		this.error = "";
+		this.error = "Successfully retrieved List of All Algorithms";
 	}
 
 	public AllAlgorithmsResponse(String errorMessage, int code)
