@@ -50,20 +50,19 @@ public class AlgorithmsDAO {
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new Exception("Failed in getting playlist: " + e.getMessage());
+			throw new Exception("Failed in getting Algorithm: " + e.getMessage());
 		}
 	}
 
 	public List<Algorithm> getAllAlgorithms() throws Exception
 	{
-		List<Algorithm> algorithms = new ArrayList<>();
 		try
 		{
+			List<Algorithm> algorithms = new ArrayList<>();
 
 			Statement statement = conn.createStatement();
-			String query = "SELECT * FROM " + tblName;
+			String query = "SELECT * FROM " + tblName + ";";
 			ResultSet resultSet = statement.executeQuery(query);
-			resultSet.getFetchSize();
 
 			while (resultSet.next())
 			{
@@ -87,25 +86,32 @@ public class AlgorithmsDAO {
 
 		try
 		{
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmId = ?;");
-			ps.setString(1, algorithm_.getAlgorithmId());
-			ResultSet resultSet = ps.executeQuery();
-
-			// IF Algorithm already exists
-			while (resultSet.next())
-			{
-				Algorithm a = generateAlgorithm(resultSet);
-				resultSet.close();
-				return false;
-			}
-
-			ps = conn.prepareStatement(
-					"INSERT INTO " + tblName + " (algorithmName, classificationId, algorithmId) values(?,?,?);");
+			PreparedStatement ps = conn.prepareStatement(
+					"INSERT INTO " + tblName + " (algorithmName, classificationId, algorithmId) values(?, ?, ?);");
 			ps.setString(1, algorithm_.getAlgorithmName());
 			ps.setString(2, algorithm_.getClassificationId());
 			ps.setString(3, algorithm_.getAlgorithmId());
 			ps.execute();
 			return true;
+
+//			
+//			ResultSet resultSet = ps.executeQuery();
+//
+//			// IF Algorithm already exists
+//			while (resultSet.next())
+//			{
+//				Algorithm a = generateAlgorithm(resultSet);
+//				resultSet.close();
+//				return false;
+//			}
+//
+//			ps = conn.prepareStatement(
+//					"INSERT INTO " + tblName + " (algorithmName, classificationId, algorithmId) values(?,?,?);");
+//			ps.setString(1, algorithm_.getAlgorithmName());
+//			ps.setString(2, algorithm_.getClassificationId());
+//			ps.setString(3, algorithm_.getAlgorithmId());
+//			ps.execute();
+//			return true;
 
 		} catch (Exception e)
 		{
@@ -119,7 +125,7 @@ public class AlgorithmsDAO {
 		{
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE algorithmId = ?;");
 			ps.setString(1, algorithm_.getAlgorithmId());
-			ps.executeUpdate();
+			int numAffected = ps.executeUpdate();
 			ps.close();
 
 //			PreparedStatement ps1 = conn.prepareStatement("DELETE FROM Classification WHERE classificationId = ?;");
@@ -127,7 +133,7 @@ public class AlgorithmsDAO {
 //			ps1.executeUpdate();
 //			ps1.close();
 
-			return true;
+			return (numAffected == 1);
 
 		} catch (Exception e)
 		{

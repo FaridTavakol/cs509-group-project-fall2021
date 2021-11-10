@@ -28,8 +28,7 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 			}
 		} catch (Exception e)
 		{
-			response = new AddAlgorithmResponse(
-					"Unable to add Algorithm: " + input.getAlgorithmName() + " (" + e.getMessage() + ")", 400);
+			response = new AddAlgorithmResponse("Unable to add Algorithm: " + "(" + e.getMessage() + ")", 400);
 		}
 		return response;
 	}
@@ -38,7 +37,7 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 	{
 		if (logger != null)
 		{
-			logger.log("in createPlaylist");
+			logger.log("in addAlgorithm");
 		}
 		AlgorithmsDAO dao = new AlgorithmsDAO();
 
