@@ -18,10 +18,11 @@
             var statusCode = js["statusCode"];
 
             if (statusCode == 200) {
-
-            	window.location.href = "AlgorithmMainPage.html";
-                var msg = document.getElementById("msg");
+                
+            	var msg = document.getElementById("msg");
+                sessionStorage.setItem("algorithmName",document.addAlgorithmForm.algorithmName.value);
                 msg.innerHTML = "successfully added the algorithm";
+                window.location.href = "AlgorithmMainPage.html";
             } else {
                 // Update computation result
                 var msg = document.getElementById("msg");
