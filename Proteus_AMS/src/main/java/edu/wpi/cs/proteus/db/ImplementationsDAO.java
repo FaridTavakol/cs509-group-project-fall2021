@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import edu.wpi.cs.proteus.model.Algorithm;
 import edu.wpi.cs.proteus.model.Implementation;
@@ -94,7 +95,7 @@ public class ImplementationsDAO {
 			
 			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO " + tblName + " (implementationID,algorithmID,url,language,details) VALUES (?,?,?,?,?);");
-			ps.setString(1, fullID);
+			ps.setString(1, UUID.randomUUID().toString());
 			ps.setString(2, newImplementation.getAlgorithmID());
 			ps.setString(3, newImplementation.getUrl());
 			ps.setString(4, newImplementation.getLanguage());

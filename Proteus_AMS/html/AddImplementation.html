@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bootstrap CSS -->
 <script type='text/javascript'>
-	var add_url = "https://lu5g32p10j.execute-api.us-east-2.amazonaws.com/beta/register";
+	var add_url = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/uploadImplementation";
 	function notEmpty(algorithmName, language, url) {
 		return !(algorithmName === "" || language === "" || url === "");
 	}
@@ -22,64 +22,93 @@
 			window.location.href = "Implementation.html";
 		} else {
 			// Update computation result
-			var msg = document.getElementById("msg");
+			var msg = document.getElementById("Msg");
 			msg.innerHTML = js["Message"];
 		}
 
 	}
 
 	function handleClick(e) {
-		var fileForm = document.addFileForm;
-		var form = document.addImplementationForm;
-		var algorithmName = form.algorithmName.value;
-		var language = form.language.value;
-		var details = form.details.value;
-		var url = fileForm.key.value;
-
-		if (notEmpty(algorithmName, language, url)) {
-			console.log("1");
-			var data = {};
-			data["algorithmName"] = algorithmName;
-			data["language"] = language;
-			data["details"] = details;
-			data["url"] = url;
-			console.log("2");
-			var js = JSON.stringify(data);
-			console.log("JS:" + js);
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", add_url, true);
-			console.log("3");
-			// send the collected data as JSON
-			xhr.send(js);
-			console.log("4");
-			// This will process results and update HTML as appropriate. 
-			xhr.onloadend = function() {
-				console.log(xhr);
-				console.log(xhr.request);
-				if (xhr.readyState == XMLHttpRequest.DONE) {
-					if (xhr.status == 200) {
-						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
-					} else if (xhr.status == 400) {
-						alert("unable to process request");
+		var details = document.getElementById('details').value;
+		var url = document.getElementById('theFile').value.split(/(\\|\/)/g).pop();
+		var algorithmName = sessionStorage.getItem("algorithmName");
+		var extRE = /(?:\.([^.]+))?$/;
+		var extension = extRE.exec(url)[1];
+		var language = "Other";
+		
+		if (extension === "java") {
+			language = "Java";
+		}
+		if (extension === "py") {
+			language = "Python";
+		}
+		if (extension === "c") {
+			language = "C";
+		}
+		if (extension === "CPP") {
+			language = "C++";
+		}
+		if (extension === "js") {
+			language = "JavaScript";
+		}
+		if (extension === "html") {
+			language = "HTML";
+		}
+		
+		var re = /(\.java|\.html|\.h|\.H|\.hxx|\.Hxx|\.HXX|\.c|\.CPP|\.cxx|\.CXX|\.pl|\.PL|\.sbl|\.sh|\.py|\.cs|\.vb|\.js|\.ts|\.tsx|\.jsx|\.php|\.phps|\.swift|\.sql|\.rb|\.m|\.asm|\.s|\.pl|\.PL|\.mat|\.r)$/i;
+		
+		if (notEmpty(algorithmName, language, url) && re.exec(url)) {
+			console.log("Valid Input.")
+			setTimeout(function() {
+				var data = {};
+				data["algorithmName"] = algorithmName;
+				data["language"] = language;
+				data["details"] = details;
+				data["url"] = url;
+				sessionStorage.setItem("implementationURL", url);
+				var js = JSON.stringify(data);
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", add_url, true);
+				// send the collected data as JSON
+				xhr.send(js);
+				// This will process results and update HTML as appropriate. 
+				xhr.onloadend = function() {
+					if (xhr.readyState == XMLHttpRequest.DONE) {
+						if (xhr.status == 200) {
+							console.log("XHR:" + xhr.responseText);
+							processResponse(xhr.responseText);
+						} else if (xhr.status == 400) {
+							alert("Unable to process request");
+							console.log("UNABLE TO PROCESS REQUEST");
+						}
+					} else {
+						processResponse("N/A");
 					}
-				} else {
-					processResponse("N/A");
-				}
-			};
+				};
+			}, 100);
 		} else {
-			console.log("Inputs invalid:")
-			if (algorithmName === "") {
-				console.log("Algo name invalid - " + algorithmName)
-			}
-			if (language === "") {
-				console.log("Language invalid - " + language)
-			}
-			if (url === "") {
-				console.log("Url invalid - " + url)
-			}
 			var msg = document.getElementById("Msg");
-			msg.innerHTML = "Kindly Check your Inputs. Algorithm & Language are required.";
+			if (notEmpty(algorithmName, language, url)) {
+				console.log("Algo name  - " + algorithmName);
+				console.log("Language  - " + language);
+				console.log("Url  - " + url);
+				msg.innerHTML = "Please check your input. The file may not have been selected properly.";
+			}
+			if (!re.exec(url)) {
+				alert("File extension not supported!");
+			}
+		}
+		
+		
+		function SubmitWithCallback(form, frame, successFunction) {
+		   var callback = function () {
+		       if(successFunction)
+		           successFunction();
+		       frame.onload = null;
+		   };
+
+		   frame.onload = callback;
+		   form.submit();
 		}
 	}
 </script>
@@ -93,63 +122,98 @@
 <title>Algorithm Management System</title>
 </head>
 <body>
-	<header class="py-3 mb-4 border-bottom bg-dark">
-		<div class="container d-flex flex-wrap justify-content-center">
-			<a href="/"
-				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-				<svg class="bi me-2" width="40" height="32">
-					<use xlink:href="#bootstrap" /></svg> <span class="fs-4 text-white">Algorithm
-					Management System</span>
-			</a>
+	<nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+	    <li><a class="dropdown-item" href="#">Get</a></li>
+            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="#">Merge</a></li>
+            <li><a class="dropdown-item" href="#">Remove</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item"  href="AddAlgorithm.html">Add</a></li>
+            <li><a class="dropdown-item" href="#">Get</a></li>
+	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	  <li><a class="dropdown-item" href="#">Add</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+	   <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>           
+          </ul>
+        </li>
+  <ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
+    <header class="py-3 mb-4 border-bottom bg-dark">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
+            </a>
 
-		</div>
-	</header>
+        </div>
+    </header>
 	<div class="container">
 		<div class="row">
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
 					<div class="card-header">Add Implementation</div>
-					<form name="addFileForm" action="https://proteus-implementations.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
+					<div class="mb-5">
+						<label class="form-label">Description (Optional)</label>
+						<input class="form-control" name="details" id="details">
+					</div>
+					<form name="addFileForm" action="https://proteus-implementations.s3.amazonaws.com/" method="post" enctype="multipart/form-data"
+						onsubmit="JavaScript:handleClick(this)">
 						<input type="hidden" name="key"              value="${filename}" />
 						<input type="hidden" name="x-amz-algorithm"  value="AWS4-HMAC-SHA256" />
 						<input type="hidden" name="x-amz-credential" value="AKIA52V65MIM7KAANWNY/20211108/us-east-2/s3/aws4_request" />
 						<input type="hidden" name="x-amz-date"       value="20211108T184400Z" />
 						<input type="hidden" name="policy"           value="eyJleHBpcmF0aW9uIjogIjIwMjItMDEtMDFUMTg6NDQ6MDBaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAicHJvdGV1cy1pbXBsZW1lbnRhdGlvbnMifSwgWyJzdGFydHMtd2l0aCIsICIka2V5IiwgIiJdLCB7IngtYW16LWFsZ29yaXRobSI6ICJBV1M0LUhNQUMtU0hBMjU2In0sIHsieC1hbXotY3JlZGVudGlhbCI6ICJBS0lBNTJWNjVNSU03S0FBTldOWS8yMDIxMTEwOC91cy1lYXN0LTIvczMvYXdzNF9yZXF1ZXN0In0sIHsieC1hbXotZGF0ZSI6ICIyMDIxMTEwOFQxODQ0MDBaIn1dfQ==" />
 						<input type="hidden" name="x-amz-signature"  value="360c78ba13edea5dc8e495e9b7a8e7ca83010134e8e109af97a3b970031013c0" /> 
-						<input type="file"   name="file" /> <br />
-						<input type="submit" name="submit"           value="Upload File" />
-					</form>
-					<form name="addImplementationForm" method="post" name="register"
-						onsubmit="JavaScript:handleClick(this)">
-						<div class="card-body">
-							<div class="mb-3">
-								<label class="form-label">Algorithm</label> 
-								<input type="hidden" class="form-control" name="algorthimName" id="algorithmName" required>
-							</div>
-							<div class="mb-5">
-								<label class="form-label">Language</label> 
-								<input class="form-control" name="langauge" id="language" required>
-							</div>
-							<div class="mb-5">
-								<label class="form-label">Description (Optional)</label>
-								<input class="form-control" name="details" id="details">
-							</div>
-							<div class="d-flex justify-content-center">
-								<button type="submit" class="btn btn-primary">Add Implementation</button>
-							</div>
-							<div class="mb-3">
-								<label class="form-label" id="Msg"></label>
-							</div>
+						<input type="file"   name="file" id="theFile"/> <br />
+						<input type="submit" name="submit"           value="Upload Implementation" />
+						<div class="mb-3">
+							<label class="form-label" id="Msg"></label>
 						</div>
 					</form>
 				</div>
-
-
 			</div>
 			<div class="col-2"></div>
 		</div>
-
 	</div>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

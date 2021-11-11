@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AddImplementationRequest {
-	@JsonProperty("algorithmID") String algorithmID;
+	@JsonProperty("algorithmName") String algorithmName;
 	@JsonProperty("language") String language;
 	@JsonProperty("details") String details;
 	@JsonProperty("url") String url;
 
 	@JsonCreator
-	public AddImplementationRequest(@JsonProperty("algorithmID") String algorithmID, @JsonProperty("language") String language, 
+	public AddImplementationRequest(@JsonProperty("algorithmName") String algorithmName, @JsonProperty("language") String language, 
 			@JsonProperty("details") String details, @JsonProperty("url") String url) {
-		this.algorithmID = algorithmID;
+		this.algorithmName = algorithmName;
 		this.language = language;
 		this.details = details;
 		this.url = url;
@@ -24,14 +24,14 @@ public class AddImplementationRequest {
 	
 	@Override
 	public String toString() {
-		return "AlgorimthID: " + this.algorithmID + ". Language: " + this.language + ". Details: " + this.details + ". URL: " + this.url;
+		return "AlgorimthName: " + this.algorithmName + ". Language: " + this.language + ". Details: " + this.details + ". URL: " + this.url;
 	}
 
-	public String getAlgorithmID() {
-		return algorithmID;
+	public String getAlgorithmName() {
+		return algorithmName;
 	}
-	public void setAlgorithmID(String algorithmID) {
-		this.algorithmID = algorithmID;
+	public void setAalgorithmName(String algorithmName) {
+		this.algorithmName = algorithmName;
 	}
 	public String getLanguage() {
 		return language;
