@@ -40,29 +40,70 @@
 <!-- Custom styles for this template -->
 <link href="list-groups.css" rel="stylesheet">
 </head>
+ <nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+	    <li><a class="dropdown-item" href="#">Get</a></li>
+            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="#">Merge</a></li>
+            <li><a class="dropdown-item" href="#">Remove</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item"  href="AddAlgorithm.html">Add</a></li>
+            <li><a class="dropdown-item" href="#">Get</a></li>
+	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	  <li><a class="dropdown-item" href="#">Add</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+	   <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>           
+          </ul>
+        </li>
+  <ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
+    <header class="py-3 mb-4 border-bottom bg-dark">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
+            </a>
 
-<body>
-	<!-- Responsive navbar-->
-	<nav class="py-3 mb-4 border-bottom bg-dark">
-		<div class="container d-flex flex-wrap">
-			<ul class="nav me-auto">
-				<li class="nav-item"><a href="Home.html"
-					class="nav-link link-light px-2 active" aria-current="page">Home</a></li>
-				<!-- <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Features</a></li> -->
-				<li class="nav-item"><a href="#"
-					class="nav-link link-light px-2">Classification List</a></li>
-				<li class="nav-item"><a href="AllAlgorithms.html"
-					class="nav-link link-light px-2">Algorithm List</a></li>
-				<!-- <li class="nav-item"><a href="#" class="nav-link link-dark px-2">About</a></li> -->
-			</ul>
-			<ul class="nav">
-				<li class="nav-item"><a href="login.html"
-					class="nav-link link-light px-2">Login</a></li>
-				<li class="nav-item"><a href="Register.html"
-					class="nav-link link-light px-2">Sign up</a></li>
-			</ul>
-		</div>
-	</nav>
+        </div>
+    </header>
 	<div class="p-5 mb-4 bg-light rounded-3">
 		<div class="container-fluid py-5">
 			<h1 class="display-5 fw-bold">[The Name of the Algorithm]</h1>
