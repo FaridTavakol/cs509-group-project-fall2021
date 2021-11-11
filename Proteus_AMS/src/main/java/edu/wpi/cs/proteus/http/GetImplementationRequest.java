@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetImplementationRequest {
-	@JsonProperty("implementationID") private String implementationID;
+	@JsonProperty("implementationID") String implementationID;
 
 	public String getImplementationID() {
 		return this.implementationID;
@@ -23,9 +23,9 @@ public class GetImplementationRequest {
 		
 	}
 	
-	@Override
-	public String toString() {
-		return "[GetImplementationRequest] implementationID: " + this.implementationID;
-	}
+//	@Override
+//	public String toString() {
+//		return "[GetImplementationRequest] implementationID: " + this.implementationID;
+//	}
 
 }
