@@ -15,10 +15,10 @@ public class AllAlgorithmsResponse {
 	{
 		this.list = list;
 		this.statusCode = code;
-		this.error = "";
+		this.error = "Successfully retrieved List of All Algorithms";
 	}
 
-	public AllAlgorithmsResponse(int code, String errorMessage)
+	public AllAlgorithmsResponse(String errorMessage, int code)
 	{
 		this.list = new ArrayList<Algorithm>();
 		this.statusCode = code;
