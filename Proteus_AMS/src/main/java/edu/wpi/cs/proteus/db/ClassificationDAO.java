@@ -55,12 +55,14 @@ public class ClassificationDAO {
             String id = "";
             
             while (resultSet.next()) {
-                Classification c = generateClassification(resultSet);
-                id = Integer.toString(Integer.parseInt(c.getClassificationID()) + 1);
+            	Classification c = generateClassification(resultSet);
+            	id = Integer.toString(Integer.parseInt(c.getClassificationID()) + 1);
             }
             resultSet.close();
             statement.close();
-			
+            
+            if(id.equals("") || id.equals(null)) id = Integer.toString(1);
+        
             PreparedStatement ps = conn.prepareStatement("INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?);");
             ps.setString(1,  id);
             ps.setString(2,  classificationName);
