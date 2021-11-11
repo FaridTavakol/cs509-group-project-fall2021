@@ -1,4 +1,3 @@
-
 //*****************
 package edu.wpi.cs.proteus.model;
 
@@ -70,5 +69,4 @@ public class Algorithm {
 	{
 		return this.algorithmId;
 	}
-
 }
