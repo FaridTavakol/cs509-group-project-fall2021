@@ -19,7 +19,9 @@
 
             if (statusCode == 200) {
 
-                window.location.href = "AddAlgorithm.html";
+            	window.location.href = "AlgorithmMainPage.html";
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "successfully added the algorithm";
             } else {
                 // Update computation result
                 var msg = document.getElementById("msg");
