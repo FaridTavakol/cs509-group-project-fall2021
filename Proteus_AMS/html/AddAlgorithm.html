@@ -1,40 +1,25 @@
 <html>
 
 <head>
-    <script type="text/javascript">
-        var add_url = "https://o9j8wkl6g2.execute-api.us-east-2.amazonaws.com/beta/register";
+<script type="text/javascript">
+        var add_algorithm_url = "https://ic4yt9raic.execute-api.us-east-2.amazonaws.com/beta/addAlgorithm";
 
-        function notEmpty() {
-            var form = document.registerForm;
-            var name = form.name.value;
-            var email = form.email.value;
-            var password = form.password.value;
-
-            if (name === "" || email === "" || password === "")
+        function notEmpty(algorithmName, classificationName) {
+            
+            if (algorithmName === "" || classificationName === "")
                 return false;
             return true;
         }
-        function ValidateEmail() {
-            var form = document.registerForm;
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-                .test(document.registerForm.email.value))
-                return true;
-
-            return false;
-        }
         function processResponse(result) {
-            // Can grab any DIV or SPAN HTML element and can then manipulate its
-            // contents dynamically via javascript
             console.log("result:" + result);
             var js = JSON.parse(result);
-
+            
             var message = js["Message"];
             var statusCode = js["statusCode"];
 
             if (statusCode == 200) {
 
-                sessionStorage.setItem("username", message);
-                window.location.href = "login.html";
+                window.location.href = "AddAlgorithm.html";
             } else {
                 // Update computation result
                 var msg = document.getElementById("msg");
@@ -44,23 +29,28 @@
         }
 
         function handleClick(e) {
-            var form = document.registerForm;
-            var name = form.name.value;
-            var email = form.email.value;
-            var password = form.password.value;
+            var form = document.addAlgorithmForm;
+            var algorithmName = form.algorithmName.value;
+            var classificationName = form.classificationName.value;
+            var details = form.details.value;
 
-            if (notEmpty() && ValidateEmail()) {
+
+
+            if (notEmpty(algorithmName,classificationName)) {
+            	console.log("1");
 
                 var data = {};
-                data["name"] = name;
-                data["email"] = email;
-                data["password"] = password;
+                data["algorithmName"] = algorithmName;
+                data["classificationId"] = classificationName;
+                <!--data["details"] = details; -->
 
+                console.log("2");
+                
                 var js = JSON.stringify(data);
                 console.log("JS:" + js);
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", add_url, true);
-
+                xhr.open("POST", add_algorithm_url, true);
+                console.log("3");
                 // send the collected data as JSON
                 xhr.send(js);
 
@@ -80,75 +70,80 @@
                     }
                 };
             } else {
+            	console.log("Inputs invalid:")
+    			if (algorithmName === "") {
+    				console.log("Algorithm name is empty/invalid - " + algorithmName)
+    			}
+    			if (classificationName === "") {
+    				console.log("Classification name is empty/invalid - " + classificationName)
+    			}
+    			if (url === "") {
+    				console.log("Url invalid - " + url)
+    			}
                 var msg = document.getElementById("msg");
-                msg.innerHTML = "Kindly Check your Inputs. All inputs are required and email should be valid";
+                msg.innerHTML = "Kindly Check your Inputs!";
             }
         }
     </script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
 
 
-    <title>Algorithm Management System</title>
+<title>Algorithm Management System</title>
 </head>
 
 <body>
-    <!--<nav class="py-2 bg-light border-bottom">
-    <div class="container d-flex flex-wrap">
-      <ul class="nav me-auto">
-     
-      </ul>
-      <ul class="nav">
-        <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Login</a></li>
-        <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Sign up</a></li>
-      </ul>
-    </div>
-  </nav>-->
-    <header class="py-3 mb-4 border-bottom bg-dark">
-        <div class="container d-flex flex-wrap justify-content-center">
-            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32">
+	<header class="py-3 mb-4 border-bottom bg-dark">
+		<div class="container d-flex flex-wrap justify-content-center">
+			<a href="/"
+				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+				<svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap" />
-                </svg> <span class="fs-4 text-white">Add algorithm for [name of classification]</span>
-            </a>
+                </svg> <span class="fs-4 text-white">Add algorithm</span>
+			</a>
 
-        </div>
-    </header>
-    <div class="container">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-                <div class="card">
-                    <div class="card-header">Add Algorithm</div>
-                    <div class="card-body">
-                        <form name="registerForm" method="post" onsubmit="return ValidateEmail()">
-                            <div class="mb-3">
-                                <label class="form-label">Name of Algorithm:</label> <input name="name" value=""
-                                    class="form-control" placeholder="For example: A* algorithm" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Name of Classification:</label> <input name="name" value=""
-                                    class="form-control" placeholder="For example: Search" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Algorithm Description:</label> <input name="email" value=""
-                                    class="form-control"
-                                    placeholder="(Optional) Write a short description of what this algorithm does" />
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <input type="button" value="Add" class="btn btn-primary"
-                                    onClick="JavaScript:handleClick(this)">
-                            </div>
-                            <div class="mb-3">
-                                <label id="msg" class="form-label"></label>
-                            </div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="card">
+					<div class="card-header">Add Algorithm</div>
+					<div class="card-body">
+						<form name="addAlgorithmForm" method="post" name="addAlgorithm">
+							<div class="mb-3">
+								<label class="form-label">Name of Algorithm:</label> <input
+									name="algorithmName" value="" class="form-control"
+									placeholder="For example: A* algorithm" />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Name of Classification:</label> <input
+									name="classificationName" value="" class="form-control"
+									placeholder="For example: Search" />
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Algorithm Description:</label> <input
+									name="details" value="" class="form-control"
+									placeholder="(Optional) Write a short description of what this algorithm does" />
+							</div>
+							<div class="d-flex justify-content-center">
+								<input type="button" value="Add" class="btn btn-primary"
+									onClick="JavaScript:handleClick(this)">
+							</div>
+							<div class="mb-3">
+								<label id="msg" class="form-label"></label>
+							</div>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 
