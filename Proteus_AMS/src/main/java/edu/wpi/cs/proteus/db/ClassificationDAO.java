@@ -96,14 +96,19 @@ public class ClassificationDAO {
         }
     }
 	
-	public boolean deleteClassification(Classification classification) throws Exception {
+	public boolean deleteClassification(String classificationName) throws Exception {
+		
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM Classification WHERE classificationID = ?;");
-            ps.setString(1, classification.getClassificationID());
+        	System.out.println("deleteClassification");
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Classification WHERE classificationName = ?;");
+            ps.setString(1, classificationName);
             int numAffected = ps.executeUpdate();
             ps.close();
-            return (numAffected == 1);
+            System.out.println("deleted Classification " + numAffected);
 
+            
+            return (numAffected == 1);
+            
         } catch (Exception e) {
             throw new Exception("Failed to delete classification: " + e.getMessage());
         }
