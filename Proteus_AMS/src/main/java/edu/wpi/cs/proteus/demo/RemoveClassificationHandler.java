@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import edu.wpi.cs.proteus.db.ClassificationDAO;
 import edu.wpi.cs.proteus.http.RemoveClassificationRequest;
 import edu.wpi.cs.proteus.http.RemoveClassificationResponse;
+import edu.wpi.cs.proteus.model.Classification;
 
 public class RemoveClassificationHandler implements RequestHandler<RemoveClassificationRequest,RemoveClassificationResponse> {
 	
@@ -33,7 +34,8 @@ public class RemoveClassificationHandler implements RequestHandler<RemoveClassif
 		ClassificationDAO dao = new ClassificationDAO();
 		
 		System.out.println("removeClassification");
-		return dao.deleteClassification(name);
+		Classification classification = dao.getClassification(name);
+		return dao.deleteClassification(classification);
 	}
 
 }
