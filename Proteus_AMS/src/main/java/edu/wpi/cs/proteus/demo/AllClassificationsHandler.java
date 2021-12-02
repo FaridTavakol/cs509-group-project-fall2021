@@ -20,7 +20,7 @@ public class AllClassificationsHandler implements RequestHandler<Object,AllClass
 		AllClassificationsResponse response;
 		
 		try {
-			List<Classification> classifications = getAllClassifications();
+			List<Classification> classifications = getAllChildClassifications();
 			response = new AllClassificationsResponse(classifications, 200);
 		}catch (Exception e) { 
 			response = new AllClassificationsResponse(400, "Unable to get all classifications(" + e.getMessage() + ")");
@@ -28,10 +28,10 @@ public class AllClassificationsHandler implements RequestHandler<Object,AllClass
 		return response;
 	}
 	
-	private List<Classification> getAllClassifications() throws Exception {
+	private List<Classification> getAllChildClassifications() throws Exception {
 		if (logger != null) { logger.log("in addClassification"); }
 		ClassificationDAO dao = new ClassificationDAO();
 		
-		return dao.getAllClassifications();
+		return dao.getAllChildClassifications();
 	}
 }
