@@ -3,8 +3,84 @@
 	<script>
 		window.onload = function() {
 			var algorithmName = sessionStorage.getItem("algorithmName");
-			document.getElementById('algoName').innerHTML = algorithmName
+			document.getElementById('algoName').innerHTML = algorithmName + "'s Implementation";
 		};
+
+        var removeURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/removeImplementation";
+        var downloadURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/downloadImplementation";
+
+        function processResponse(result) {
+            // Can grab any DIV or SPAN HTML element and can then manipulate its
+            // contents dynamically via javascript
+            console.log("result:" + result);
+            var js = JSON.parse(result);
+
+            var message = js["response"];
+            var statusCode = js["httpCode"];
+
+            if (statusCode === 200) {
+                sessionStorage.setItem("classificationName", message);
+  		        var msg = document.getElementById("msg");
+                msg.innerHTML = "Successfully Added";
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = js["response"];
+            }
+        }
+
+        function handlePost(data, url) {
+            var js = JSON.stringify(data);
+                console.log("JS:" + js);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url, true);
+
+                // send the collected data as JSON
+                xhr.send(js);
+
+                // This will process results and update HTML as appropriate. 
+                xhr.onloadend = function () {
+                    console.log(xhr);
+                    console.log(xhr.request);
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            console.log("XHR:" + xhr.responseText);
+                            processResponse(xhr.responseText);
+                        } else if (xhr.status == 400) {
+                            alert("unable to process request");
+                        }
+                    } else {
+                        processResponse("N/A");
+                    }
+                };
+        }
+
+        function removeImplementation(e) {
+            var form = document.removeImplementationForm;
+            var implementationID = sessionStorage.getItem("implementationID");
+
+            if (!(implementationID === "")) {
+                var data = {};
+                data["implementationID"] = implementationID;
+                handlePost(data, removeURL)                
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "An error occurred.";
+            }
+        }
+
+        function downloadImplementation(e) {
+            var form = document.downloadImplementationForm;
+            var implementationID = sessionStorage.getItem("implementationID");
+
+            if (!(implementationID === "")) {
+                var data = {};
+                data["implementationID"] = implementationID;
+                handlePost(data, downloadURL)                
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "An error occurred.";
+            }   
+        }
 	</script>
     <head>
         <meta charset="utf-8" />
@@ -83,9 +159,12 @@
 
         </div>
     </header>
-
-        <button type="button" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start">Remove Implementation</button>
-        <button type="button" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start">Download Implementation</button>
+        <form name="removeImplementationForm" method="post">
+            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:removeImplementation(this)">Remove Implementation</input>
+        </form>
+        <form name="downloadImplementationForm" method="post">
+            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:downloadImplementation(this)">Download Implementation</input>
+        </form>
         <form class="float-end sticky-top d-flex px-2 my-3" style="width: 40rem;">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-dark" type="submit">Search</button>

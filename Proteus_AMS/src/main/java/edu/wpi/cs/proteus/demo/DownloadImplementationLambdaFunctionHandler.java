@@ -19,30 +19,30 @@ import java.net.URL;
 import java.time.Instant;
 
 import edu.wpi.cs.proteus.db.ImplementationsDAO;
-import edu.wpi.cs.proteus.http.GetImplementationRequest;
+import edu.wpi.cs.proteus.http.SimpleImplementationRequest;
 import edu.wpi.cs.proteus.http.Response;
 import edu.wpi.cs.proteus.model.Implementation;
 
-public class DownloadImplementationLambdaFunctionHandler implements RequestHandler<GetImplementationRequest, Response>{
+public class DownloadImplementationLambdaFunctionHandler implements RequestHandler<SimpleImplementationRequest, Response>{
 
     LambdaLogger logger;
     @Override
-    public Response handleRequest(GetImplementationRequest input, Context context) {
+    public Response handleRequest(SimpleImplementationRequest input, Context context) {
 
 		logger = context.getLogger();
     	logger.log("Input: " + input.toString());
 		logger.log("Loading Java Lambda handler of AddImplementationRequestHandler");
 		
 		Gson gson = new GsonBuilder().create();
-		GetImplementationRequest getImplementationRequest = null;
+		SimpleImplementationRequest simpleImplementationRequest = null;
 
-		getImplementationRequest = gson.fromJson(input.toString(), GetImplementationRequest.class);
+		simpleImplementationRequest = gson.fromJson(input.toString(), SimpleImplementationRequest.class);
 
 		Response response=null;
 		
 		try {
 			ImplementationsDAO implementationsDAO = new ImplementationsDAO();
-			Implementation implementation = implementationsDAO.getImplementation(getImplementationRequest.getImplementationID());
+			Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
 			String fileURL = implementation.getUrl();
 			String accessURL = generatePresignedURL(fileURL);
 
