@@ -110,15 +110,15 @@ public class ImplementationsDAO {
 
 	// TODO UpdateImplementation
 
-	public boolean removeImplementation(Implementation implementation) throws Exception {
+	public boolean removeImplementation(String implementationID) throws Exception {
 		try {
 			PreparedStatement ps = conn
 					.prepareStatement("DELETE FROM " + tblName + " WHERE implementationID = ?");
-			ps.setString(1, implementation.getId());
+			ps.setString(1, implementationID);
 			ps.execute();
 			return true;
 		} catch (Exception e) {
-			throw new Exception("Failed to remove implementation: " + implementation.getId() + ". " + e.getMessage());
+			throw new Exception("Failed to remove implementation: " + implementationID + ". " + e.getMessage());
 		} 
 	}
 

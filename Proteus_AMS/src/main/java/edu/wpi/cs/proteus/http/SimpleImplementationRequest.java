@@ -3,7 +3,7 @@ package edu.wpi.cs.proteus.http;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GetImplementationRequest {
+public class SimpleImplementationRequest {
 	@JsonProperty("implementationID") String implementationID;
 
 	public String getImplementationID() {
@@ -15,11 +15,11 @@ public class GetImplementationRequest {
 	}
 	
 	@JsonCreator
-	public GetImplementationRequest(@JsonProperty("implementationID") String implementationID) {
+	public SimpleImplementationRequest(@JsonProperty("implementationID") String implementationID) {
 		this.implementationID = implementationID;
 	}
 	
-	public GetImplementationRequest() {
+	public SimpleImplementationRequest() {
 		
 	}
 	
