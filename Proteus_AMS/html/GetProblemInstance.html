@@ -17,10 +17,26 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 <script type="text/javascript">
-	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications"
-	var algorithm_url = " https://jxyeyf30p8.execute-api.us-east-2.amazonaws.com/beta/allAlgorithmsByCID"
-	var addPI_url = "https://wxmpzgvlmi.execute-api.us-east-2.amazonaws.com/PI/addPI"
+	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var algorithm_url = "https://jxyeyf30p8.execute-api.us-east-2.amazonaws.com/beta/allAlgorithmsByCID";
+	var getPI_url = "https://wxmpzgvlmi.execute-api.us-east-2.amazonaws.com/PI/getPI";
+	var removePI_url = "https://wxmpzgvlmi.execute-api.us-east-2.amazonaws.com/PI/removePI";
 
+	
+	function processResponse(result) {
+		// Can grab any DIV or SPAN HTML element and can then manipulate its
+		// contents dynamically via javascript
+		console.log("result:" + result);
+		var js = JSON.parse(result);
+
+		var msg = js["Message"];
+		var statusCode = js["statusCode"];
+
+		var msg = document.getElementById("msg");
+		msg.innerHTML = js["Message"];
+	}
+
+	
 	function removeOptions() {
 		var select = document.getElementById("Algorithm");
 		var i, L = select.options.length - 1;
@@ -28,19 +44,16 @@
 			select.remove(i);
 		}
 	}
-	function getBase64(file) {
-		var reader = new FileReader();
-		var res = '';
-		reader.readAsDataURL(file);
-		reader.onload = function() {
-			res = reader.result;
-		};
-		reader.onerror = function(error) {
-			res = 'Error';
-		};
-		return res;
-	}
 
+	function removeTableRows() {
+		var elmtTable = document.getElementById("dataTable");
+		var tableRows = elmtTable.getElementsByTagName('tr');
+		var rowCount = tableRows.length;
+
+		for (var x = rowCount - 1; x > 0; x--) {
+			elmtTable.deleteRow(x);
+		}
+	}
 	function getAlgorithms() {
 		var nxhr = new XMLHttpRequest();
 		var ndata = {};
@@ -57,6 +70,10 @@
 					var js = JSON.parse(nxhr.responseText);
 					var res = js["list"];
 					removeOptions();
+					var option = document.createElement("option");
+					option.value = "-1";
+					option.text = "Select Algorithm";
+					select.appendChild(option);
 					for (var i = 0; i < res.length; i++) {
 						var option = document.createElement("option");
 						option.value = res[i].algorithmId;
@@ -70,6 +87,118 @@
 				alert("unable to process request");
 			}
 		};
+	}
+
+	function getPI() {
+		var nxhr = new XMLHttpRequest();
+		var ndata = {};
+		ndata["ID"] = document.getElementById("Algorithm").value;
+		removeTableRows();
+		if (document.getElementById("Algorithm").value != "-1") {
+			var js = JSON.stringify(ndata);
+			nxhr.open("POST", getPI_url, true);
+			nxhr.send(js); // This will process results and update HTML as appropriate. 
+			nxhr.onloadend = function() {
+				console.log(nxhr);
+				console.log(nxhr.request);
+				if (nxhr.readyState == XMLHttpRequest.DONE) {
+					if (nxhr.status == 200) {
+						//Add all records to the table
+						var js = JSON.parse(nxhr.responseText);
+						var res = js["list"];
+						for (var i = 0; i < res.length; i++) {
+							var myArray = res[i].algorithmID.split("$");
+
+							addRow(res[i].ID, myArray[1], myArray[2],
+									res[i].URL, res[i].fileContent);
+
+						}
+
+					} else if (nxhr.status == 400) {
+						alert("unable to process request");
+					}
+				} else {
+					alert("unable to process request");
+				}
+			};
+		}
+	}
+
+	function addRow(ID, Name, Description, URL, fileContent) {
+
+		var table = document.getElementById('dataTable');
+
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+
+		var cell1 = row.insertCell(0);
+		var element1 = document.createElement("label");
+		element1.name = "piname";
+		element1.innerHTML = Name;
+		element1.className = "form-label";
+		cell1.appendChild(element1);
+
+		var cell2 = row.insertCell(1);
+		var element2 = document.createElement("label");
+		element2.name = "pidescription";
+		element2.innerHTML = Description;
+		element2.className = "form-label";
+		cell2.appendChild(element2);
+
+		var cell3 = row.insertCell(2);
+		var element3 = document.createElement("a");
+		element3.href = fileContent;
+		element3.innerHTML = URL;
+		element3.download = URL;
+		cell3.appendChild(element3);
+
+		var cell4 = row.insertCell(3);
+		var input = document.createElement("input");
+		input.type = "hidden";
+		input.name = "hdnID";
+		input.value = ID;
+		cell4.appendChild(input);
+
+		var element4 = document.createElement("input");
+		element4.type = "button";
+		element4.name = "deletebtn";
+		element4.className = "btn btn-danger";
+		element4.value = "Delete";
+		element4.setAttribute('onclick', 'deleteRow(' + rowCount + ')');
+		cell4.appendChild(element4);
+
+	}
+
+	function deleteRow(rowID) {
+		var rows = document.getElementById("dataTable").rows;
+		var cell = rows[rowID].cells[3];
+		var PI_ID = cell.childNodes[0].value;
+
+		var ndata = {};
+		ndata["ID"] = PI_ID
+		ndata["requestedBy"] = sessionStorage.getItem("username");
+		var js = JSON.stringify(ndata);
+
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", removePI_url, true);
+		xhr.send(js); // This will process results and update HTML as appropriate. 
+		xhr.onloadend = function() {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+					console.log("XHR:" + xhr.responseText);
+					processResponse(xhr.responseText);
+					getPI();
+
+				} else if (xhr.status == 400) {
+					alert("unable to process request");
+				}
+			} else {
+				alert("unable to process request");
+			}
+		};
+
 	}
 
 	var xhr = new XMLHttpRequest();
@@ -99,75 +228,10 @@
 		}
 	};
 
-	function notEmpty() {
-		var form = document.problemInstanceForm;
-		var name = form.piname.value;
-		var description = form.description.value;
-		var select = document.getElementById("Classification");
-		var file = document.getElementById("formFile").value
-		if (name === "" || description === "" || file === "")
-			return false;
-		return true;
-	}
-	function processResponse(result) {
-		// Can grab any DIV or SPAN HTML element and can then manipulate its
-		// contents dynamically via javascript
-		console.log("result:" + result);
-		var js = JSON.parse(result);
-
-		var msg = js["Message"];
-		var statusCode = js["statusCode"];
-
-		var msg = document.getElementById("msg");
-		msg.innerHTML = js["Message"];
-	}
-	function handleClick(e) {
-		if (notEmpty()) {
-			var form = document.problemInstanceForm;
-			var name = form.piname.value;
-			var description = form.description.value;
-			var file = document.getElementById("formFile").files[0]
-
-			var content = '';
-			var reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = function() {
-				content = reader.result;
-				var data = {};
-				data["algorithmID"] = document.getElementById("Algorithm").value
-						+ '$' + name + '$' + description;
-				data["URL"] = file.name;
-				data["fileContent"] = content.trim();
-				data["requestedBy"] = sessionStorage.getItem("username");
-				var js = JSON.stringify(data);
-				console.log("JS:" + js);
-				var xhr = new XMLHttpRequest();
-				xhr.open("POST", addPI_url, true);
-				// send the collected data as JSON
-				xhr.send(js);
-				xhr.onloadend = function() {
-					console.log(xhr);
-					console.log(xhr.request);
-					if (xhr.readyState == XMLHttpRequest.DONE) {
-						if (xhr.status == 200) {
-							console.log("XHR:" + xhr.responseText);
-							processResponse(xhr.responseText);
-						} else if (xhr.status == 400) {
-							alert("unable to process request");
-						}
-					} else {
-						processResponse("N/A");
-					}
-				};
-			};
-		} else {
-			var msg = document.getElementById("msg");
-			msg.innerHTML = "Kindly Check your Inputs. All inputs are required";
-		}
-	}
 </script>
+
 </head>
-<body>
+
 <body>
 	<nav class="py-2 bg-light border-bottom">
 		<div class="container d-flex flex-wrap">
@@ -199,9 +263,10 @@
 					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
 					aria-expanded="false"> Problem Instance </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="#">Add</a></li>
-						<li><a class="dropdown-item" href="GetProblemInstance.html">Remove</a></li>
-						<li><a class="dropdown-item" href="GetProblemInstance.html">Get</a></li>
+						<li><a class="dropdown-item" href="addProblemInstance.html">Add</a></li>
+						<li><a class="dropdown-item"
+							href="RemoveProblemInstance.html">Remove</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
 
 					</ul></li>
 				<li class="nav-item dropdown"><a
@@ -237,7 +302,7 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Add Problem Instance</div>
+					<div class="card-header">Get Problem Instance</div>
 					<div class="card-body">
 						<form name="problemInstanceForm" method="post">
 							<div class="mb-3">
@@ -249,25 +314,21 @@
 							<div class="mb-3">
 								<label class="form-label">Algorithm</label><select
 									class="form-select" aria-label="Default select example"
-									id="Algorithm">
+									onchange="getPI()" id="Algorithm">
 								</select>
 							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">Name</label> <input
-									id="piname" value="" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label for="Description" class="form-label">Description</label>
-								<input id="description" value="" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label for="formFile" class="form-label">Select File</label> <input
-									class="form-control" type="file" id="formFile">
-							</div>
-							<div class="d-flex justify-content-center">
-								<input type="button" value="Add" class="btn btn-primary"
-									onClick="JavaScript:handleClick(this)">
-							</div>
+
+							<table id="dataTable" class="table">
+								<thead>
+									<tr>
+										<th scope="col">Name</th>
+										<th scope="col">Description</th>
+										<th scope="col">File</th>
+										<th scope="col">Delete</th>
+									</tr>
+								</thead>
+
+							</table>
 							<div class="mb-3">
 								<label id="msg" class="form-label"></label>
 							</div>
@@ -284,6 +345,7 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
+
 
 </body>
 </html>

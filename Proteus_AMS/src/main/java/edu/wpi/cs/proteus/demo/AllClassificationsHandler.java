@@ -10,28 +10,35 @@ import edu.wpi.cs.proteus.db.ClassificationDAO;
 import edu.wpi.cs.proteus.http.AllClassificationsResponse;
 import edu.wpi.cs.proteus.model.Classification;
 
-public class AllClassificationsHandler implements RequestHandler<Object,AllClassificationsResponse> {
-	
+public class AllClassificationsHandler implements RequestHandler<Object, AllClassificationsResponse> {
+
 	LambdaLogger logger;
-	
+
 	@Override
-	public AllClassificationsResponse handleRequest(Object input, Context context) {
-		
+	public AllClassificationsResponse handleRequest(Object input, Context context)
+	{
+
 		AllClassificationsResponse response;
-		
-		try {
-			List<Classification> classifications = getAllClassifications();
+
+		try
+		{
+			List<Classification> classifications = getAllChildClassifications();
 			response = new AllClassificationsResponse(classifications, 200);
-		}catch (Exception e) { 
+		} catch (Exception e)
+		{
 			response = new AllClassificationsResponse(400, "Unable to get all classifications(" + e.getMessage() + ")");
 		}
 		return response;
 	}
-	
-	private List<Classification> getAllClassifications() throws Exception {
-		if (logger != null) { logger.log("in addClassification"); }
+
+	private List<Classification> getAllChildClassifications() throws Exception
+	{
+		if (logger != null)
+		{
+			logger.log("in addClassification");
+		}
 		ClassificationDAO dao = new ClassificationDAO();
-		
-		return dao.getAllClassifications();
+
+		return dao.getAllChildClassifications();
 	}
 }
