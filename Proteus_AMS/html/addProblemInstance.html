@@ -18,7 +18,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 <script type="text/javascript">
 	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications"
-	var algorithm_url = " https://jxyeyf30p8.execute-api.us-east-2.amazonaws.com/beta/allAlgorithmsByCID"
+	var algorithm_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse"
 	var addPI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/addPI"
 
 	function removeOptions() {
@@ -41,56 +41,26 @@
 		return res;
 	}
 
-	function getAlgorithms() {
-		var nxhr = new XMLHttpRequest();
-		var ndata = {};
-		ndata["ID"] = document.getElementById("Classification").value;
-		var js = JSON.stringify(ndata);
-		nxhr.open("POST", algorithm_url, true);
-		nxhr.send(js); // This will process results and update HTML as appropriate. 
-		nxhr.onloadend = function() {
-			console.log(nxhr);
-			console.log(nxhr.request);
-			if (nxhr.readyState == XMLHttpRequest.DONE) {
-				if (nxhr.status == 200) {
-					var select = document.getElementById("Algorithm");
-					var js = JSON.parse(nxhr.responseText);
-					var res = js["list"];
-					removeOptions();
-					for (var i = 0; i < res.length; i++) {
-						var option = document.createElement("option");
-						option.value = res[i].algorithmId;
-						option.text = res[i].algorithmName;
-						select.appendChild(option);
-					}
-				} else if (nxhr.status == 400) {
-					alert("unable to process request");
-				}
-			} else {
-				alert("unable to process request");
-			}
-		};
-	}
+	
 
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", classification_url, true);
+	xhr.open("POST", algorithm_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
 		console.log(xhr.request);
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
-				var select = document.getElementById("Classification");
+				var select = document.getElementById("Algorithm");
 				var js = JSON.parse(xhr.responseText);
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
 					var option = document.createElement("option");
-					option.value = res[i].classificationID;
-					option.text = res[i].classificationName;
+					option.value = res[i].algorithmId;
+					option.text = res[i].algorithmName;
 					select.appendChild(option);
 				}
 
-				getAlgorithms();
 			} else if (xhr.status == 400) {
 				alert("unable to process request");
 			}
@@ -132,12 +102,11 @@
 			var reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onload = function() {
-				content = reader.result;
+				content =reader.result;
 				var data = {};
-				data["algorithmID"] = document.getElementById("Algorithm").value
-						+ '$' + name + '$' + description;
+				data["algorithmID"] = document.getElementById("Algorithm").value + '$'+ name + '$'+description;
 				data["URL"] = file.name;
-				data["fileContent"] = content.trim();
+				data["fileContent"] =content.trim();
 				data["requestedBy"] = sessionStorage.getItem("username");
 				var js = JSON.stringify(data);
 				console.log("JS:" + js);
@@ -226,8 +195,7 @@
 				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
 				<svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap" />
-                </svg> <span class="fs-4 text-white">Algorithm
-					Management System</span>
+                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
 			</a>
 
 		</div>
@@ -240,12 +208,6 @@
 					<div class="card-header">Add Problem Instance</div>
 					<div class="card-body">
 						<form name="problemInstanceForm" method="post">
-							<div class="mb-3">
-								<label class="form-label">Classification:</label> <select
-									onchange="getAlgorithms()" class="form-select"
-									aria-label="Default select example" id="Classification">
-								</select>
-							</div>
 							<div class="mb-3">
 								<label class="form-label">Algorithm</label><select
 									class="form-select" aria-label="Default select example"

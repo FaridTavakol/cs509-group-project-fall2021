@@ -33,7 +33,6 @@ public class ClassificationDAO {
 
 	public List<Classification> getAllClassifications() throws Exception
 	{
-
 		try
 		{
 
@@ -122,6 +121,7 @@ public class ClassificationDAO {
 	{
 		try
 		{
+
 			Classification classification = null;
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
 			ps.setString(1, classificationName);

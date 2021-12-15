@@ -1,11 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+	<script>
+		window.onload = function() {
+			var algorithmName = sessionStorage.getItem("algorithmName");
+			document.getElementById('algoName').innerHTML = algorithmName + "'s Implementation";
+		};
+
+        var removeURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/removeImplementation";
+        var downloadURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/downloadImplementation";
+
+        function processResponse(result) {
+            // Can grab any DIV or SPAN HTML element and can then manipulate its
+            // contents dynamically via javascript
+            console.log("result:" + result);
+            var js = JSON.parse(result);
+
+            var message = js["response"];
+            var statusCode = js["httpCode"];
+
+            if (statusCode === 200) {
+                sessionStorage.setItem("classificationName", message);
+  		        var msg = document.getElementById("msg");
+                msg.innerHTML = "Successfully Added";
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = js["response"];
+            }
+        }
+
+        function handlePost(data, url) {
+            var js = JSON.stringify(data);
+                console.log("JS:" + js);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", url, true);
+
+                // send the collected data as JSON
+                xhr.send(js);
+
+                // This will process results and update HTML as appropriate. 
+                xhr.onloadend = function () {
+                    console.log(xhr);
+                    console.log(xhr.request);
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        if (xhr.status == 200) {
+                            console.log("XHR:" + xhr.responseText);
+                            processResponse(xhr.responseText);
+                        } else if (xhr.status == 400) {
+                            alert("unable to process request");
+                        }
+                    } else {
+                        processResponse("N/A");
+                    }
+                };
+        }
+
+        function removeImplementation(e) {
+            var form = document.removeImplementationForm;
+            var implementationID = sessionStorage.getItem("implementationID");
+
+            if (!(implementationID === "")) {
+                var data = {};
+                data["implementationID"] = implementationID;
+                handlePost(data, removeURL)                
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "An error occurred.";
+            }
+        }
+
+        function downloadImplementation(e) {
+            var form = document.downloadImplementationForm;
+            var implementationID = sessionStorage.getItem("implementationID");
+
+            if (!(implementationID === "")) {
+                var data = {};
+                data["implementationID"] = implementationID;
+                handlePost(data, downloadURL)                
+            } else {
+                var msg = document.getElementById("msg");
+                msg.innerHTML = "An error occurred.";
+            }   
+        }
+	</script>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Algorithm Managment System</title>
+        <title>Algorithm Management System</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Bootstrap icons-->
@@ -13,34 +95,76 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
     </head>
     <body class="bg-light">
-        <!-- Responsive navbar-->
-        <header class="bd-header bg-dark py-3 align-items-stretch border-bottom border-dark">
-            <nav class="py-2 bg-light border-bottom">
-                <div class="container d-flex flex-wrap">
-                    <ul class="nav me-auto">
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Features</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">Pricing</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">FAQs</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link link-dark px-2">About</a></li>
-                    </ul>
-                    <ul class="nav">
-                    <li class="nav-item"><a class="nav-link link-dark px-2">Username1</a></li>
-                    <li class="nav-item"><a href="Home.html" class="nav-link link-dark px-2">Sign out</a></li>
-                    </ul>
-                </div>
-            </nav>
-            <div class="container d-flex flex-wrap justify-content-center">
-                <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-                <span class="fs-4 text-white">Algorithm Management System</span>
-                </a>
+        <nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+	    <li><a class="dropdown-item" href="#">Get</a></li>
+            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="#">Merge</a></li>
+            <li><a class="dropdown-item" href="#">Remove</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item"  href="AddAlgorithm.html">Add</a></li>
+            <li><a class="dropdown-item" href="#">Get</a></li>
+	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	  <li><a class="dropdown-item" href="#">Add</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+	   <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>           
+          </ul>
+        </li>
+  <ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
+    <header class="py-3 mb-4 border-bottom bg-dark">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
+            </a>
 
-            </div>
-        </header>
-
-        <button type="button" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onclick="window.location.href = 'AddImplementation.html'">Upload Implementation</button>
-        <button type="button" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start">Download Implementation</button>
+        </div>
+    </header>
+        <form name="removeImplementationForm" method="post">
+            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:removeImplementation(this)">Remove Implementation</input>
+        </form>
+        <form name="downloadImplementationForm" method="post">
+            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:downloadImplementation(this)">Download Implementation</input>
+        </form>
         <form class="float-end sticky-top d-flex px-2 my-3" style="width: 40rem;">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-dark" type="submit">Search</button>
@@ -52,7 +176,7 @@
                 <div class="container px-lg-5">
                     <div class="py-1 bg-light rounded-3 text-left">
                         <div class="m-1 m-lg-2">
-                            <h3 class="display-3 fw-bold">Algorithm X Implementation</h3>
+                            <h3 class="display-3 fw-bold" id="algoName">Algorithm X Implementation</h3>
                             <p class="card-text" >Information about implementation as well as link to the<a href="#" class="nav-link" style="display: inline-block;">Algorithm</a>.</p>
                         </div>
                     </div>
