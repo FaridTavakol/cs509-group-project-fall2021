@@ -2,6 +2,7 @@ package edu.wpi.cs.proteus.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import edu.wpi.cs.proteus.model.Classification;
 
@@ -128,6 +129,12 @@ public class ClassificationDAO {
 		} catch (Exception e) {
 			throw new Exception("Failed to delete classification: " + e.getMessage());
 		}
+	}
+	
+	public List<Classification> classificationHierarchy(){
+		
+		
+		return new LinkedList<Classification>();
 	}
 
 }
