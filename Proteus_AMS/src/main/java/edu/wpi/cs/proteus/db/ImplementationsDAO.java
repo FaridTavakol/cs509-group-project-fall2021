@@ -55,6 +55,30 @@ public class ImplementationsDAO {
 		}
 	}
 
+	public List<Implementation> getAllImplementations(String algoID) throws Exception {
+		try {
+			Statement stmt = conn.createStatement();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName +" WHERE algorithmID=?;");
+			ps.setString(1, algoID);
+			ResultSet resultSet = ps.executeQuery();
+			List<Implementation> implementations = new ArrayList<>();
+
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					Implementation implementation = generateImplementation(resultSet);
+					implementations.add(implementation);
+				}
+				resultSet.close();
+				stmt.close();
+			}
+
+			return implementations;
+
+		} catch (Exception e) {
+			throw new Exception("Failed in getting implementations by AlgoID: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
+		}
+	}
+
 	public Implementation getImplementation(String implementationID) throws Exception {
 		try {
 			Implementation implementation = null;
@@ -86,7 +110,7 @@ public class ImplementationsDAO {
 		try {
 			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
 			String algorithmID = newImplementation.getAlgorithmID();
-			Algorithm algorithm = algorithmsDAO.getAlgorithmByID(algorithmID);
+			Algorithm algorithm = algorithmsDAO.getAlgorithm(algorithmID);
 			String classificationID = algorithm.getClassificationId();
 			String language = newImplementation.getLanguage();
 			Random rand = new Random();

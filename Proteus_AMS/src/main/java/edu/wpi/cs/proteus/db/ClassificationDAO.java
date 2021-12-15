@@ -96,7 +96,7 @@ public class ClassificationDAO {
 			throw new Exception("Failed to add classification: " + e.getMessage());
 		}
 	}
-
+	
 	public Classification getClassification(String classificationName) throws Exception {
 		try {
 			Classification classification = null;
@@ -131,10 +131,33 @@ public class ClassificationDAO {
 		}
 	}
 	
-	public List<Classification> classificationHierarchy(){
-		
-		
-		return new LinkedList<Classification>();
+	public boolean addClassification(Classification obj) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			Statement statement = conn.createStatement();
+			String query = "SELECT * FROM Classification ORDER BY classificationID DESC LIMIT 1";
+			ResultSet resultSet = statement.executeQuery(query);
+
+			String id = "";
+
+			while (resultSet.next()) {
+				Classification c = generateClassification(resultSet);
+				id = Integer.toString(Integer.parseInt(c.getClassificationID()) + 1);
+			}
+			resultSet.close();
+			statement.close();
+
+			PreparedStatement ps = conn.prepareStatement(
+					"INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?);");
+			ps.setString(1, id);
+			ps.setString(2, obj.getClassificationName());
+			ps.setString(3, obj.getSuperClassification());
+			ps.execute();
+			return true;
+
+		} catch (Exception e) {
+			throw new Exception("Failed to add classification: " + e.getMessage());
+		}
 	}
 
 }

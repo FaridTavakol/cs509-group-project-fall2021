@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
 <head>
 <meta charset="utf-8" />
@@ -140,4 +141,256 @@
 		crossorigin="anonymous"></script>
 
 </body>
+=======
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>Algorithm Managment System</title>
+<!-- Favicon-->
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+<!-- Bootstrap icons-->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+<script type="text/javascript">
+	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications"
+	var algorithm_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse"
+	var addPI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/addPI"
+
+	function removeOptions() {
+		var select = document.getElementById("Algorithm");
+		var i, L = select.options.length - 1;
+		for (i = L; i >= 0; i--) {
+			select.remove(i);
+		}
+	}
+	function getBase64(file) {
+		var reader = new FileReader();
+		var res = '';
+		reader.readAsDataURL(file);
+		reader.onload = function() {
+			res = reader.result;
+		};
+		reader.onerror = function(error) {
+			res = 'Error';
+		};
+		return res;
+	}
+
+	
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", algorithm_url, true);
+	xhr.send(null); // This will process results and update HTML as appropriate. 
+	xhr.onloadend = function() {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			if (xhr.status == 200) {
+				var select = document.getElementById("Algorithm");
+				var js = JSON.parse(xhr.responseText);
+				var res = js["list"];
+				for (var i = 0; i < res.length; i++) {
+					var option = document.createElement("option");
+					option.value = res[i].algorithmId;
+					option.text = res[i].algorithmName;
+					select.appendChild(option);
+				}
+
+			} else if (xhr.status == 400) {
+				alert("unable to process request");
+			}
+		} else {
+			alert("unable to process request");
+		}
+	};
+
+	function notEmpty() {
+		var form = document.problemInstanceForm;
+		var name = form.piname.value;
+		var description = form.description.value;
+		var select = document.getElementById("Classification");
+		var file = document.getElementById("formFile").value
+		if (name === "" || description === "" || file === "")
+			return false;
+		return true;
+	}
+	function processResponse(result) {
+		// Can grab any DIV or SPAN HTML element and can then manipulate its
+		// contents dynamically via javascript
+		console.log("result:" + result);
+		var js = JSON.parse(result);
+
+		var msg = js["Message"];
+		var statusCode = js["statusCode"];
+
+		var msg = document.getElementById("msg");
+		msg.innerHTML = js["Message"];
+	}
+	function handleClick(e) {
+		if (notEmpty()) {
+			var form = document.problemInstanceForm;
+			var name = form.piname.value;
+			var description = form.description.value;
+			var file = document.getElementById("formFile").files[0]
+
+			var content = '';
+			var reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = function() {
+				content =reader.result;
+				var data = {};
+				data["algorithmID"] = document.getElementById("Algorithm").value + '$'+ name + '$'+description;
+				data["URL"] = file.name;
+				data["fileContent"] =content.trim();
+				data["requestedBy"] = sessionStorage.getItem("username");
+				var js = JSON.stringify(data);
+				console.log("JS:" + js);
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", addPI_url, true);
+				// send the collected data as JSON
+				xhr.send(js);
+				xhr.onloadend = function() {
+					console.log(xhr);
+					console.log(xhr.request);
+					if (xhr.readyState == XMLHttpRequest.DONE) {
+						if (xhr.status == 200) {
+							console.log("XHR:" + xhr.responseText);
+							processResponse(xhr.responseText);
+						} else if (xhr.status == 400) {
+							alert("unable to process request");
+						}
+					} else {
+						processResponse("N/A");
+					}
+				};
+			};
+		} else {
+			var msg = document.getElementById("msg");
+			msg.innerHTML = "Kindly Check your Inputs. All inputs are required";
+		}
+	}
+</script>
+</head>
+<body>
+<body>
+	<nav class="py-2 bg-light border-bottom">
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+						<li><a class="dropdown-item" href="#">Merge</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Algorithms </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="#">Reclassify</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Problem Instance </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="#">Add</a></li>
+						<li><a class="dropdown-item" href="GetProblemInstance.html">Remove</a></li>
+						<li><a class="dropdown-item" href="GetProblemInstance.html">Get</a></li>
+
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Implementation </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
+						<li><a class="dropdown-item" href="#">Download</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+					</ul></li>
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Home.html"
+						class="nav-link link-dark px-2 text-black">Log out</a></li>
+				</ul>
+		</div>
+	</nav>
+	<header class="py-3 mb-4 border-bottom bg-dark">
+		<div class="container d-flex flex-wrap justify-content-center">
+			<a href="/"
+				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+				<svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
+			</a>
+
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="card">
+					<div class="card-header">Add Problem Instance</div>
+					<div class="card-body">
+						<form name="problemInstanceForm" method="post">
+							<div class="mb-3">
+								<label class="form-label">Algorithm</label><select
+									class="form-select" aria-label="Default select example"
+									id="Algorithm">
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="inputName" class="form-label">Name</label> <input
+									id="piname" value="" class="form-control" />
+							</div>
+							<div class="mb-3">
+								<label for="Description" class="form-label">Description</label>
+								<input id="description" value="" class="form-control" />
+							</div>
+							<div class="mb-3">
+								<label for="formFile" class="form-label">Select File</label> <input
+									class="form-control" type="file" id="formFile">
+							</div>
+							<div class="d-flex justify-content-center">
+								<input type="button" value="Add" class="btn btn-primary"
+									onClick="JavaScript:handleClick(this)">
+							</div>
+							<div class="mb-3">
+								<label id="msg" class="form-label"></label>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+
+</body>
+>>>>>>> 6fc3c3d71b48be9261ba5f9a48b390f6af53b2f6
 </html>

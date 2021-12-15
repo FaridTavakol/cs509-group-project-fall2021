@@ -2,6 +2,8 @@ package edu.wpi.cs.proteus.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.cs.proteus.model.User;
 
 /**
@@ -50,6 +52,7 @@ public class UsersDAO {
 			throw new Exception("Failed in getting User: " + e.getMessage());
 		}
 	}
+
 	public User getUserCredentials(String email, String password) throws Exception {
 
 		try {
@@ -93,13 +96,50 @@ public class UsersDAO {
 			throw new Exception("Failed to insert constant: " + e.getMessage());
 		}
 	}
+	public boolean deleteUser(String email) throws Exception {
+		try {
+			PreparedStatement ps = conn
+					.prepareStatement("DELETE FROM " + tblName + "  WHERE EMAIL = ?;");
+			ps.setString(1, email);
+			ps.execute();
+			return true;
 
+		} catch (Exception e) {
+			throw new Exception("Failed to Delete User: " + e.getMessage());
+		}
+	}
 	private User generateUser(ResultSet resultSet) throws Exception {
 		String email = resultSet.getString("email");
 		String password = resultSet.getString("password");
 		String name = resultSet.getString("name");
 		String role = resultSet.getString("Role");
 		return new User(name, email, password, role);
+	}
+
+	public List<User> getAllUser() throws Exception {
+
+		try {
+			List<User> users = new ArrayList<>();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM User WHERE Role='Register';");
+			ResultSet resultSet = ps.executeQuery();
+
+			if (resultSet != null) {
+				while (resultSet.next()) {
+					User u = generateUser(resultSet);
+					users.add(u);				
+				}
+				resultSet.close();
+				ps.close();
+				return users;
+			}
+
+			else
+				return null;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Failed in getting All User: " + e.getMessage());
+		}
 	}
 
 }
