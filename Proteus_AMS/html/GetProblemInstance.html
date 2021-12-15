@@ -18,7 +18,7 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 <script type="text/javascript">
 	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
-	var algorithm_url = "https://jxyeyf30p8.execute-api.us-east-2.amazonaws.com/beta/allAlgorithmsByCID";
+	var algorithm_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse";
 	var getPI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/getPIByAlgoID";
 	var removePI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/removePI";
 
@@ -54,41 +54,7 @@
 			elmtTable.deleteRow(x);
 		}
 	}
-	function getAlgorithms() {
-		var nxhr = new XMLHttpRequest();
-		var ndata = {};
-		ndata["ID"] = document.getElementById("Classification").value;
-		var js = JSON.stringify(ndata);
-		nxhr.open("POST", algorithm_url, true);
-		nxhr.send(js); // This will process results and update HTML as appropriate. 
-		nxhr.onloadend = function() {
-			console.log(nxhr);
-			console.log(nxhr.request);
-			if (nxhr.readyState == XMLHttpRequest.DONE) {
-				if (nxhr.status == 200) {
-					var select = document.getElementById("Algorithm");
-					var js = JSON.parse(nxhr.responseText);
-					var res = js["list"];
-					removeOptions();
-					var option = document.createElement("option");
-					option.value = "-1";
-					option.text = "Select Algorithm";
-					select.appendChild(option);
-					for (var i = 0; i < res.length; i++) {
-						var option = document.createElement("option");
-						option.value = res[i].algorithmId;
-						option.text = res[i].algorithmName;
-						select.appendChild(option);
-					}
-				} else if (nxhr.status == 400) {
-					alert("unable to process request");
-				}
-			} else {
-				alert("unable to process request");
-			}
-		};
-	}
-
+	
 	function getPI() {
 		var nxhr = new XMLHttpRequest();
 		var ndata = {};
@@ -153,20 +119,7 @@
 		element3.download = URL;
 		cell3.appendChild(element3);
 
-		var cell4 = row.insertCell(3);
-		var input = document.createElement("input");
-		input.type = "hidden";
-		input.name = "hdnID";
-		input.value = ID;
-		cell4.appendChild(input);
 
-		var element4 = document.createElement("input");
-		element4.type = "button";
-		element4.name = "deletebtn";
-		element4.className = "btn btn-danger";
-		element4.value = "Delete";
-		element4.setAttribute('onclick', 'deleteRow(' + rowCount + ')');
-		cell4.appendChild(element4);
 
 	}
 
@@ -203,24 +156,23 @@
 		}
 
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", classification_url, true);
+	xhr.open("POST", algorithm_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
 		console.log(xhr.request);
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
-				var select = document.getElementById("Classification");
+				var select = document.getElementById("Algorithm");
 				var js = JSON.parse(xhr.responseText);
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
 					var option = document.createElement("option");
-					option.value = res[i].classificationID;
-					option.text = res[i].classificationName;
+					option.value = res[i].algorithmId;
+					option.text = res[i].algorithmName;
 					select.appendChild(option);
 				}
-
-				getAlgorithms();
+				getPI();
 			} else if (xhr.status == 400) {
 				alert("unable to process request");
 			}
@@ -303,15 +255,9 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Get Problem Instance</div>
+					<div class="card-header">View Problem Instance</div>
 					<div class="card-body">
 						<form name="problemInstanceForm" method="post">
-							<div class="mb-3">
-								<label class="form-label">Classification:</label> <select
-									onchange="getAlgorithms()" class="form-select"
-									aria-label="Default select example" id="Classification">
-								</select>
-							</div>
 							<div class="mb-3">
 								<label class="form-label">Algorithm</label><select
 									class="form-select" aria-label="Default select example"
@@ -325,7 +271,6 @@
 										<th scope="col">Name</th>
 										<th scope="col">Description</th>
 										<th scope="col">File</th>
-										<th scope="col">Delete</th>
 									</tr>
 								</thead>
 

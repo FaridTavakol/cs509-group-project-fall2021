@@ -289,57 +289,156 @@
 </head>
 <body>
 <body>
-	<nav class="py-2 bg-light border-bottom">
-		<div class="container d-flex flex-wrap">
-			<ul class="nav me-auto text-black">
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle text-black" href="#"
-					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-					aria-expanded="false"> Classification </a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-						<li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
-						<li><a class="dropdown-item" href="#">Merge</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
-					</ul></li>
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle text-black" href="#"
-					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-					aria-expanded="false"> Algorithms </a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-						<li><a class="dropdown-item" href="#">Reclassify</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
+<div id='admin' style='display:none'>
 
-					</ul></li>
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle text-black" href="#"
-					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-					aria-expanded="false"> Problem Instance </a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="#">Add</a></li>
-						<li><a class="dropdown-item" href="GetProblemInstance.html">Remove</a></li>
-						<li><a class="dropdown-item" href="GetProblemInstance.html">Get</a></li>
+<nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+           
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+            </ul>
+        </li>
 
-					</ul></li>
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle text-black" href="#"
-					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-					aria-expanded="false"> Implementation </a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
-						<li><a class="dropdown-item" href="#">Download</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-					</ul></li>
-				<ul class="nav">
-					<li class="nav-item text-black"><a href="Home.html"
-						class="nav-link link-dark px-2 text-black">Log out</a></li>
-				</ul>
-		</div>
-	</nav>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Benchmarks
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+            </ul>
+        </li>
+
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Users
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Delete</a></li>
+            <li><a class="dropdown-item" href="#">View</a></li>
+            <li><a class="dropdown-item" href="#">Get Actviity</a></li>
+            </ul>
+        </li>
+<ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
+
+</div>
+<div id='register' style='display:none'>
+<nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Add</a></li>
+	    <li><a class="dropdown-item" href="#">Get</a></li>
+            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="#">Merge</a></li>
+            <li><a class="dropdown-item" href="#">Remove</a></li>
+          </ul>
+        </li>
+<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Add</a></li>
+            <li><a class="dropdown-item" href="#">Get</a></li>
+	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Problem Instance
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	  <li><a class="dropdown-item" href="#">Add</a></li>
+	  <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>
+           
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Implementation
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="#">Upload</a></li>
+            <li><a class="dropdown-item" href="#">Download</a></li>
+	   <li><a class="dropdown-item" href="#">Remove</a></li>
+	  <li><a class="dropdown-item" href="#">Get</a></li>           
+          </ul>
+        </li>
+  <ul class="nav">
+        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
+      </ul>
+</div>    
+  </nav>
+</div>
+<div id='anonymous' style='display:none'><nav class="py-2 bg-light border-bottom">
+      <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto text-black">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Classification
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Search</a></li>
+          </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Algorithms
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="AllAlgorithms.html">Show All</a></li>
+            <li><a class="dropdown-item" href="AddAlgorithm.html">Add Algorithm</a></li>
+           </ul>
+        </li>
+	<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Benchmark
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="addbenchmark.html">Upload</a></li>
+            <li><a class="dropdown-item" href="GetBenchmark.html">Get</a></li>
+            </ul>
+        </li>
+
+      <ul class="nav">
+        <li class="nav-item text-black"><a href="Register.html" class="nav-link link-dark px-2 text-black">Register</a></li>
+        <li class="nav-item text-black"><a href="login.html" class="nav-link link-dark px-2 text-black">Login</a></li>
+      </ul>
+</div>    
+  </nav></div>
+	
 	<header class="py-3 mb-4 border-bottom bg-dark">
 		<div class="container d-flex flex-wrap justify-content-center">
 			<a href="/"
@@ -408,7 +507,26 @@
 			</div>
 		</div>
 	</div>
+<script>
+var role=sessionStorage.getItem("role");
+if(role=='Admin')
+{
+document.getElementById("admin").style.display='block';
+}
+else if(role=='Register')
+{
+document.getElementById("register").style.display='block';
+}
+else
+{
+document.getElementById("anonymous").style.display='block';
+}
 
+function clearSessions()
+{
+	sessionStorage.clear();
+}
+</script>
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
