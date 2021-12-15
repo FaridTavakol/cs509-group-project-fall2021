@@ -19,8 +19,8 @@
 <script type="text/javascript">
 	var classification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 	var algorithm_url = "https://jxyeyf30p8.execute-api.us-east-2.amazonaws.com/beta/allAlgorithmsByCID";
-	var getPI_url = "https://wxmpzgvlmi.execute-api.us-east-2.amazonaws.com/PI/getPI";
-	var removePI_url = "https://wxmpzgvlmi.execute-api.us-east-2.amazonaws.com/PI/removePI";
+	var getPI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/getPIByAlgoID";
+	var removePI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/removePI";
 
 	
 	function processResponse(result) {
@@ -93,6 +93,7 @@
 		var nxhr = new XMLHttpRequest();
 		var ndata = {};
 		ndata["ID"] = document.getElementById("Algorithm").value;
+		
 		removeTableRows();
 		if (document.getElementById("Algorithm").value != "-1") {
 			var js = JSON.stringify(ndata);
@@ -169,37 +170,37 @@
 
 	}
 
-	function deleteRow(rowID) {
-		var rows = document.getElementById("dataTable").rows;
-		var cell = rows[rowID].cells[3];
-		var PI_ID = cell.childNodes[0].value;
-
-		var ndata = {};
-		ndata["ID"] = PI_ID
-		ndata["requestedBy"] = sessionStorage.getItem("username");
-		var js = JSON.stringify(ndata);
-
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", removePI_url, true);
-		xhr.send(js); // This will process results and update HTML as appropriate. 
-		xhr.onloadend = function() {
-			console.log(xhr);
-			console.log(xhr.request);
-			if (xhr.readyState == XMLHttpRequest.DONE) {
-				if (xhr.status == 200) {
-					console.log("XHR:" + xhr.responseText);
-					processResponse(xhr.responseText);
-					getPI();
-
-				} else if (xhr.status == 400) {
+		function deleteRow(rowID) {
+			var rows = document.getElementById("dataTable").rows;
+			var cell = rows[rowID].cells[3];
+			var PI_ID = cell.childNodes[0].value;
+	
+			var ndata = {};
+			ndata["ID"] = PI_ID
+			ndata["requestedBy"] = sessionStorage.getItem("username");
+			var js = JSON.stringify(ndata);
+	
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", removePI_url, true);
+			xhr.send(js); // This will process results and update HTML as appropriate. 
+			xhr.onloadend = function() {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					if (xhr.status == 200) {
+						console.log("XHR:" + xhr.responseText);
+						processResponse(xhr.responseText);
+						getPI();
+	
+					} else if (xhr.status == 400) {
+						alert("unable to process request");
+					}
+				} else {
 					alert("unable to process request");
 				}
-			} else {
-				alert("unable to process request");
-			}
-		};
-
-	}
+			};
+	
+		}
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", classification_url, true);

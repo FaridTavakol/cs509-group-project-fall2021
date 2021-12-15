@@ -8,10 +8,12 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.cs.proteus.http.AllBenchmarkResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class ImplementationByAlgoIDHandlerTest {
+public class GetAnImplementationBenchmarkHanderTest {
 
     private static Object input;
 
@@ -31,11 +33,11 @@ public class ImplementationByAlgoIDHandlerTest {
     }
 
     @Test
-    public void testImplementationByAlgoIDHandler() {
-        ImplementationByAlgoIDHandler handler = new ImplementationByAlgoIDHandler();
+    public void testGetAnImplementationBenchmarkHander() {
+        GetAnImplementationBenchmarkHandler handler = new GetAnImplementationBenchmarkHandler();
         Context ctx = createContext();
 
-        String output = handler.handleRequest(input, ctx);
+        AllBenchmarkResponse output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);
