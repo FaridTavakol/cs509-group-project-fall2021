@@ -46,7 +46,7 @@ public class AddImplementationLambdaFunctionHandler implements RequestStreamHand
 			String details = addImplementationRequest.getDetails();
 			
 			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
-			Algorithm algorithm = algorithmsDAO.getAlgorithmByName(algorithmName);
+			Algorithm algorithm = algorithmsDAO.getAlgorithm(algorithmName);
 			String algorithmID = algorithm.getAlgorithmId();
 			
 			Implementation newImplementation = new Implementation("N/A", url, details, language, algorithmID, new ArrayList<String>());

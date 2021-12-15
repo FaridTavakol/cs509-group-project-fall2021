@@ -27,15 +27,15 @@ public class AlgorithmsDAO {
 	}
 
 	// Methods //
-	
-	public Algorithm getAlgorithm(String valueName, String value) throws Exception
+
+	public Algorithm getAlgorithm(String name) throws Exception
 	{
 
 		try
 		{
 			Algorithm algorithm = null;
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE " + valueName + "=?;");
-			ps.setString(1, value);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmName=?;");
+			ps.setString(1, name);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next())
@@ -52,17 +52,6 @@ public class AlgorithmsDAO {
 			e.printStackTrace();
 			throw new Exception("Failed in getting Algorithm: " + e.getMessage());
 		}
-	}
-
-	public Algorithm getAlgorithmByName(String name) throws Exception
-	{
-		return getAlgorithm("algorithmName", name);
-	}
-	
-	public Algorithm getAlgorithmByID(String id) throws Exception
-	{
-
-		return getAlgorithm("algorithmId", id);
 	}
 
 	public List<Algorithm> getAllAlgorithms() throws Exception

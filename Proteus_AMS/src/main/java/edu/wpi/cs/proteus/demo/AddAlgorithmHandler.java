@@ -67,7 +67,7 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 		System.out.println("connected to DB");
 
 		// check if present
-		Algorithm exist = dao.getAlgorithmByName(AlgorithmName_);
+		Algorithm exist = dao.getAlgorithm(AlgorithmName_);
 		Algorithm algorithm = new Algorithm(AlgorithmName_, classificationId_);
 		if (exist == null)
 		{
