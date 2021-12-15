@@ -2,10 +2,9 @@
 
 <head>
 <script type="text/javascript">
-	/* Change it to get all Algorithms*/
 	var getAllAlgorithms_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse";
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", getAllAlgorithms_url, true);
+	xhr.open("POST", getAllAlgorithms_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
@@ -135,7 +134,7 @@
 					aria-expanded="false"> Algorithms </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
 						<li><a class="dropdown-item" href="#">Reclassify</a></li>
 						<li><a class="dropdown-item" href="#">Remove</a></li>
 
