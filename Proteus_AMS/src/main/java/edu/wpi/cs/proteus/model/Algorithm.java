@@ -2,6 +2,8 @@
 //*****************
 package edu.wpi.cs.proteus.model;
 
+import java.util.UUID;
+
 public class Algorithm {
 
 	public Algorithm(String algorithmName_, String classificationId_, String AlgorithmId_)
@@ -9,6 +11,22 @@ public class Algorithm {
 		this.algorithmName = algorithmName_;
 		this.classificationId = classificationId_;
 		this.algorithmId = AlgorithmId_;
+//		this.algorithmDescription = description;
+	}
+
+	public Algorithm(String algorithmName_)
+	{
+		this.algorithmName = algorithmName_;
+		this.classificationId = UUID.randomUUID().toString();
+		this.algorithmId = UUID.randomUUID().toString();
+//		this.algorithmDescription = description;
+	}
+
+	public Algorithm(String algorithmName_, String classificationId_)
+	{
+		this.algorithmName = algorithmName_;
+		this.classificationId = classificationId_;
+		this.algorithmId = UUID.randomUUID().toString();
 //		this.algorithmDescription = description;
 	}
 

@@ -47,6 +47,13 @@ public class AddAlgorithmRequest {
 		this.algorithmId = algorithmId_;
 	}
 
+	public AddAlgorithmRequest(String algorithmName_, String classificationId_)
+	{
+		this.algorithmName = algorithmName_;
+		this.classificationId = classificationId_;
+		this.algorithmId = "";
+	}
+
 	public AddAlgorithmRequest()
 	{
 	}

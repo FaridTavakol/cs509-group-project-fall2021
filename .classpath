@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="Proteus_AMS/src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
 	<classpathentry kind="src" path="Proteus_AMS/src/test/java"/>
+	<classpathentry exported="true" kind="lib" path="/home/farid/.m2/repository/com/amazonaws/aws-lambda-java-core/1.1.0/aws-lambda-java-core-1.1.0.jar" sourcepath="/home/farid/.m2/repository/com/amazonaws/aws-lambda-java-core/1.1.0/aws-lambda-java-core-1.1.0-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="com.amazonaws"/>
+			<attribute name="maven.artifactId" value="aws-lambda-java-core"/>
+			<attribute name="maven.version" value="1.1.0"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
