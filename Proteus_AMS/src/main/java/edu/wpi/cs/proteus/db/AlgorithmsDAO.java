@@ -54,6 +54,32 @@ public class AlgorithmsDAO {
 		}
 	}
 
+	public Algorithm getAlgorithmByID(String algorithmID) throws Exception
+	{
+
+		try
+		{
+			Algorithm algorithm = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmId=?;");
+			ps.setString(1, algorithmID);
+			ResultSet resultSet = ps.executeQuery();
+
+			while (resultSet.next())
+			{
+				algorithm = generateAlgorithm(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+
+			return algorithm;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("Failed in getting Algorithm: " + e.getMessage());
+		}
+	}
+
 	public List<Algorithm> getAllAlgorithms() throws Exception
 	{
 		try
@@ -127,12 +153,6 @@ public class AlgorithmsDAO {
 			ps.setString(1, algorithm_.getAlgorithmId());
 			int numAffected = ps.executeUpdate();
 			ps.close();
-
-//			PreparedStatement ps1 = conn.prepareStatement("DELETE FROM Classification WHERE classificationId = ?;");
-//			ps1.setString(1, algorithm_.getClassificationId());
-//			ps1.executeUpdate();
-//			ps1.close();
-
 			return (numAffected == 1);
 
 		} catch (Exception e)

@@ -5,8 +5,8 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.cs.proteus.db.AlgorithmsDAO;
 import edu.wpi.cs.proteus.db.LogDAO;
-import edu.wpi.cs.proteus.db.PIDAO;
 import edu.wpi.cs.proteus.http.GetObjectsByID;
 import edu.wpi.cs.proteus.http.Response;
 import edu.wpi.cs.proteus.model.Log;
@@ -27,9 +27,9 @@ public class DeleteAlgorithmHandler implements RequestHandler<Object, Response> 
 		try
 		{
 
-			if (deletePI(instance.getID(), instance.getRequestedBy()))
+			if (deleteAlgorithm(instance.getID(), instance.getRequestedBy()))
 			{
-				response = new Response(200, "Problem Instance Deleted Successfully");
+				response = new Response(200, "Algorithm Deleted Successfully");
 			} else
 			{
 				response = new Response(400, "Error Occurred");
@@ -42,20 +42,22 @@ public class DeleteAlgorithmHandler implements RequestHandler<Object, Response> 
 		return response;
 	}
 
-	boolean deletePI(String ID, String requestedBy) throws Exception
+	boolean deleteAlgorithm(String ID, String requestedBy) throws Exception
 	{
 		if (logger != null)
 		{
-			logger.log("in Delete Problem Instance");
+			logger.log("in Delete Algorithm Instance");
 		}
-		PIDAO dao = new PIDAO();
-		System.out.println("connected to DB");
 
-		boolean result = dao.deletePI(Integer.parseInt(ID));
+		AlgorithmsDAO dao = new AlgorithmsDAO();
+		System.out.println("connected to DB");
+		// Gets The method takes the ID of the algorithm and deletes an algorithm
+		// matching with that ID.
+		boolean result = dao.deleteAlgorithm(dao.getAlgorithmByID(ID));
 
 		if (result)
 		{
-			Log entry = new Log(requestedBy, "Delete Problem Instance", java.time.LocalDate.now().toString());
+			Log entry = new Log(requestedBy, "Deleted Algorithm", java.time.LocalDate.now().toString());
 			LogDAO ldao = new LogDAO();
 			return ldao.addLogEntry(entry);
 		}
