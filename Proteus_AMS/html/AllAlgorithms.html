@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var getAllAlgorithms_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse"
+	var getAllAlgorithms_url = "https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse";
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", getAllAlgorithms_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
@@ -20,6 +20,7 @@
 					option.text = res[i].algorithmName;
 					select.appendChild(option);
 				}
+				console.log("Loaded all Algorithms!");
 			} else if (xhr.status == 400) {
 				alert("unable to process request");
 			}
@@ -58,48 +59,16 @@
 
 	function handleClick(e) {
 		var form = document.getAllAlgorithmForm;
-		var algorithmName = document.getElementById("Algorithm").value;
+		var algorithmId = document.getElementById("Algorithm").value; // The algorithm Id of the selected algorithm is saved
 
-		if (notEmpty(algorithmName)) {
-			console.log("1");
-
-			var data = {};
-			data["algorithmName"] = algorithmName;
-
-			console.log("2");
-
-			var js = JSON.stringify(data);
-			console.log("JS:" + js);
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", getAllAlgorithms_url, true);
-			console.log("3");
-			// send the collected data as JSON
-			xhr.send(js);
-
-			// This will process results and update HTML as appropriate. 
-			xhr.onloadend = function() {
-				console.log(xhr);
-				console.log(xhr.request);
-				if (xhr.readyState == XMLHttpRequest.DONE) {
-					if (xhr.status == 200) {
-						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
-					} else if (xhr.status == 400) {
-						alert("unable to process request");
-					}
-				} else {
-					processResponse("N/A");
-				}
-			};
-		} else {
-			console.log("Inputs invalid:")
-			if (algorithmName === "") {
-				console.log("Algorithm name is empty/invalid - "
-						+ algorithmName)
-			}
+		if (notEmpty(algorithmId)) {
+			console.log("not-empty check passed!");
+			console.log("Algorithm ID saved!");
+			var msg = document.getElementById("msg");
+			sessionStorage.setItem("algorithmId", algorithmId);
+			msg.innerHTML = "Successfully retrieved the algorithm";
+			window.location.href = "GetAlgorithmMainPage.html";
 		}
-		var msg = document.getElementById("msg");
-		msg.innerHTML = "Kindly Check your Inputs!";
 	}
 </script>
 <link
