@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var getAllAlgorithms_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse";
+	var getAllAlgorithms_url = " https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse"
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", getAllAlgorithms_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
@@ -59,7 +59,7 @@
 	function handleClick(e) {
 		var form = document.getAllAlgorithmForm;
 		var algorithmName = document.getElementById("Algorithm").value;
-		
+
 		if (notEmpty(algorithmName)) {
 			console.log("1");
 
@@ -97,10 +97,9 @@
 				console.log("Algorithm name is empty/invalid - "
 						+ algorithmName)
 			}
-			}
-			var msg = document.getElementById("msg");
-			msg.innerHTML = "Kindly Check your Inputs!";
 		}
+		var msg = document.getElementById("msg");
+		msg.innerHTML = "Kindly Check your Inputs!";
 	}
 </script>
 <link
@@ -175,7 +174,8 @@
 				<div class="card">
 					<div class="card-header">Get Algorithm</div>
 					<div class="card-body">
-						<form name="getAllAlgorithmForm" method="post" name="AllAlgorithmsResponse">
+						<form name="getAllAlgorithmForm" method="post"
+							name="AllAlgorithmsResponse">
 							<div class="mb-3">
 								<label class="form-label">List of All Algorithms:</label> <select
 									class="form-select" aria-label="Default select example"
