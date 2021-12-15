@@ -8,29 +8,30 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.proteus.db.ImplementationsDAO;
+import edu.wpi.cs.proteus.http.AllImplementationsResponse;
 import edu.wpi.cs.proteus.http.GetObjectsByID;
 import edu.wpi.cs.proteus.model.Implementation;
 
-public class ImplementationByAlgoIDHandler implements RequestHandler<Object, String> {
+public class GetImplementationByAlgoHandler implements RequestHandler<Object, AllImplementationsResponse> {
 
 	LambdaLogger logger;
     @Override
-    public String handleRequest(Object input, Context context) {
+    public AllImplementationsResponse handleRequest(Object input, Context context) {
         context.getLogger().log("Input: " + input);
 
-//		AllImplementationsResponse response;
-//
+		AllImplementationsResponse response;
+
 		Gson gson = new Gson();
 		GetObjectsByID instance = gson.fromJson(input.toString(), GetObjectsByID.class);
-//
-//		try {
-//			List<Implementation> pinstances = getImplementation(instance.getID());
-//					
-//			response = new AllImplementationsResponse(pinstances, 200);
-//		} catch (Exception e) {
-//			response = new AllImplementationsResponse(400, "Unable to get Implementations by Algo ID(" + e.getMessage() + ")");
-//		}
-		return instance.getID() ;
+
+		try {
+			List<Implementation> pinstances = getImplementation(instance.getID());
+					
+			response = new AllImplementationsResponse(pinstances, 200);
+		} catch (Exception e) {
+			response = new AllImplementationsResponse(400, "Unable to get Implementations by Algo ID(" + e.getMessage() + ")");
+		}
+		return response;
 	}
 
 	List<Implementation> getImplementation(String algoID) throws Exception {

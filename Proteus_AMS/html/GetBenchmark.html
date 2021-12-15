@@ -20,7 +20,8 @@
 	var algorithm_url = "https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse"
 	var implementation_url = "https://phdmewp6ae.execute-api.us-east-2.amazonaws.com/benchmark/getImplementation";
 	var getPI_url = "https://r02j35mct5.execute-api.us-east-2.amazonaws.com/beta/getPIByAlgoID";
-	var getbenchmark_url ="https://phdmewp6ae.execute-api.us-east-2.amazonaws.com/benchmark/addBenchmark";
+	var getbenchmark_url = "https://phdmewp6ae.execute-api.us-east-2.amazonaws.com/benchmark/getabenchmark";
+	var removebenchmark_url = "https://phdmewp6ae.execute-api.us-east-2.amazonaws.com/benchmark/removebenchmark";
 
 	function removeimplementaionOptions() {
 		var select = document.getElementById("implementation");
@@ -37,6 +38,15 @@
 		}
 	}
 
+	function removeTableRows() {
+		var elmtTable = document.getElementById("dataTable");
+		var tableRows = elmtTable.getElementsByTagName('tr');
+		var rowCount = tableRows.length;
+
+		for (var x = rowCount - 1; x > 0; x--) {
+			elmtTable.deleteRow(x);
+		}
+	}
 	function getImplementation() {
 		var nxhr = new XMLHttpRequest();
 		var ndata = {};
@@ -73,7 +83,7 @@
 		var ndata = {};
 		ndata["ID"] = document.getElementById("Algorithm").value;
 
-		removeProblemInstanceOptions();
+		
 		var js = JSON.stringify(ndata);
 		nxhr.open("POST", getPI_url, true);
 		nxhr.send(js); // This will process results and update HTML as appropriate. 
@@ -85,7 +95,7 @@
 					var select = document.getElementById("problemInstance");
 					var js = JSON.parse(nxhr.responseText);
 					var res = js["list"];
-					removeimplementaionOptions();
+					removeProblemInstanceOptions();
 					for (var i = 0; i < res.length; i++) {
 						var myArray = res[i].algorithmID.split("$");
 						var option = document.createElement("option");
@@ -137,19 +147,89 @@
 		}
 	};
 
-	function notEmpty() {
-		var form = document.benchmarkForm;
-		var name = form.bname.value;
-		var time = form.btime.value;
-		var algo = document.getElementById("Algorithm").value;
-		var imp = document.getElementById("implementation").value;
-		var pi = document.getElementById("problemInstance").value;
+	function deleteRow(rowID) {
+		var rows = document.getElementById("dataTable").rows;
+		var cell = rows[rowID].cells[6];
+		var Benchmark_ID = cell.childNodes[0].value;
 
-		if (name === "" || time === "" || algo === "" || imp === ""
-				|| pi === "")
-			return false;
-		return true;
+		var ndata = {};
+		ndata["ID"] = Benchmark_ID;
+		ndata["requestedBy"] = sessionStorage.getItem("username");
+		var js = JSON.stringify(ndata);
+
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", removebenchmark_url, true);
+		xhr.send(js); // This will process results and update HTML as appropriate. 
+		xhr.onloadend = function() {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+					console.log("XHR:" + xhr.responseText);
+					processResponse(xhr.responseText);
+					
+					getBenchmarks();
+
+				} else if (xhr.status == 400) {
+					alert("unable to process request");
+				}
+			} else {
+				alert("unable to process request");
+			}
+		};
+
 	}
+
+	function addRow(ID, Name, ExecTime, CPU, Cores,RAM, Cache) {
+
+		var table = document.getElementById('dataTable');
+
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+
+		var cell1 = row.insertCell(0);
+		var element1 = document.createElement("label");
+		element1.name = "bname";
+		element1.innerHTML = Name;
+		element1.className = "form-label";
+		cell1.appendChild(element1);
+
+		var cell2 = row.insertCell(1);
+		var element2 = document.createElement("label");
+		element2.name = "btime";
+		element2.innerHTML = ExecTime;
+		element2.className = "form-label";
+		cell2.appendChild(element2);
+
+		var cell3 = row.insertCell(2);
+		var element3 = document.createElement("label");
+		element3.name = "bcpu";
+		element3.innerHTML = CPU;
+		element3.className = "form-label";
+		cell3.appendChild(element3);
+
+		var cell4 = row.insertCell(3);
+		var element4 = document.createElement("label");
+		element4.name = "bcores";
+		element4.innerHTML = Cores;
+		element4.className = "form-label";
+		cell4.appendChild(element4);
+
+		var cell5 = row.insertCell(4);
+		var element5 = document.createElement("label");
+		element5.name = "bRAM";
+		element5.innerHTML = RAM;
+		element5.className = "form-label";
+		cell5.appendChild(element5);
+
+		var cell6 = row.insertCell(5);
+		var element6 = document.createElement("label");
+		element6.name = "bCache";
+		element6.innerHTML = Cache;
+		element6.className = "form-label";
+		cell6.appendChild(element6);
+	}
+
 	function processResponse(result) {
 		// Can grab any DIV or SPAN HTML element and can then manipulate its
 		// contents dynamically via javascript
@@ -162,52 +242,48 @@
 		var msg = document.getElementById("msg");
 		msg.innerHTML = js["Message"];
 	}
+	function getBenchmarks() {
+		removeTableRows();
+		var imp = document.getElementById("implementation").value;
+		var pi = document.getElementById("problemInstance").value;
 
-	function handleClick(e) {
-		if (notEmpty()) {
-			var form = document.benchmarkForm;
-			var form = document.benchmarkForm;
-			var name = form.bname.value;
-			var time = form.btime.value;
-			var algo = document.getElementById("Algorithm").value;
-			var imp = document.getElementById("implementation").value;
-			var pi = document.getElementById("problemInstance").value;
-
-			var data = {};
-			data["implemetationid"] = document.getElementById("implementation").value;
-			data["probleminstanceid"] = document.getElementById("problemInstance").value;
-			data["name"] = form.bname.value
-			data["time"] = form.btime.value;
-			data["cpu"] = document.getElementById("bcpu").value;
-			data["cores"] = document.getElementById("bcores").value;
-			data["ram"] = document.getElementById("bram").value;
-			data["cache"] = document.getElementById("bcache").value;
-			data["requestedBy"] = sessionStorage.getItem("username");
-			var js = JSON.stringify(data);
-			console.log("JS:" + js);
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", getbenchmark_url, true);
-			// send the collected data as JSON
-			xhr.send(js);
-			xhr.onloadend = function() {
-				console.log(xhr);
-				console.log(xhr.request);
-				if (xhr.readyState == XMLHttpRequest.DONE) {
-					if (xhr.status == 200) {
-						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
-					} else if (xhr.status == 400) {
-						alert("unable to process request");
-					}
-				} else {
-					processResponse("N/A");
+		var data = {};
+		data["implemetationid"] = document.getElementById("implementation").value;
+		data["probleminstanceid"] = document.getElementById("problemInstance").value;
+		data["name"] = "A";
+		data["time"] = "A";
+		data["cpu"] = "A";
+		data["cores"] = "A";
+		data["ram"] = "A";
+		data["cache"] = "A";
+		data["requestedBy"] = "A";
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", getbenchmark_url, true);
+		// send the collected data as JSON
+		xhr.send(js);
+		xhr.onloadend = function() {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+					//show in table
+						var js = JSON.parse(xhr.responseText);
+						var res = js["list"];
+						for (var i = 0; i < res.length; i++) {
+							addRow(res[i].implemetationid, res[i].time, res[i].cpu,res[i].cores,res[i].ram,res[i].cache,res[i].requestedBy);}
+					
+				} else if (xhr.status == 400) {
+					alert("unable to process request");
 				}
-			};
-
-		} else {
-			var msg = document.getElementById("msg");
-			msg.innerHTML = "Kindly Check your Inputs. All inputs are required";
-		}
+			} else {
+				processResponse("N/A");
+			}
+		};
+	}
+	function handleClick(e) {
+		getBenchmarks();
 	}
 </script>
 </head>
@@ -281,7 +357,7 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Upload Benchmark</div>
+					<div class="card-header">View Benchmark</div>
 					<div class="card-body">
 						<form name="benchmarkForm" method="post">
 							<div class="mb-3">
@@ -302,64 +378,29 @@
 									id="problemInstance">
 								</select>
 							</div>
-							<div class="mb-3">
-								<label class="form-label">Name</label> <input name="bname"
-									value="" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">CPU</label> <select
-									id="bcpu" class="form-select"
-									aria-label="Default select example">
-									<option value="x86-64">x86</option>
-									<option value="x86-64">x86-64</option>
-									<option value="IA64">IA64</option>
-									<option value="AMD64">AMD64</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">Cores</label> <select
-									id="bcores" class="form-select"
-									aria-label="Default select example">
-									<option value="Single">Single</option>
-									<option value="Dual">Dual</option>
-									<option value="Quad">Quad</option>
-									<option value="Hexa">Hexa</option>
-									<option value="Octa">Octa</option>
-									<option value="Deca">Deca</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">Ram</label> <select
-									id="bram" class="form-select"
-									aria-label="Default select example">
-									<option value="2GB">2GB</option>
-									<option value="4GB">4GB</option>
-									<option value="8GB">8GB</option>
-									<option value="12GB">12GB</option>
-									<option value="16GB">16GB</option>
-									<option value="32GB">32GB</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">Cache</label><select
-									id="bcache" class="form-select"
-									aria-label="Default select example">
-									<option value="L1">L1</option>
-									<option value="L2">L2</option>
-									<option value="L3">L3</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="inputName" class="form-label">Time</label> <input
-									id="btime" value="" class="form-control" />
-							</div>
+
 							<div class="d-flex justify-content-center">
-								<input type="button" value="Add" class="btn btn-primary"
-									onClick="JavaScript:handleClick(this)">
+								<input type="button" value="Get Benchmarks"
+									class="btn btn-primary" onClick="JavaScript:handleClick(this)">
 							</div>
 							<div class="mb-3">
 								<label id="msg" class="form-label"></label>
 							</div>
+							<table id="dataTable" class="table">
+								<thead>
+									<tr>
+										<th scope="col">Name</th>
+										<th scope="col">Exec. Time</th>
+										<th scope="col">CPU</th>
+										<th scope="col">Cores</th>
+										<th scope="col">RAM</th>
+										<th scope="col">Cache</th>
+	
+									</tr>
+								</thead>
+
+							</table>
+
 
 						</form>
 					</div>

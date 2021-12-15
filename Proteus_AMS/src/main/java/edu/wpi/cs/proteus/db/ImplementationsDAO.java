@@ -109,7 +109,7 @@ public class ImplementationsDAO {
 		try {
 			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
 			String algorithmID = newImplementation.getAlgorithmID();
-			Algorithm algorithm = algorithmsDAO.getAlgorithmByID(algorithmID);
+			Algorithm algorithm = algorithmsDAO.getAlgorithm(algorithmID);
 			String classificationID = algorithm.getClassificationId();
 			String language = newImplementation.getLanguage();
 			Random rand = new Random();
