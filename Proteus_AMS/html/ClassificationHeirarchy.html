@@ -2,11 +2,10 @@
 
 <head>
 <script type="text/javascript">
-	var mergeClassification_url = "";
-	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var getClassificationHeirarchy_url = "";
 
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", getClassification_url, true);
+	xhr.open("GET", getClassificationHeirarchy_url, true);
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
