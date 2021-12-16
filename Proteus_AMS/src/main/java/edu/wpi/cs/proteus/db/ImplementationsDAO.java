@@ -54,6 +54,7 @@ public class ImplementationsDAO {
 			throw new Exception("Failed in getting implementations: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
 		}
 	}
+
 	public List<Implementation> getAllImplementations(String algoID) throws Exception {
 		try {
 			Statement stmt = conn.createStatement();

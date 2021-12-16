@@ -18,7 +18,7 @@ public class AddClassificationHandler implements RequestHandler<AddClassificatio
 		AddClassificationResponse response;
 		
 		try {
-			if (addClassification(input.getClassificationID(), input.getClassificationName(), input.getSuperClassification())) {
+			if (addClassification(input.getClassificationName(), input.getSuperClassification())) {
 				response = new AddClassificationResponse(input.getClassificationName());
 			} else {
 				response = new AddClassificationResponse(input.getClassificationName(), 422);
@@ -29,18 +29,17 @@ public class AddClassificationHandler implements RequestHandler<AddClassificatio
 		return response;
 	}
 	
-	boolean addClassification(String id, String name, String superClass) throws Exception {
+	boolean addClassification(String name, String superClass) throws Exception {
 		if (logger != null) { logger.log("in addClassification"); }
 		ClassificationDAO dao = new ClassificationDAO();
 		System.out.println("connected to DB");
 		
 		// check if present
-		Classification exist = dao.getClassification(id);
-		Classification classification = new Classification(id, name, superClass);
+		Classification exist = dao.getClassification(name);
 		System.out.println("checked exist");
 		if (exist == null) {
 			System.out.println("handler - add classification");
-			return dao.addClassification(classification);
+			return dao.addClassification(name, superClass);
 		} else {
 			return false;
 		}

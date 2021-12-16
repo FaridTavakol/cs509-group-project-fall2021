@@ -68,20 +68,7 @@
 		element2.className = "form-label";
 		cell2.appendChild(element2);
 		
-		
-		var cell3 = row.insertCell(2);
-		var input = document.createElement("input");
-		input.type = "hidden";
-		input.name = "hdnID";
-		input.value = Email;
-		cell3.appendChild(input);
-		var element3 = document.createElement("input");
-		element3.type = "button";
-		element3.name = "deletebtn";
-		element3.className = "btn btn-danger";
-		element3.value = "Delete";
-		element3.setAttribute('onclick', 'deleteRow(' + rowCount + ')');
-		cell3.appendChild(element3);
+	
 
 	}
 	function processResponse(result) {
@@ -212,7 +199,7 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">View & Delete Users</div>
+					<div class="card-header">View Users</div>
 					<div class="card-body">
 						<form name="problemInstanceForm" method="post">
 						<div class="mb-3">
@@ -223,7 +210,6 @@
 									<tr>
 										<th scope="col">Name</th>
 										<th scope="col">Email</th>
-										<th scope="col">Action</th>
 									</tr>
 								</thead>
 							</table>

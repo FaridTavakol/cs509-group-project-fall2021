@@ -1,7 +1,6 @@
 package edu.wpi.cs.proteus.model;
 
 public class Benchmark {
-
 	String id;
 	String implemetationid;
 	String probleminstanceid;
@@ -99,6 +98,4 @@ public class Benchmark {
 	public void setRequestedBy(String requestedBy) {
 		this.requestedBy = requestedBy;
 	}
-
-
 }
