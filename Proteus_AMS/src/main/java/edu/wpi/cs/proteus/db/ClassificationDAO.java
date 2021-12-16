@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.wpi.cs.proteus.model.Classification;
@@ -191,5 +192,62 @@ public class ClassificationDAO {
 			throw new Exception("Failed to add classification: " + e.getMessage());
 		}
 	}
+	
+	public List<Classification> getClassificationHeirarchy() throws Exception{
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE superClassification=?;");
+			ps.setString(1, "");
+			ResultSet resultSet = ps.executeQuery();
+			
+			LinkedList<Classification> list = new LinkedList<Classification>();
+			
+			while (resultSet.next()) {
+				Classification c = generateHeirarchy(resultSet);
+				list.add(c);
+			}
+			resultSet.close();
+			ps.close();
+			return list;
+			
+		}catch (Exception e) {
+			throw new Exception("Failed to get classification heirarchy: " + e.getMessage());
+		}
+	}
+	
+	public Classification generateHeirarchy(ResultSet resultSet) throws Exception {
+		try {
+			String id = resultSet.getString("classificationID");
+			String name = resultSet.getString("classificationName");
+			String superClass = resultSet.getString("superClassification");		
+			LinkedList<Classification> subClasses = new LinkedList<Classification>();
+			
+			String subClass = resultSet.getString("subClassification");
+			String sub[];
+			if(subClass != null) {
+				sub = subClass.split(",");
+				for(String n: sub) {
+					PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
+					ps.setString(1, n);
+					ResultSet rs = ps.executeQuery();
+					
+					while(rs.next()) {
+						subClasses.add(generateHeirarchy(rs));
+					}
+					
+					rs.close();
+					ps.close();
+				}
+			}
+			
+			Classification h = new Classification(id, name, superClass, subClasses);
+			
+			return h;
+			
+		}catch (Exception e) {
+			throw new Exception("Failed to get classification heirarchy: " + e.getMessage());
+		}	
+	}
+
 	
 }
