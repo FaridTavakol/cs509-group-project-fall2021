@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -48,11 +49,12 @@ public class AddImplementationLambdaFunctionHandler implements RequestStreamHand
 			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
 			Algorithm algorithm = algorithmsDAO.getAlgorithmByName(algorithmName);
 			String algorithmID = algorithm.getAlgorithmId();
+			String implementationID = UUID.randomUUID().toString();
 			
-			Implementation newImplementation = new Implementation("N/A", url, details, language, algorithmID, new ArrayList<String>());
+			Implementation newImplementation = new Implementation(implementationID, url, details, language, algorithmID, new ArrayList<String>());
 			boolean result = implementationsDAO.addImplementation(newImplementation);
 			if(result) {
-				writer.write(gson.toJson(new Response(200, "Implementation added succesfully!")));	
+				writer.write(gson.toJson(new Response(200, implementationID)));	
 			} else {
 				writer.write(gson.toJson(new Response(400, "Failed to add implementation to the database.")));
 			}

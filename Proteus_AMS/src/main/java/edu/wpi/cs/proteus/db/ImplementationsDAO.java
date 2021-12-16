@@ -108,18 +108,9 @@ public class ImplementationsDAO {
 
 	public boolean addImplementation(Implementation newImplementation) throws Exception {
 		try {
-			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
-			String algorithmID = newImplementation.getAlgorithmID();
-			Algorithm algorithm = algorithmsDAO.getAlgorithmByID(algorithmID);
-			String classificationID = algorithm.getClassificationId();
-			String language = newImplementation.getLanguage();
-			Random rand = new Random();
-			Integer idInt = rand.nextInt(10000);
-			String fullID = classificationID + "." + algorithmID + "." + language + "." + idInt.toString();
-			
 			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO " + tblName + " (implementationID,algorithmID,url,language,details) VALUES (?,?,?,?,?);");
-			ps.setString(1, UUID.randomUUID().toString());
+			ps.setString(1, newImplementation.getId());
 			ps.setString(2, newImplementation.getAlgorithmID());
 			ps.setString(3, newImplementation.getUrl());
 			ps.setString(4, newImplementation.getLanguage());

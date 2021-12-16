@@ -10,7 +10,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -23,7 +25,6 @@ import edu.wpi.cs.proteus.db.ImplementationsDAO;
 import edu.wpi.cs.proteus.http.SimpleImplementationRequest;
 import edu.wpi.cs.proteus.http.GetImplementationResponse;
 import edu.wpi.cs.proteus.http.Response;
-import edu.wpi.cs.proteus.http.ResponseImplementation;
 import edu.wpi.cs.proteus.model.Implementation;
 
 public class GetImplementationLambdaFunctionHandler implements RequestStreamHandler {
@@ -43,27 +44,16 @@ public class GetImplementationLambdaFunctionHandler implements RequestStreamHand
     		
 			ImplementationsDAO implementationsDAO = new ImplementationsDAO();
 			Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
-			String id = implementation.getId();
-			String url = implementation.getUrl();
-			String language = implementation.getLanguage();
-			String details = implementation.getDetails();
-			String algorithmID = implementation.getAlgorithmID();
-			ResponseImplementation responseImplementation = new ResponseImplementation(id, url, details, language, algorithmID);
-			GetImplementationResponse response = new GetImplementationResponse(200, responseImplementation);
+			Map<String, String> message = new HashMap<>();
+			message.put("implementationURL", implementation.getUrl());
+			message.put("implementationLanguage", implementation.getLanguage());
+			message.put("implementationDetails", implementation.getDetails());
+			GetImplementationResponse response = new GetImplementationResponse(200, message);
 			
     		writer.write(gson.toJson(response));
         }
         catch (Exception exception) {
-        	List<String> strings1 = new ArrayList<String>();
-        	Stream<String> strings2 = reader.lines();
-        	strings2.forEach(s -> strings1.add(s));
-        	String input = "";
-        	int counter = 1;
-        	for(String s : strings1) {
-        		input = Integer.toString(counter) + ". " + input + s + " ";
-        		counter++;
-        	}
-        	Response response = new Response(400, "Input: " + input + ". Failed to get implementation.");
+        	Response response = new Response(400, "Failed to get implementation. " + exception.getMessage());
         	logger.log(exception.toString());
         	writer.write(gson.toJson(response));
         }

@@ -3,55 +3,100 @@
 	<script>
 		window.onload = function() {
 			var algorithmName = sessionStorage.getItem("algorithmName");
+            var details = sessionStorage.getItem("implementationDetails");
 			document.getElementById('algoName').innerHTML = algorithmName + "'s Implementation";
+            document.getElementById('algorithmLink').innerHTML = algorithmName;
+            document.getElementById('details').innerHTML = "Implementation details: " + details;
 		};
 
         var removeURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/removeImplementation";
         var downloadURL = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/downloadImplementation";
 
-        function processResponse(result) {
+        function processResponse(result, operation) {
             // Can grab any DIV or SPAN HTML element and can then manipulate its
             // contents dynamically via javascript
             console.log("result:" + result);
             var js = JSON.parse(result);
 
-            var message = js["response"];
-            var statusCode = js["httpCode"];
+            var message = js["Message"];
+            var statusCode = js["statusCode"];
+
+            var msg = document.getElementById("msg");
 
             if (statusCode === 200) {
-                sessionStorage.setItem("classificationName", message);
-  		        var msg = document.getElementById("msg");
-                msg.innerHTML = "Successfully Added";
+                if (operation == "remove") {
+                    sessionStorage.removeItem("implementationID");
+                    window.location.href = "Home.html";
+                }
+                if (operation == "download") {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", message, true);
+                    xhr.send();
+
+                    xhr.onloadend = function () {
+                        if (xhr.readyState == XMLHttpRequest.DONE) {
+                            if (xhr.status == 200) {
+                                const download = (path, filename) => {
+                                    // Create a new link
+                                    const anchor = document.createElement('a');
+                                    anchor.href = path;
+                                    anchor.download = filename;
+
+                                    // Append to the DOM
+                                    document.body.appendChild(anchor);
+
+                                    // Trigger `click` event
+                                    anchor.click();
+
+                                    // Remove element from DOM
+                                    document.body.removeChild(anchor);
+                                }; 
+
+                                // Create a Blob object
+                                const blob = new Blob([xhr.responseText], { type: 'text/plain' });
+                                const filename = sessionStorage.getItem("implementationURL");
+
+                                // Create an object URL
+                                const url = URL.createObjectURL(blob);
+
+                                // Download file
+                                download(url, filename);
+
+                                // Release the object URL
+                                URL.revokeObjectURL(url);
+                            } else if (xhr.status == 400) {
+                                alert("Unable to process request!");
+                            }
+                        } else {
+                            msg.innerHTML = "Failed to download implementation file.";
+                        }
+                    };
+                }
             } else {
-                var msg = document.getElementById("msg");
-                msg.innerHTML = js["response"];
+                msg.innerHTML = js["Message"];
             }
         }
 
-        function handlePost(data, url) {
+        function handlePost(data, url, operation) {
             var js = JSON.stringify(data);
-                console.log("JS:" + js);
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", url, true);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
 
-                // send the collected data as JSON
-                xhr.send(js);
+            // send the collected data as JSON
+            xhr.send(js);
 
-                // This will process results and update HTML as appropriate. 
-                xhr.onloadend = function () {
-                    console.log(xhr);
-                    console.log(xhr.request);
-                    if (xhr.readyState == XMLHttpRequest.DONE) {
-                        if (xhr.status == 200) {
-                            console.log("XHR:" + xhr.responseText);
-                            processResponse(xhr.responseText);
-                        } else if (xhr.status == 400) {
-                            alert("unable to process request");
-                        }
-                    } else {
-                        processResponse("N/A");
+            // This will process results and update HTML as appropriate. 
+            xhr.onloadend = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    if (xhr.status == 200) {
+                        processResponse(xhr.responseText, operation);
+                    } else if (xhr.status == 400) {
+                        alert("unable to process request");
                     }
-                };
+                } else {
+                    processResponse("N/A");
+                }
+            };
         }
 
         function removeImplementation(e) {
@@ -61,7 +106,7 @@
             if (!(implementationID === "")) {
                 var data = {};
                 data["implementationID"] = implementationID;
-                handlePost(data, removeURL)                
+                handlePost(data, removeURL, "remove")                
             } else {
                 var msg = document.getElementById("msg");
                 msg.innerHTML = "An error occurred.";
@@ -75,7 +120,7 @@
             if (!(implementationID === "")) {
                 var data = {};
                 data["implementationID"] = implementationID;
-                handlePost(data, downloadURL)                
+                handlePost(data, downloadURL, "download")                
             } else {
                 var msg = document.getElementById("msg");
                 msg.innerHTML = "An error occurred.";
@@ -160,14 +205,10 @@
         </div>
     </header>
         <form name="removeImplementationForm" method="post">
-            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:removeImplementation(this)">Remove Implementation</input>
+            <input type="button" value="Remove" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:removeImplementation(this)"/>
         </form>
         <form name="downloadImplementationForm" method="post">
-            <input type="button" value="Add" class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:downloadImplementation(this)">Download Implementation</input>
-        </form>
-        <form class="float-end sticky-top d-flex px-2 my-3" style="width: 40rem;">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-dark" type="submit">Search</button>
+            <input type="button" value="Download" class="float-end sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start" onClick="JavaScript:downloadImplementation(this)"/>
         </form>
 
         <div class="container-fluid bg-body">
@@ -177,7 +218,11 @@
                     <div class="py-1 bg-light rounded-3 text-left">
                         <div class="m-1 m-lg-2">
                             <h3 class="display-3 fw-bold" id="algoName">Algorithm X Implementation</h3>
-                            <p class="card-text" >Information about implementation as well as link to the<a href="#" class="nav-link" style="display: inline-block;">Algorithm</a>.</p>
+                            <p class="card-text" id="details">Information about implementation.</p>
+                            <a class="nav-link" href="AlgorithmMainPage.html" id="algorithmLink">Algorithm</a>
+                            <div class="mb-3">
+                                <label class="form-label" id="Msg"></label>
+                            </div>
                         </div>
                     </div>
                     

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bootstrap CSS -->
 <script type='text/javascript'>
-	var add_url = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/uploadImplementation";
+	var add_url = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/addImplementation";
 	function notEmpty(algorithmName, language, url) {
 		return !(algorithmName === "" || language === "" || url === "");
 	}
@@ -15,10 +15,11 @@
 		console.log("result:" + result);
 		var js = JSON.parse(result);
 
-		var role = js["Message"];
+		var message = js["Message"];
 		var statusCode = js["statusCode"];
 
 		if (statusCode == 200) {
+			sessionStorage.setItem("implementationID", message);
 			window.location.href = "Implementation.html";
 		} else {
 			// Update computation result
@@ -66,6 +67,8 @@
 				data["details"] = details;
 				data["url"] = url;
 				sessionStorage.setItem("implementationURL", url);
+				sessionStorage.setItem("implementationDetails", details);
+				sessionStorage.setItem("implementationLanguage", language);
 				var js = JSON.stringify(data);
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", add_url, true);
@@ -78,8 +81,8 @@
 							console.log("XHR:" + xhr.responseText);
 							processResponse(xhr.responseText);
 						} else if (xhr.status == 400) {
-							alert("Unable to process request");
 							console.log("UNABLE TO PROCESS REQUEST");
+							alert("Unable to process request");
 						}
 					} else {
 						processResponse("N/A");
@@ -200,10 +203,10 @@
 						onsubmit="JavaScript:handleClick(this)">
 						<input type="hidden" name="key"              value="${filename}" />
 						<input type="hidden" name="x-amz-algorithm"  value="AWS4-HMAC-SHA256" />
-						<input type="hidden" name="x-amz-credential" value="AKIA52V65MIM7KAANWNY/20211108/us-east-2/s3/aws4_request" />
-						<input type="hidden" name="x-amz-date"       value="20211108T184400Z" />
-						<input type="hidden" name="policy"           value="eyJleHBpcmF0aW9uIjogIjIwMjItMDEtMDFUMTg6NDQ6MDBaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAicHJvdGV1cy1pbXBsZW1lbnRhdGlvbnMifSwgWyJzdGFydHMtd2l0aCIsICIka2V5IiwgIiJdLCB7IngtYW16LWFsZ29yaXRobSI6ICJBV1M0LUhNQUMtU0hBMjU2In0sIHsieC1hbXotY3JlZGVudGlhbCI6ICJBS0lBNTJWNjVNSU03S0FBTldOWS8yMDIxMTEwOC91cy1lYXN0LTIvczMvYXdzNF9yZXF1ZXN0In0sIHsieC1hbXotZGF0ZSI6ICIyMDIxMTEwOFQxODQ0MDBaIn1dfQ==" />
-						<input type="hidden" name="x-amz-signature"  value="360c78ba13edea5dc8e495e9b7a8e7ca83010134e8e109af97a3b970031013c0" /> 
+						<input type="hidden" name="x-amz-credential" value="AKIA52V65MIM7KAANWNY/20211215/us-east-2/s3/aws4_request" />
+						<input type="hidden" name="x-amz-date"       value="20211215T064841Z" />
+						<input type="hidden" name="policy"           value="eyJleHBpcmF0aW9uIjogIjIwNTMtMDgtMjNUMDg6MzU6MjBaIiwgImNvbmRpdGlvbnMiOiBbeyJidWNrZXQiOiAicHJvdGV1cy1pbXBsZW1lbnRhdGlvbnMifSwgWyJzdGFydHMtd2l0aCIsICIka2V5IiwgIiJdLCB7IngtYW16LWFsZ29yaXRobSI6ICJBV1M0LUhNQUMtU0hBMjU2In0sIHsieC1hbXotY3JlZGVudGlhbCI6ICJBS0lBNTJWNjVNSU03S0FBTldOWS8yMDIxMTIxNS91cy1lYXN0LTIvczMvYXdzNF9yZXF1ZXN0In0sIHsieC1hbXotZGF0ZSI6ICIyMDIxMTIxNVQwNjQ4NDFaIn1dfQ==" />
+						<input type="hidden" name="x-amz-signature"  value="43c265492c25d51b8d8b9f91ecf5ca098d39d4fb14f1ac8f3015680b538f7b66" /> 
 						<input type="file"   name="file" id="theFile"/> <br />
 						<input type="submit" name="submit"           value="Upload Implementation" />
 						<div class="mb-3">
