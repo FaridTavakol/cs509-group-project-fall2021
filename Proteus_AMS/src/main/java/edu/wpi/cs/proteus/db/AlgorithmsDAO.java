@@ -27,15 +27,15 @@ public class AlgorithmsDAO {
 	}
 
 	// Methods //
-	
-	public Algorithm getAlgorithm(String valueName, String value) throws Exception
+
+	public Algorithm getAlgorithm(String name) throws Exception
 	{
 
 		try
 		{
 			Algorithm algorithm = null;
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE " + valueName + "=?;");
-			ps.setString(1, value);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmName=?;");
+			ps.setString(1, name);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next())
@@ -54,15 +54,30 @@ public class AlgorithmsDAO {
 		}
 	}
 
-	public Algorithm getAlgorithmByName(String name) throws Exception
-	{
-		return getAlgorithm("algorithmName", name);
-	}
-	
-	public Algorithm getAlgorithmByID(String id) throws Exception
+	public Algorithm getAlgorithmByID(String algorithmID) throws Exception
 	{
 
-		return getAlgorithm("algorithmId", id);
+		try
+		{
+			Algorithm algorithm = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmId=?;");
+			ps.setString(1, algorithmID);
+			ResultSet resultSet = ps.executeQuery();
+
+			while (resultSet.next())
+			{
+				algorithm = generateAlgorithm(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+
+			return algorithm;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("Failed in getting Algorithm: " + e.getMessage());
+		}
 	}
 
 	public List<Algorithm> getAllAlgorithms() throws Exception
@@ -130,20 +145,14 @@ public class AlgorithmsDAO {
 		}
 	}
 
-	public boolean deleteAlgorithm(Algorithm algorithm_) throws Exception
+	public boolean deleteAlgorithm(String algorithmId_) throws Exception
 	{
 		try
 		{
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE algorithmId = ?;");
-			ps.setString(1, algorithm_.getAlgorithmId());
+			ps.setString(1, algorithmId_);
 			int numAffected = ps.executeUpdate();
 			ps.close();
-
-//			PreparedStatement ps1 = conn.prepareStatement("DELETE FROM Classification WHERE classificationId = ?;");
-//			ps1.setString(1, algorithm_.getClassificationId());
-//			ps1.executeUpdate();
-//			ps1.close();
-
 			return (numAffected == 1);
 
 		} catch (Exception e)

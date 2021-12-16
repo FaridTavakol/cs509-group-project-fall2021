@@ -34,28 +34,6 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 		}
 		return response;
 	}
-//
-//	boolean addAlgorithm(String AlgorithmName_, String classificationId_, String AlgorithmId_) throws Exception
-//	{
-//		if (logger != null)
-//		{
-//			logger.log("in addAlgorithm");
-//		}
-//		AlgorithmsDAO dao = new AlgorithmsDAO();
-//		System.out.println("connected to DB");
-//
-//		// check if present
-//		Algorithm exist = dao.getAlgorithm(AlgorithmName_);
-//		Algorithm algorithm = new Algorithm(AlgorithmName_, classificationId_, AlgorithmId_);
-//		if (exist == null)
-//		{
-//			System.out.println("handler - add classification");
-//			return dao.addAlgorithm(algorithm);
-//		} else
-//		{
-//			return false;
-//		}
-//	}
 
 	boolean addAlgorithm(String AlgorithmName_, String classificationId_) throws Exception
 	{
@@ -67,7 +45,7 @@ public class AddAlgorithmHandler implements RequestHandler<AddAlgorithmRequest, 
 		System.out.println("connected to DB");
 
 		// check if present
-		Algorithm exist = dao.getAlgorithmByName(AlgorithmName_);
+		Algorithm exist = dao.getAlgorithm(AlgorithmName_);
 		Algorithm algorithm = new Algorithm(AlgorithmName_, classificationId_);
 		if (exist == null)
 		{

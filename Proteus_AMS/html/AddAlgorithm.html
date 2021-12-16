@@ -7,6 +7,7 @@
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", getClassification_url, true);
+	
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
@@ -48,6 +49,8 @@
 			var msg = document.getElementById("msg");
 			sessionStorage.setItem("algorithmName",
 					document.addAlgorithmForm.algorithmName.value);
+			sessionStorage.setItem("algorithmDescription",
+					document.addAlgorithmForm.details.value);
 			msg.innerHTML = "successfully added the algorithm";
 			window.location.href = "AlgorithmMainPage.html";
 		} else {
@@ -108,9 +111,6 @@
 				console.log("Classification name is empty/invalid - "
 						+ classificationName)
 			}
-			if (url === "") {
-				console.log("Url invalid - " + url)
-			}
 			var msg = document.getElementById("msg");
 			msg.innerHTML = "Kindly Check your Inputs!";
 		}
@@ -147,7 +147,7 @@
 					aria-expanded="false"> Algorithms </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms">Get</a></li>
 						<li><a class="dropdown-item" href="#">Reclassify</a></li>
 						<li><a class="dropdown-item" href="#">Remove</a></li>
 
@@ -162,16 +162,7 @@
 						<li><a class="dropdown-item" href="#">Get</a></li>
 
 					</ul></li>
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle text-black" href="#"
-					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-					aria-expanded="false"> Implementation </a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
-						<li><a class="dropdown-item" href="#">Download</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-					</ul></li>
+
 				<ul class="nav">
 					<li class="nav-item text-black"><a href="Home.html"
 						class="nav-link link-dark px-2 text-black">Log out</a></li>
@@ -228,7 +219,10 @@
 			</div>
 		</div>
 	</div>
-
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
 </body>
 
 </html>
