@@ -98,7 +98,7 @@
 <div class="p-5 mb-4 bg-light rounded-3">
 	<div class="container-fluid py-5">
 		<h1 id='name' class="display-5 fw-bold"></h1>
-		<p id='detail' class="col-md-8 fs-4"></p>
+		<p id='classificationName' class="col-md-8 fs-4"></p>
 		<button class="btn btn-primary btn-lg" type="button"
 			onclick="window.location.href = 'Implementations.html'">Show
 			Implementations</button>
@@ -144,8 +144,11 @@
 
 				var js = JSON.parse(xhr.responseText);
 				var name = js.algorithmName;
+				var classificationName1 = js.classificationName;
 				var name1 = document.getElementById("name");
+				var classificationName = document.getElementById("classificationName");
 				name1.innerHTML = name;
+				classificationName.innerHTML = classificationName1;
 
 			}
 		} else if (xhr.status == 400) {
