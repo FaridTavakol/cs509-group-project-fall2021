@@ -105,10 +105,11 @@ public class ClassificationDAO {
 			statement.close();
 
 			PreparedStatement ps = conn.prepareStatement(
-					"INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?);");
+					"INSERT INTO Classification (classificationID, classificationName, superClassification, subClassification) values(?, ?, ?, ?);");
 			ps.setString(1, id);
 			ps.setString(2, classificationName);
 			ps.setString(3, superClass);
+			ps.setString(4, "");
 			ps.execute();
 			ps.close();
 			
@@ -138,7 +139,7 @@ public class ClassificationDAO {
 			resultSet.close();
 			
 			if(subClass != null) {
-				subClass += ", " + classificationName;
+				subClass += "," + classificationName;
 			}else subClass = classificationName;
 			
 			PreparedStatement ps1 = conn.prepareStatement("UPDATE Classification SET subClassification= ? WHERE classificationName=?;");
@@ -242,10 +243,11 @@ public class ClassificationDAO {
 			statement.close();
 
 			PreparedStatement ps = conn.prepareStatement(
-					"INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?);");
+					"INSERT INTO Classification (classificationID, classificationName, superClassification) values(?, ?, ?, ?);");
 			ps.setString(1, id);
 			ps.setString(2, obj.getClassificationName());
 			ps.setString(3, obj.getSuperClassification());
+			ps.setString(4, "");
 			ps.execute();
 			return true;
 
@@ -258,15 +260,20 @@ public class ClassificationDAO {
 	public List<Classification> getClassificationHeirarchy() throws Exception{
 		
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE superClassification=?;");
-			ps.setString(1, "");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification;");
 			ResultSet resultSet = ps.executeQuery();
 			
 			LinkedList<Classification> list = new LinkedList<Classification>();
 			
+			int i = 1;
 			while (resultSet.next()) {
-				Classification c = generateHeirarchy(resultSet);
-				list.add(c);
+				Classification c = generateClassification(resultSet);
+				if(!containsC(list, c)) {
+					c.setH(Integer.toString(i));
+					list.add(c);
+					i++;
+					list.addAll(generateHeirarchy(c.getH(), c));
+				}
 			}
 			resultSet.close();
 			ps.close();
@@ -277,37 +284,37 @@ public class ClassificationDAO {
 		}
 	}
 	
-	public Classification generateHeirarchy(ResultSet resultSet) throws Exception {
+	public boolean containsC(LinkedList<Classification> list, Classification c) {
+		for(Classification x: list) {
+			if(x.getClassificationID().equals(c.getClassificationID())) return true;
+		}
+		return false;
+	}
+	
+	public LinkedList<Classification> generateHeirarchy(String h, Classification c) throws Exception {
 		try {
-			String id = resultSet.getString("classificationID");
-			String name = resultSet.getString("classificationName");
-			String superClass = resultSet.getString("superClassification");		
-			LinkedList<Classification> subClasses = new LinkedList<Classification>();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE superClassification=?;");
+			ps.setString(1, c.getClassificationName());
+			ResultSet rs = ps.executeQuery();
 			
-			String subClass = resultSet.getString("subClassification");
-			String sub[];
-			if(subClass != null) {
-				sub = subClass.split(",");
-				for(String n: sub) {
-					PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
-					ps.setString(1, n);
-					ResultSet rs = ps.executeQuery();
-					
-					while(rs.next()) {
-						subClasses.add(generateHeirarchy(rs));
-					}
-					
-					rs.close();
-					ps.close();
-				}
+			LinkedList<Classification> children = new LinkedList<Classification>();
+			int i = 1;
+			
+			while(rs.next()) {
+				Classification child = generateClassification(rs);
+				child.setH(h + "." + i);
+				children.add(child);
+				children.addAll(generateHeirarchy(child.getH(), child));
+				i++;
 			}
 			
-			Classification h = new Classification(id, name, superClass, subClasses);
+			ps.close();
+			rs.close();
 			
-			return h;
+			return children;
 			
 		}catch (Exception e) {
-			throw new Exception("Failed to get classification heirarchy: " + e.getMessage());
+			throw new Exception("Failed to get children: " + e.getMessage());
 		}	
 	}
 	
