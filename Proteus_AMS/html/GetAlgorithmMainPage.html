@@ -107,10 +107,10 @@
 			Implementation</button>
 		<button class="btn btn-primary btn-lg" type="button"
 			onclick="window.location.href = '#'">Add Problem Instance</button>
-		<button class="btn btn-primary btn-lg" type="button" onclick="window.location.href = '#'">Reclasify
-			Algorithm</button>
-		<button class="btn btn-primary btn-lg" type="button" onclick="JavaScript:deleteClick(this)">Delete
-			Algorithm</button>
+		<button class="btn btn-primary btn-lg" type="button"
+			onclick="window.location.href = '#'">Reclasify Algorithm</button>
+		<button class="btn btn-primary btn-lg" type="button"
+			onclick="JavaScript:deleteClick(this)">Delete Algorithm</button>
 	</div>
 </div>
 <!-- Footer-->
@@ -120,6 +120,7 @@
 	crossorigin="anonymous"></script>
 <script type="text/javascript">
 	var getAlgorithmById_url = "https://mkdrvnol8k.execute-api.us-east-2.amazonaws.com/beta/GetAlgorithmById";
+	var deleteAlgorithmById_url = "https://osfq1u112l.execute-api.us-east-2.amazonaws.com/beta/DeleteAlgorithmById"
 	var algorithmId = sessionStorage.getItem("algorithmId");
 	// Create a post to get algorithm details to populate the page
 	var data = {};
@@ -156,21 +157,15 @@
 	
 	
 	function deleteClick(e) {
-		var form = document.removeClassificationForm;
-		var classificationName = document.getElementById("classificationName").value;
-
-		if (notEmpty(classificationName)) {
-			console.log("1");
-
-			var data = {};
-			data["classificationName"] = classificationName;
-
+		
+		
+			data["algorithmId"] = algorithmId;
 			console.log("2");
-
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
+
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", removeClassification_url, true);
+			xhr.open("POST", deleteAlgorithmById_url, true);
 			console.log("3");
 			// send the collected data as JSON
 			xhr.send(js);
@@ -183,6 +178,7 @@
 					if (xhr.status == 200) {
 						console.log("XHR:" + xhr.responseText);
 						processResponse(xhr.responseText);
+						
 					} else if (xhr.status == 400) {
 						alert("unable to process request");
 					}
@@ -190,16 +186,25 @@
 					processResponse("N/A");
 				}
 			};
-		} else {
-			console.log("Inputs invalid:")
-			if (classificationName === "") {
-				console.log("Classification name is empty/invalid - "
-						+ classificationName)
-			}
-			var msg = document.getElementById("msg");
-			msg.innerHTML = "Kindly Check your Inputs!";
-		}
 	}
+	function processResponse(result) {
+		console.log("result:" + result);
+		var js = JSON.parse(result);
+
+		var message = js["errorMessage"];
+		var statusCode = js["statusCode"];
+
+		if (statusCode == 200) {
+					
+			window.location.href = "Registered.html";
+		} else {
+			// Update computation result
+			var msg = document.getElementById("msg");
+			msg.innerHTML = js["Message"];
+		}
+
+	}
+	
 
 </script>
 </body>
