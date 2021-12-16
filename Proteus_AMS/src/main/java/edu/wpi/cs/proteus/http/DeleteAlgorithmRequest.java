@@ -2,18 +2,7 @@ package edu.wpi.cs.proteus.http;
 
 public class DeleteAlgorithmRequest {
 
-	String name;
-	String algorithmId;
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+	public String algorithmId;
 
 	public String getAlgorithmID()
 	{
@@ -29,14 +18,13 @@ public class DeleteAlgorithmRequest {
 	{
 	}
 
-	public DeleteAlgorithmRequest(String name, String algorithmID)
+	public DeleteAlgorithmRequest(String algorithmID)
 	{
-		this.name = name;
 		this.algorithmId = algorithmID;
 	}
 
 	public String toString()
 	{
-		return "DeleteAlgorithm(" + name + ")";
+		return "DeleteAlgorithm(" + algorithmId + ")";
 	}
 }

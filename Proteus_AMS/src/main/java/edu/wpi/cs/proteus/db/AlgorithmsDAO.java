@@ -145,12 +145,12 @@ public class AlgorithmsDAO {
 		}
 	}
 
-	public boolean deleteAlgorithm(Algorithm algorithm_) throws Exception
+	public boolean deleteAlgorithm(String algorithmId_) throws Exception
 	{
 		try
 		{
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + tblName + " WHERE algorithmId = ?;");
-			ps.setString(1, algorithm_.getAlgorithmId());
+			ps.setString(1, algorithmId_);
 			int numAffected = ps.executeUpdate();
 			ps.close();
 			return (numAffected == 1);
