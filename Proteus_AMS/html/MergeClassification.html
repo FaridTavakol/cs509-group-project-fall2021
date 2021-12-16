@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var removeClassification_url = "";
+	var mergeClassification_url = "";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 
 	var xhr = new XMLHttpRequest();
@@ -13,14 +13,16 @@
 		console.log(xhr.request);
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
-				var select = document.getElementById("Classification");
+				var selectOne = document.getElementById("classificationOne");
+				var selectTwo = document.getElementById("classificationTwo");
 				var js = JSON.parse(xhr.responseText);
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
 					var option = document.createElement("option");
 					option.value = res[i].classificationID;
 					option.text = res[i].classificationName;
-					select.appendChild(option);
+					selectOne.appendChild(option);
+					selectTwo.appendChild(option);
 				}
 			} else if (xhr.status == 400) {
 				alert("unable to process request");
@@ -30,9 +32,9 @@
 		}
 	};
 
-	function notEmpty(classificationName) {
+	function notEmpty(classificationOne, classificationTwo) {
 
-		if (classificationName === "")
+		if (classificationOne === "" || classificationTwo === "" || classificationOne === classificationTwo)
 			return false;
 		return true;
 	}
@@ -44,9 +46,9 @@
 		var statusCode = js["statusCode"];
 
 		if (statusCode == 200) {
-			sessionStorage.setItem("classificationName", message);
+			sessionStorage.setItem("classificationOne", message);
 			var msg = document.getElementById("msg");
-            msg.innerHTML = "Successfully Removed";
+            msg.innerHTML = "Successfully Merged";
             
 		} else {
 			// Update computation result
@@ -57,21 +59,23 @@
 	}
 
 	function handleClick(e) {
-		var form = document.removeClassificationForm;
-		var classificationName = document.getElementById("classificationName").value;
+		var form = document.mergeClassificationForm;
+		var classificationOne = document.getElementById("classificationOne").value;
+		var classificationTwo = document.getElementById("classificationTwo").value;
 
-		if (notEmpty(classificationName)) {
+		if (notEmpty(classificationOne, classificationTwo)) {
 			console.log("1");
 
 			var data = {};
-			data["classificationName"] = classificationName;
+			data["classificationOne"] = classificationOne;
+			data["classificationTwo"] = classificationTwo;
 
 			console.log("2");
 
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", removeClassification_url, true);
+			xhr.open("POST", mergeClassification_url, true);
 			console.log("3");
 			// send the collected data as JSON
 			xhr.send(js);
@@ -93,9 +97,9 @@
 			};
 		} else {
 			console.log("Inputs invalid:")
-			if (classificationName === "") {
-				console.log("Classification name is empty/invalid - "
-						+ classificationName)
+			if (classificationOne === "" || classificationTwo === "" || classificationOne === classificationTwo) {
+				console.log("Classification names are empty/invalid - "
+						+ classificationOne + ", " + classificationTwo);
 			}
 			var msg = document.getElementById("msg");
 			msg.innerHTML = "Kindly Check your Inputs!";
@@ -172,23 +176,28 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Remove Classification</div>
+					<div class="card-header">Merge Classification</div>
 					<div class="card-body">
-						<form name="removeClassificationForm" method="post" name="removeClassification">
+						<form name="mergeClassificationForm" method="post" name="mergeClassification">
 							<div class="mb-3">
-								<label class="form-label">Classification:</label><select
+								<label class="form-label">Classification One:</label><select
 									class="form-select" aria-label="Default select example"
-									id="Classification">
+									id="classificationOne">
+								</select>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Classification Two:</label><select
+									class="form-select" aria-label="Default select example"
+									id="classificationTwo">
 								</select>
 							</div>
 							<div class="d-flex justify-content-center">
-								<input type="button" value="Remove" class="btn btn-primary"
+								<input type="button" value="Merge" class="btn btn-primary"
 									onClick="JavaScript:handleClick(this)">
 							</div>
 							<div class="mb-3">
 								<label id="msg" class="form-label"></label>
 							</div>
-
 						</form>
 					</div>
 				</div>

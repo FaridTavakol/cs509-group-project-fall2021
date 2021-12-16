@@ -143,6 +143,32 @@ public class ClassificationDAO {
 			throw new Exception("Failed in getting classification: " + e.getMessage());
 		}
 	}
+	
+	public Classification getClassificationByID(String classificationID) throws Exception
+	{
+		try
+		{
+
+			Classification classification = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationID=?;");
+			ps.setString(1, classificationID);
+			ResultSet resultSet = ps.executeQuery();
+
+			while (resultSet.next())
+			{
+				classification = generateClassification(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+
+			return classification;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Exception("Failed in getting classification: " + e.getMessage());
+		}
+	}
 
 	public boolean deleteClassification(Classification classification) throws Exception
 	{
@@ -255,7 +281,7 @@ public class ClassificationDAO {
 			Classification c2 = getClassification(two);
 			
 			if(deleteClassification(c2)) {
-				//reclassify all algorithms with classification two id to classification one
+				//reclassify all algorithms with classification two id
 			}
 			
 		}catch (Exception e) {

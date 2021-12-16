@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var removeClassification_url = "";
+	var mergeClassification_url = "";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 
 	var xhr = new XMLHttpRequest();
@@ -13,7 +13,7 @@
 		console.log(xhr.request);
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
-				var select = document.getElementById("Classification");
+				var select = document.getElementById("Classification One");
 				var js = JSON.parse(xhr.responseText);
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
@@ -71,7 +71,7 @@
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", removeClassification_url, true);
+			xhr.open("POST", mergeClassification_url, true);
 			console.log("3");
 			// send the collected data as JSON
 			xhr.send(js);
@@ -172,13 +172,13 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Remove Classification</div>
+					<div class="card-header">Classification Heirarchy</div>
 					<div class="card-body">
 						<form name="removeClassificationForm" method="post" name="removeClassification">
 							<div class="mb-3">
 								<label class="form-label">Classification:</label><select
 									class="form-select" aria-label="Default select example"
-									id="Classification">
+									id="classificationName">
 								</select>
 							</div>
 							<div class="d-flex justify-content-center">

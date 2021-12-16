@@ -5,15 +5,15 @@ public class GetClassificationByIdResponse {
 	public final String statusCode;
 	public final String classificationName;
 
-	GetClassificationByIdResponse(String classificaitonName)
+	public GetClassificationByIdResponse(String classificationName)
 	{
 		this.errorMessage = "Success!";
 		this.statusCode = "200";
-		this.classificationName = classificaitonName;
+		this.classificationName = classificationName;
 
 	}
 
-	GetClassificationByIdResponse(String statusCode, String errorMessage)
+	public GetClassificationByIdResponse(String statusCode, String errorMessage)
 	{
 		this.errorMessage = errorMessage;
 		this.statusCode = statusCode;
