@@ -248,6 +248,21 @@ public class ClassificationDAO {
 			throw new Exception("Failed to get classification heirarchy: " + e.getMessage());
 		}	
 	}
+	
+	public boolean mergeClassification(String one, String two) throws Exception{
+		try {
+			Classification c1 = getClassification(one);
+			Classification c2 = getClassification(two);
+			
+			if(deleteClassification(c2)) {
+				//reclassify all algorithms with classification two id to classification one
+			}
+			
+		}catch (Exception e) {
+			throw new Exception("Failed to merge classifications: " + e.getMessage());
+		}
+		return false;
+	}
 
 	
 }
