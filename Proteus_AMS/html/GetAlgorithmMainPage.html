@@ -114,27 +114,6 @@
 			Algorithm</button>
 	</div>
 </div>
-<!-- div class="list-group mx-0">
-		<label class="list-group-item d-flex gap-2"> <input
-			class="form-check-input flex-shrink-0" type="radio"
-			name="listGroupRadios" id="listGroupRadios1" value="" checked>
-			<span> First Implementation- [Language]- [Upload Date] <small
-				class="d-block text-muted">Author note goes here!</small>
-		</span>
-		</label> <label class="list-group-item d-flex gap-2"> <input
-			class="form-check-input flex-shrink-0" type="radio"
-			name="listGroupRadios" id="listGroupRadios2" value=""> <span>
-				Second Implementation- [Language]- [Upload Date] <small
-				class="d-block text-muted">Author note goes here!</small>
-		</span>
-		</label> <label class="list-group-item d-flex gap-2"> <input
-			class="form-check-input flex-shrink-0" type="radio"
-			name="listGroupRadios" id="listGroupRadios3" value=""> <span>
-				Third Implementation- [Language]- [Upload Date] <small
-				class="d-block text-muted">Author note goes here!</small>
-		</span>
-		</label>
-	</div-->
 </div>
 <!-- Footer-->
 <script
@@ -142,8 +121,31 @@
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 	crossorigin="anonymous"></script>
 <script type="text/javascript">
-	var name = sessionStorage.getItem("algorithmName");
-	var description = sessionStorage.getItem("algorithmDescription");
+	var getAlgorithmById_url = "https://hb11opuhn2.execute-api.us-east-2.amazonaws.com/beta/AllAlgorithmsResponse";
+	var algorithmId = sessionStorage.getItem("algorithmId");
+	// Create a post to get algorithm details to populate the page
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", add_algorithm_url, true);
+	console.log("3");
+	// send the collected data as JSON
+	xhr.send(js);
+
+	// This will process results and update HTML as appropriate. 
+	xhr.onloadend = function() {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			if (xhr.status == 200) {
+				console.log("XHR:" + xhr.responseText);
+				processResponse(xhr.responseText);
+			} else if (xhr.status == 400) {
+				alert("unable to process request");
+			}
+		} else {
+			processResponse("N/A");
+		}
+	};
+
 	var name1 = document.getElementById("name");
 	var detail = document.getElementById("detail");
 	name1.innerHTML = name;
