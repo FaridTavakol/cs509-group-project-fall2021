@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import org.json.*;
 import edu.wpi.cs.proteus.model.Classification;
 
 public class ClassificationDAO {
@@ -21,7 +22,7 @@ public class ClassificationDAO {
 	private Classification generateClassification(ResultSet resultSet) throws Exception {
 		String id = resultSet.getString("classificationID");
 		String name = resultSet.getString("classificationName");
-		String superClass = resultSet.getString("superClassification");
+		String superClass = resultSet.getString("superClassification");		
 		return new Classification(id, name, superClass);
 	}
 
@@ -159,5 +160,5 @@ public class ClassificationDAO {
 			throw new Exception("Failed to add classification: " + e.getMessage());
 		}
 	}
-
+	
 }

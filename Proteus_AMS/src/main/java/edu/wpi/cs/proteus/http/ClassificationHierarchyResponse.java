@@ -1,6 +1,6 @@
 package edu.wpi.cs.proteus.http;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import edu.wpi.cs.proteus.model.Classification;
 
@@ -18,7 +18,7 @@ public class ClassificationHierarchyResponse {
 	
 	// 200 means success
 	public ClassificationHierarchyResponse(int code, String error) {
-		list = new ArrayList<Classification>();
+		list = new LinkedList<Classification>();
 		this.httpCode = code;
 		this.error = error;
 	}
