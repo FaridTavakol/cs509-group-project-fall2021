@@ -168,4 +168,22 @@ public class AlgorithmsDAO {
 		String algorithmId = resultSet.getString("algorithmId");
 		return new Algorithm(algorithmName, classificationId, algorithmId);
 	}
+
+	public boolean reclassifyAlgorithm(String algorithmId_, String classificationId_) throws Exception
+	{
+		try
+		{
+			PreparedStatement ps = conn
+					.prepareStatement("UPDATE " + tblName + " SET classificationId = ? WHERE algorithmId = ?;");
+			ps.setString(1, classificationId_);
+			ps.setString(2, algorithmId_);
+			int numAffected = ps.executeUpdate();
+			ps.close();
+			return (numAffected == 1);
+
+		} catch (Exception e)
+		{
+			throw new Exception("Failed to Reclassify algorithm(sql): " + e.getMessage());
+		}
+	}
 }
