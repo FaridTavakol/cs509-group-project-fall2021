@@ -19,9 +19,14 @@
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
 					var option = document.createElement("option");
-					option.value = res[i].classificationID;
+					option.value = res[i].classificationName;
 					option.text = res[i].classificationName;
 					selectOne.appendChild(option);
+				}
+				for (var i = 0; i < res.length; i++) {
+					var option = document.createElement("option");
+					option.value = res[i].classificationName;
+					option.text = res[i].classificationName;
 					selectTwo.appendChild(option);
 				}
 			} else if (xhr.status == 400) {

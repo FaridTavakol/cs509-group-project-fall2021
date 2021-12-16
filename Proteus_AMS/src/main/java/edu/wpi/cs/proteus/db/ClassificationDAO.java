@@ -110,11 +110,47 @@ public class ClassificationDAO {
 			ps.setString(2, classificationName);
 			ps.setString(3, superClass);
 			ps.execute();
-			return true;
+			ps.close();
+			
+			if(addSubClass(classificationName, superClass)) return true;
+			else return false;
 
 		} catch (Exception e)
 		{
 			throw new Exception("Failed to add classification: " + e.getMessage());
+		}
+	}
+	
+	public boolean addSubClass(String classificationName, String superClass) throws Exception{
+		try {
+			
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
+			ps.setString(1, superClass);
+			ResultSet resultSet = ps.executeQuery();
+			
+			String subClass = "";
+			while (resultSet.next())
+			{
+				subClass = resultSet.getString("subClassification");
+			}
+			
+			ps.close();
+			resultSet.close();
+			
+			if(subClass != null) {
+				subClass += ", " + classificationName;
+			}else subClass = classificationName;
+			
+			PreparedStatement ps1 = conn.prepareStatement("UPDATE Classification SET subClassification= ? WHERE classificationName=?;");
+			ps1.setString(1, subClass);
+			ps1.setString(2, superClass);
+			int affected = ps1.executeUpdate();
+			
+			if(affected > 0) return true;
+			else return false;
+			
+		}catch(Exception e) {
+			throw new Exception("Failed to add sub classification: " + e.getMessage());
 		}
 	}
 
