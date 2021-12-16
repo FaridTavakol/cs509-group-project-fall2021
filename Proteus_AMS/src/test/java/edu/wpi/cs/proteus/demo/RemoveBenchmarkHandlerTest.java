@@ -8,15 +8,12 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.cs.proteus.http.AllBenchmarkResponse;
+import edu.wpi.cs.proteus.http.Response;
+import edu.wpi.cs.proteus.model.Benchmark;
 
-/**
- * A simple test harness for locally invoking your Lambda function handler.
- */
-public class GetAnImplementationBenchmarkHanderTest {
+public class RemoveBenchmarkHandlerTest {
 
-    private static Object input;
-
+	private static Object input;
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
@@ -27,19 +24,25 @@ public class GetAnImplementationBenchmarkHanderTest {
         TestContext ctx = new TestContext();
 
         // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
+        ctx.setFunctionName("compute");
 
         return ctx;
     }
 
     @Test
-    public void testGetAnImplementationBenchmarkHander() {
-        GetAnImplementationBenchmarkHandler handler = new GetAnImplementationBenchmarkHandler();
+    public void testRemoveBenchmarkHandler() {
+        RemoveBenchmarkHandler handler = new RemoveBenchmarkHandler();
         Context ctx = createContext();
 
-        AllBenchmarkResponse output = handler.handleRequest(input, ctx);
+        String SAMPLE_INPUT_STRING = "{\"ID\":\"4\",\"requestedBy\":\"A\"}";
+        Response output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        Assert.assertEquals(200,output.statusCode);
+        
+        
+       
     }
 }
+
+

@@ -8,15 +8,11 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.cs.proteus.http.Response;
+import edu.wpi.cs.proteus.http.AllBenchmarkResponse;
+import edu.wpi.cs.proteus.http.AllImplementationsResponse;
 
-/**
- * A simple test harness for locally invoking your Lambda function handler.
- */
-public class DeleteUserHandlerTest {
-
-    private static Object input;
-
+public class GetImplementationByAlgoHandlerTest {
+	private static Object input;
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.
@@ -33,15 +29,21 @@ public class DeleteUserHandlerTest {
     }
 
     @Test
-    public void testDeleteUserHandler() {
-        DeleteUserHandler handler = new DeleteUserHandler();
+    public void testGetImplementationByAlgoHandler() {
+    	GetImplementationByAlgoHandler handler = new GetImplementationByAlgoHandler();
         Context ctx = createContext();
 
-        String SAMPLE_INPUT_STRING = "{\"email\": \"atifa_sarwar@hotmail.com\", \"password\": \"1234\"}";
-        
-        Response output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
+        String SAMPLE_INPUT_STRING = "{\"ID\":\"2497a8f7-0c3e-4972-9983-d43052255e0e\",\"requestedBy\":\"A\"}";
+        AllImplementationsResponse output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals(200,output.statusCode);
+        Assert.assertEquals(200,output.httpCode);
+        
+        output=new AllImplementationsResponse(400, "");
+       
     }
 }
+
+
+
+

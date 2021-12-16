@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 
 import edu.wpi.cs.proteus.http.AllPIResponse;
+import edu.wpi.cs.proteus.http.Response;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
@@ -27,7 +28,7 @@ public class GetPIHandlerTest {
         TestContext ctx = new TestContext();
 
         // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
+        ctx.setFunctionName("compute");
 
         return ctx;
     }
@@ -37,9 +38,12 @@ public class GetPIHandlerTest {
         GetPIHandler handler = new GetPIHandler();
         Context ctx = createContext();
 
-        AllPIResponse output = handler.handleRequest(input, ctx);
+        String SAMPLE_INPUT_STRING = "{\"ID\":\"24bc9b69-028b-4a70-b0ec-0e3f26d6088f\",\"requestedBy\":\"atifa_sarwar@hotmail.com\"}";
+        AllPIResponse output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
 
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        Assert.assertEquals(200,output.httpCode);
+        
+        output = new AllPIResponse(400,"");
+        
     }
 }
