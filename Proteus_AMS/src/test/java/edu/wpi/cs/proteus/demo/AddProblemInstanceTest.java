@@ -28,7 +28,7 @@ public class AddProblemInstanceTest {
         TestContext ctx = new TestContext();
 
         // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
+        ctx.setFunctionName("compute");
 
         return ctx;
     }
@@ -38,9 +38,24 @@ public class AddProblemInstanceTest {
         AddProblemInstance handler = new AddProblemInstance();
         Context ctx = createContext();
 
-        Response output = handler.handleRequest(input, ctx);
+        PIRequest req= new PIRequest("24bc9b69-028b-4a70-b0ec-0e3f26d6088f$Testing$Testing","","","Admin.html","testing");
+        Response output = handler.handleRequest(req, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+       Assert.assertEquals(200, output.statusCode);
+       req=new PIRequest();
+       req.setAlgorithmID("1$a$a");
+       req.setURL("Example");
+       req.setName("");
+       req.setDescription("");
+       req.setFileContent("Example");
+       
+       output = handler.handleRequest(req, ctx);
+       Assert.assertEquals(200, output.statusCode);
+       
+       req= new PIRequest("24bc9b69-028b-4a70-b0ec-0e3f26d6088f$Testing$Testing","","","Admin.html","testing","A");
+       output = handler.handleRequest(req, ctx);
+       Assert.assertEquals(200, output.statusCode);
+      
     }
 }
