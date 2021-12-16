@@ -121,7 +121,9 @@
 <script type="text/javascript">
 	var getAlgorithmById_url = "https://mkdrvnol8k.execute-api.us-east-2.amazonaws.com/beta/GetAlgorithmById";
 	var deleteAlgorithmById_url = "https://osfq1u112l.execute-api.us-east-2.amazonaws.com/beta/DeleteAlgorithmById"
+	var getClassificationNameById_url = "https://ekufns1h5g.execute-api.us-east-2.amazonaws.com/beta/GetClassificationNameById"
 	var algorithmId = sessionStorage.getItem("algorithmId");
+	
 	// Create a post to get algorithm details to populate the page
 	var data = {};
 	data["algorithmId"] = algorithmId;
@@ -132,6 +134,7 @@
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", getAlgorithmById_url, true);
 	console.log("3");
+	
 	// send the collected data as JSON
 	xhr.send(js);
 
@@ -142,53 +145,80 @@
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
 
-				var js = JSON.parse(xhr.responseText);
-				var name = js.algorithmName;
-				var classificationName1 = js.classificationId;
-				var name1 = document.getElementById("name");
-				var classificationName = document.getElementById("classificationName");
-				name1.innerHTML = name;
-				classificationName.innerHTML = classificationName1;
+				var js1 = JSON.parse(xhr.responseText);
+				var name = js1.algorithmName;
+				var classificationId = js1.classificationId;
+				var data1 = {}
+				data1["classificationId"] = classificationId;
 
+				var js2 = JSON.stringify(data1);
+				console.log("JS:" + js2);
+				var xhr2 = new XMLHttpRequest();
+				xhr2.open("POST", getClassificationNameById_url, true);
+				console.log("Getting Classification Name");
+				// send the collected data as JSON
+				xhr2.send(js2);
+				xhr2.onloadend = function() {
+					console.log(xhr2);
+					console.log(xhr2.request);
+					if (xhr2.readyState == XMLHttpRequest.DONE) {
+						if (xhr2.status == 200) {
+							var js3 = JSON.parse(xhr2.responseText);
+							var classificationName = js3.classificationName;
+							var classificationNameDoc = document
+							.getElementById("classificationName");
+							classificationNameDoc.innerHTML = classificationName;
+							
+						} else if (xhr2.status == 400)
+
+						{
+							alert("unable to process request");
+						}
+					} else {
+						processResponse("N/A");
+
+					}
+				};
+				var nameDoc = document.getElementById("name");
+				nameDoc.innerHTML = name;
+			
+			} else if (xhr.status == 400) {
+				alert("unable to process request");
 			}
-		} else if (xhr.status == 400) {
-			alert("unable to process request");
 		} else {
 			processResponse("N/A");
 		}
 	};
-	
-	
+
 	function deleteClick(e) {
-		
-		
-			data["algorithmId"] = algorithmId;
-			console.log("2");
-			var js = JSON.stringify(data);
-			console.log("JS:" + js);
 
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", deleteAlgorithmById_url, true);
-			console.log("3");
-			// send the collected data as JSON
-			xhr.send(js);
+		data["algorithmId"] = algorithmId;
+		console.log("2");
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
 
-			// This will process results and update HTML as appropriate. 
-			xhr.onloadend = function() {
-				console.log(xhr);
-				console.log(xhr.request);
-				if (xhr.readyState == XMLHttpRequest.DONE) {
-					if (xhr.status == 200) {
-						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
-						
-					} else if (xhr.status == 400) {
-						alert("unable to process request");
-					}
-				} else {
-					processResponse("N/A");
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", deleteAlgorithmById_url, true);
+		console.log("3");
+		// send the collected data as JSON
+		xhr.send(js);
+
+		// This will process results and update HTML as appropriate. 
+		xhr.onloadend = function() {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+					console.log("XHR:" + xhr.responseText);
+					processResponse(xhr.responseText);
+
+				} else if (xhr.status == 400) {
+					alert("unable to process request");
 				}
-			};
+			} else {
+				processResponse("N/A");
+			}
+		};
 	}
 	function processResponse(result) {
 		console.log("result:" + result);
@@ -198,7 +228,7 @@
 		var statusCode = js["statusCode"];
 
 		if (statusCode == 200) {
-					
+
 			window.location.href = "Registered.html";
 		} else {
 			// Update computation result
@@ -207,8 +237,6 @@
 		}
 
 	}
-	
-
 </script>
 </body>
 
