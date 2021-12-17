@@ -8,16 +8,12 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.cs.proteus.http.GetClassificationRequest;
-import edu.wpi.cs.proteus.http.GetClassificationResponse;
+import edu.wpi.cs.proteus.http.AllClassificationsResponse;
+import edu.wpi.cs.proteus.http.ClassificationHierarchyResponse;
 
-/**
- * A simple test harness for locally invoking your Lambda function handler.
- */
-public class GetClassificationObjbyIDHandlerTest {
-
+public class ClassificationHierarchyHandlerTest {
+	
 	private static Object input;
-
 	@BeforeClass
 	public static void createInput() throws IOException {
 		// TODO: set up your sample input object here.
@@ -34,17 +30,19 @@ public class GetClassificationObjbyIDHandlerTest {
 	}
 
 	@Test
-	public void testGetClassificationObjbyIDHandler() {
-		GetClassificationObjbyIDHandler handler = new GetClassificationObjbyIDHandler();
+	public void testClassificationHierarchyHandler() {
+		ClassificationHierarchyHandler handler = new ClassificationHierarchyHandler();
 		Context ctx = createContext();
 
-		GetClassificationResponse output = handler.handleRequest(input, ctx);
+		
+		ClassificationHierarchyResponse output = handler.handleRequest(input, ctx);
 
 		// TODO: validate output here if needed.
 		Assert.assertEquals(200, output.httpCode);
-		output.toString();
-
-		output = new GetClassificationResponse(200, "A");
+		
+		
+		output = new ClassificationHierarchyResponse(400, "");
+		
 
 	}
 }

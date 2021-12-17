@@ -52,7 +52,7 @@ public class AddClassificationHandlerTest {
        output = handler.handleRequest(input, ctx);
        Assert.assertEquals(400, output.httpCode);
        
-
-      
+      output.toString();
+      input.toString();
     }
 }

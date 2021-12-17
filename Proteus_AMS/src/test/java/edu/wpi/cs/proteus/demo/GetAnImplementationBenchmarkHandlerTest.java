@@ -13,8 +13,8 @@ import edu.wpi.cs.proteus.http.Response;
 
 public class GetAnImplementationBenchmarkHandlerTest {
 	
-	
 	private static Object input;
+	
     @BeforeClass
     public static void createInput() throws IOException {
         // TODO: set up your sample input object here.

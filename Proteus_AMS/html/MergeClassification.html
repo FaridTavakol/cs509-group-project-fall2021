@@ -2,8 +2,8 @@
 
 <head>
 <script type="text/javascript">
-	var mergeClassification_url = "";
-	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var mergeClassification_url = "https://6x2blxeyr8.execute-api.us-east-2.amazonaws.com/beta/mergeClassifications";
+	var getClassification_url = "https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", getClassification_url, true);
@@ -48,8 +48,8 @@
 		console.log("result:" + result);
 		var js = JSON.parse(result);
 
-		var message = js["Message"];
-		var statusCode = js["statusCode"];
+		var message = js["response"];
+		var statusCode = js["httpCode"];
 
 		if (statusCode == 200) {
 			sessionStorage.setItem("classificationOne", message);

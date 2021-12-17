@@ -21,6 +21,10 @@ public class Implementation {
 		this.benchmarkIDs = benchmarkIDs;
 	}
 	
+	public Implementation() {
+		
+	}
+	
 	public String getId() {
 		return this.id;
 	}
