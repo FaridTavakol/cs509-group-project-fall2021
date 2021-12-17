@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,123 +7,6 @@
 	<script src="AddImplementation.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<title>Algorithm Management System</title>
-<!-- Bootstrap CSS -->
-<script type='text/javascript'>
-	var add_url = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/uploadImplementation";
-	function notEmpty(algorithmName, language, url) {
-		return !(algorithmName === "" || language === "" || url === "");
-	}
-
-	function processResponse(result) {
-		console.log("result:" + result);
-		var js = JSON.parse(result);
-
-		var role = js["Message"];
-		var statusCode = js["statusCode"];
-
-		if (statusCode == 200) {
-			window.location.href = "Implementation.html";
-		} else {
-			// Update computation result
-			var msg = document.getElementById("Msg");
-			msg.innerHTML = js["Message"];
-		}
-
-	}
-
-	function handleClick(e) {
-		var details = document.getElementById('details').value;
-		var url = document.getElementById('theFile').value.split(/(\\|\/)/g)
-				.pop();
-		var algorithmName = sessionStorage.getItem("algorithmName");
-		var extRE = /(?:\.([^.]+))?$/;
-		var extension = extRE.exec(url)[1];
-		var language = "Other";
-
-		if (extension === "java") {
-			language = "Java";
-		}
-		if (extension === "py") {
-			language = "Python";
-		}
-		if (extension === "c") {
-			language = "C";
-		}
-		if (extension === "CPP") {
-			language = "C++";
-		}
-		if (extension === "js") {
-			language = "JavaScript";
-		}
-		if (extension === "html") {
-			language = "HTML";
-		}
-
-		var re = /(\.java|\.html|\.h|\.H|\.hxx|\.Hxx|\.HXX|\.c|\.CPP|\.cxx|\.CXX|\.pl|\.PL|\.sbl|\.sh|\.py|\.cs|\.vb|\.js|\.ts|\.tsx|\.jsx|\.php|\.phps|\.swift|\.sql|\.rb|\.m|\.asm|\.s|\.pl|\.PL|\.mat|\.r)$/i;
-
-		if (notEmpty(algorithmName, language, url) && re.exec(url)) {
-			console.log("Valid Input.")
-			setTimeout(function() {
-				var data = {};
-				data["algorithmName"] = algorithmName;
-				data["language"] = language;
-				data["details"] = details;
-				data["url"] = url;
-				sessionStorage.setItem("implementationURL", url);
-				var js = JSON.stringify(data);
-				var xhr = new XMLHttpRequest();
-				xhr.open("POST", add_url, true);
-				// send the collected data as JSON
-				xhr.send(js);
-				// This will process results and update HTML as appropriate. 
-				xhr.onloadend = function() {
-					if (xhr.readyState == XMLHttpRequest.DONE) {
-						if (xhr.status == 200) {
-							console.log("XHR:" + xhr.responseText);
-							processResponse(xhr.responseText);
-						} else if (xhr.status == 400) {
-							alert("Unable to process request");
-							console.log("UNABLE TO PROCESS REQUEST");
-						}
-					} else {
-						processResponse("N/A");
-					}
-				};
-			}, 100);
-		} else {
-			var msg = document.getElementById("Msg");
-			if (notEmpty(algorithmName, language, url)) {
-				console.log("Algo name  - " + algorithmName);
-				console.log("Language  - " + language);
-				console.log("Url  - " + url);
-				msg.innerHTML = "Please check your input. The file may not have been selected properly.";
-			}
-			if (!re.exec(url)) {
-				alert("File extension not supported!");
-			}
-		}
-
-		function SubmitWithCallback(form, frame, successFunction) {
-			var callback = function() {
-				if (successFunction)
-					successFunction();
-				frame.onload = null;
-			};
-
-			frame.onload = callback;
-			form.submit();
-		}
-	}
-</script>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous">
-
-
-<title>Algorithm Management System</title>
->>>>>>> 6696c65 Html Pages with menu
 </head>
 <body>
 	<nav class="py-2 bg-light border-bottom" id='admin'
@@ -296,12 +178,10 @@
 				<div class="card">
 					<div class="card-header">Add Implementation</div>
 					<div class="mb-5">
-						<label class="form-label">Description (Optional)</label> <input
-							class="form-control" name="details" id="details">
+						<label class="form-label">Description (Optional)</label>
+						<input class="form-control" name="details" id="details">
 					</div>
-					<form name="addFileForm"
-						action="https://proteus-implementations.s3.amazonaws.com/"
-						method="post" enctype="multipart/form-data"
+					<form name="addFileForm" action="https://proteus-implementations.s3.amazonaws.com/" method="post" enctype="multipart/form-data"
 						onsubmit="JavaScript:handleClick(this)">
 						<input type="hidden" name="key"              value="${filename}" />
 						<input type="hidden" name="x-amz-algorithm"  value="AWS4-HMAC-SHA256" />
@@ -311,7 +191,6 @@
 						<input type="hidden" name="x-amz-signature"  value="43c265492c25d51b8d8b9f91ecf5ca098d39d4fb14f1ac8f3015680b538f7b66" /> 
 						<input type="file"   name="file" id="theFile"/> <br />
 						<input type="submit" name="submit"           value="Upload Implementation" />
-
 						<div class="mb-3">
 							<label class="form-label" id="Msg"></label>
 						</div>
@@ -342,4 +221,3 @@
 	</script>
 </body>
 </html>
-

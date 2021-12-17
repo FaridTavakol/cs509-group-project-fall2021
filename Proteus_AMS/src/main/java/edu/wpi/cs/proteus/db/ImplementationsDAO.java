@@ -29,29 +29,6 @@ public class ImplementationsDAO {
 		}
 	}
 
-	public List<Implementation> getAllImplementations() throws Exception {
-		try {
-			Statement stmt = conn.createStatement();
-			String query = "SELECT * FROM " + tblName;
-			ResultSet resultSet = stmt.executeQuery(query);
-			List<Implementation> implementations = new ArrayList<>();
-
-			if (resultSet != null) {
-				while (resultSet.next()) {
-					Implementation implementation = generateImplementation(resultSet);
-					implementations.add(implementation);
-				}
-				resultSet.close();
-				stmt.close();
-			}
-
-			return implementations;
-
-		} catch (Exception e) {
-			throw new Exception("Failed in getting implementations: " + e.getMessage());
-		}
-	}
-
 	public List<Implementation> getAllImplementations(String algorithmID) throws Exception {
 		try {
 			Statement stmt = conn.createStatement();
