@@ -14,7 +14,12 @@ import edu.wpi.cs.proteus.http.ClassificationHierarchyResponse;
 import edu.wpi.cs.proteus.http.DeleteAlgorithmRequest;
 import edu.wpi.cs.proteus.http.GetAlgorithmByIdRequest;
 import edu.wpi.cs.proteus.http.GetAlgorithmByIdResponse;
+import edu.wpi.cs.proteus.http.GetAlgorithmIdByNameRequest;
 import edu.wpi.cs.proteus.http.GetAlgorithmIdByNameResponse;
+import edu.wpi.cs.proteus.http.GetClassificationResponse;
+import edu.wpi.cs.proteus.http.MergeClassificationRequest;
+import edu.wpi.cs.proteus.http.MergeClassificationResponse;
+import edu.wpi.cs.proteus.http.ReclassifyAlgorithmRequest;
 
 public class SampleTesting {
 
@@ -68,5 +73,25 @@ public class SampleTesting {
 		GetAlgorithmIdByNameResponse a10=new GetAlgorithmIdByNameResponse("A","100");
 		a10=new GetAlgorithmIdByNameResponse();
 
+		MergeClassificationRequest b1= new MergeClassificationRequest();
+		b1.toString();
+		
+		MergeClassificationResponse b2=new MergeClassificationResponse("S");
+		b2.toString();
+		
+		
+		ReclassifyAlgorithmRequest raa = new ReclassifyAlgorithmRequest("algorithmId","classificationId");
+		raa=new ReclassifyAlgorithmRequest();
+		raa.getAlgorithmId();
+		raa.getClassificationId();
+		
+		GetAlgorithmIdByNameRequest dd=new GetAlgorithmIdByNameRequest();
+		dd.toString();
+		
+		GetAlgorithmIdByNameResponse ab=new GetAlgorithmIdByNameResponse("A");
+		
+		GetClassificationResponse qw=new GetClassificationResponse(100,"1");
+		ab.toString();
+		
 	}
 }
