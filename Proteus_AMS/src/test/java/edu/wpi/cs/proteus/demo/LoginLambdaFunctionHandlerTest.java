@@ -58,7 +58,8 @@ public class LoginLambdaFunctionHandlerTest {
         response = handler.handleRequest(req, ctx);
 		Assert.assertEquals(400, response.statusCode);
 		
-		
+		req=new LoginRequest();
+		req.setPassword("A");
     
     }
 }

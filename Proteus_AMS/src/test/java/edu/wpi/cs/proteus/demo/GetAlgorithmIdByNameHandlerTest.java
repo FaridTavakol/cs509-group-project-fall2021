@@ -43,5 +43,6 @@ public class GetAlgorithmIdByNameHandlerTest {
 		String ID = output.algorithmId;
 		input.getAlgorithmName();
 
+		input=new GetAlgorithmIdByNameRequest();
 	}
 }

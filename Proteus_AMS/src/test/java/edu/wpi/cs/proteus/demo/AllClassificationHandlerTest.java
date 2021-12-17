@@ -8,14 +8,11 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.cs.proteus.http.GetClassificationRequest;
-import edu.wpi.cs.proteus.http.GetClassificationResponse;
+import edu.wpi.cs.proteus.http.AddClassificationRequest;
+import edu.wpi.cs.proteus.http.AddClassificationResponse;
+import edu.wpi.cs.proteus.http.AllClassificationsResponse;
 
-/**
- * A simple test harness for locally invoking your Lambda function handler.
- */
-public class GetClassificationObjbyIDHandlerTest {
-
+public class AllClassificationHandlerTest {
 	private static Object input;
 
 	@BeforeClass
@@ -34,17 +31,17 @@ public class GetClassificationObjbyIDHandlerTest {
 	}
 
 	@Test
-	public void testGetClassificationObjbyIDHandler() {
-		GetClassificationObjbyIDHandler handler = new GetClassificationObjbyIDHandler();
+	public void testAllClassificationHandler() {
+		AllClassificationsHandler handler = new AllClassificationsHandler();
 		Context ctx = createContext();
 
-		GetClassificationResponse output = handler.handleRequest(input, ctx);
+		
+		AllClassificationsResponse output = handler.handleRequest(input, ctx);
 
 		// TODO: validate output here if needed.
 		Assert.assertEquals(200, output.httpCode);
-		output.toString();
 
-		output = new GetClassificationResponse(200, "A");
+		
 
 	}
 }
