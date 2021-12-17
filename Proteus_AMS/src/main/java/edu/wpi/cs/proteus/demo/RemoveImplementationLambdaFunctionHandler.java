@@ -24,9 +24,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import edu.wpi.cs.proteus.db.ImplementationsDAO;
+import edu.wpi.cs.proteus.db.LogDAO;
 import edu.wpi.cs.proteus.http.Response;
 import edu.wpi.cs.proteus.http.SimpleImplementationRequest;
 import edu.wpi.cs.proteus.model.Implementation;
+import edu.wpi.cs.proteus.model.Log;
 
 public class RemoveImplementationLambdaFunctionHandler implements RequestStreamHandler {
 
@@ -43,11 +45,7 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
         	logger.log("Input: " + reader.toString());
     		logger.log("Loading Lambda handler of RemoveImplementation");
     		
-			ImplementationsDAO implementationsDAO = new ImplementationsDAO();
-			Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
-			
-			boolean result = implementationsDAO.removeImplementation(simpleImplementationRequest.getImplementationID());
-			//boolean deleteResult = removeFileFromS3(implementation.getUrl());
+    		boolean result = removeImplementation(simpleImplementationRequest);
 	        
 			if(result) {
 				String response = "Implementation removed successfully!";
@@ -58,7 +56,7 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
 			}
         }
         catch (Exception exception) {
-        	Response response = new Response(400, exception.getMessage());
+        	Response response = new Response(400, "Failed to remove Implementation: " +  exception.getMessage());
         	logger.log(exception.toString());
         	writer.write(gson.toJson(response));
         }
@@ -68,8 +66,27 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
         }
     }
 
+    private boolean removeImplementation(SimpleImplementationRequest simpleImplementationRequest) throws Exception {
+    	try {
+			ImplementationsDAO implementationsDAO = new ImplementationsDAO();
+			String requestedBy = simpleImplementationRequest.getRequestedBy();
+			
+			boolean result = implementationsDAO.removeImplementation(simpleImplementationRequest.getImplementationID());
+			//boolean deleteResult = removeFileFromS3(implementation.getUrl());
+			
+			if (result) {
+				Log entry = new Log(requestedBy, "Remove Implementation", java.time.LocalDate.now().toString());
+				LogDAO ldao = new LogDAO();
+				return ldao.addLogEntry(entry);
+			}
+    	} catch (Exception e) {
+    		throw new Exception(e.getMessage());
+    	}
+		
+    	return false;
+    }
     
-    public static boolean removeFileFromS3(String key) throws IOException {
+    private static boolean removeFileFromS3(String key) throws IOException {
         Regions clientRegion = Regions.US_EAST_2;
         String bucketName = "proteus-implementations";
         String objectKey = key;

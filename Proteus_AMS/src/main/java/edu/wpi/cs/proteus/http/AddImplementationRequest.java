@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AddImplementationRequest {
-	@JsonProperty("algorithmName") String algorithmName;
+	@JsonProperty("algorithmID") String algorithmID;
 	@JsonProperty("language") String language;
 	@JsonProperty("details") String details;
 	@JsonProperty("url") String url;
+	@JsonProperty("requestedBy") String requestedBy;
 
 	@JsonCreator
-	public AddImplementationRequest(@JsonProperty("algorithmName") String algorithmName, @JsonProperty("language") String language, 
-			@JsonProperty("details") String details, @JsonProperty("url") String url) {
-		this.algorithmName = algorithmName;
+	public AddImplementationRequest(@JsonProperty("algorithmID") String algorithmID, @JsonProperty("language") String language, 
+			@JsonProperty("details") String details, @JsonProperty("url") String url, @JsonProperty("requestedBy") String requestedBy) {
+		this.algorithmID = algorithmID;
 		this.language = language;
 		this.details = details;
 		this.url = url;
+		this.requestedBy = requestedBy;
 	}
 	
 	public AddImplementationRequest() {
@@ -24,14 +26,14 @@ public class AddImplementationRequest {
 	
 	@Override
 	public String toString() {
-		return "AlgorimthName: " + this.algorithmName + ". Language: " + this.language + ". Details: " + this.details + ". URL: " + this.url;
+		return "AlgorimthID: " + this.algorithmID + ". Language: " + this.language + ". Details: " + this.details + ". URL: " + this.url;
 	}
 
-	public String getAlgorithmName() {
-		return algorithmName;
+	public String getAlgorithmID() {
+		return algorithmID;
 	}
-	public void setAalgorithmName(String algorithmName) {
-		this.algorithmName = algorithmName;
+	public void setAlgorithmID(String algorithmID) {
+		this.algorithmID = algorithmID;
 	}
 	public String getLanguage() {
 		return language;
@@ -50,5 +52,11 @@ public class AddImplementationRequest {
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getRequestedBy() {
+		return this.requestedBy;
+	}
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
 	}
 }

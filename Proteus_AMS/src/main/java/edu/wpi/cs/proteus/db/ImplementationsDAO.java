@@ -48,15 +48,15 @@ public class ImplementationsDAO {
 			return implementations;
 
 		} catch (Exception e) {
-			throw new Exception("Failed in getting implementations: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
+			throw new Exception("Failed in getting implementations: " + e.getMessage());
 		}
 	}
 
-	public List<Implementation> getAllImplementations(String algoID) throws Exception {
+	public List<Implementation> getAllImplementations(String algorithmID) throws Exception {
 		try {
 			Statement stmt = conn.createStatement();
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName +" WHERE algorithmID=?;");
-			ps.setString(1, algoID);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmID=?;");
+			ps.setString(1, algorithmID);
 			ResultSet resultSet = ps.executeQuery();
 			List<Implementation> implementations = new ArrayList<>();
 
@@ -67,12 +67,13 @@ public class ImplementationsDAO {
 				}
 				resultSet.close();
 				stmt.close();
+				
+				return implementations;
 			}
 
-			return implementations;
-
+			return null;
 		} catch (Exception e) {
-			throw new Exception("Failed in getting implementations by AlgoID: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
+			throw new Exception("Failed in getting implementations by AlgoID: " + e.getMessage());
 		}
 	}
 
@@ -95,11 +96,7 @@ public class ImplementationsDAO {
 				return null;
 
 		} catch (Exception e) {
-			String stackTrace = "";
-			for (StackTraceElement elem : e.getStackTrace()) {
-				stackTrace = stackTrace + "\n" + elem.toString();
-			}
-			throw new Exception("Failed getting implementation for id= " + implementationID + ": " + e.getMessage() + ". \nSTACK TRACE:\n\n" + stackTrace);
+			throw new Exception("Failed getting implementation for id= " + implementationID + ": " + e.getMessage());
 		}
 	}
 

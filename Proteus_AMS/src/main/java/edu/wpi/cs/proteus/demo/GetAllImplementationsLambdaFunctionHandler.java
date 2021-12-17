@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
@@ -18,17 +20,15 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.wpi.cs.proteus.db.AlgorithmsDAO;
 import edu.wpi.cs.proteus.db.ImplementationsDAO;
 import edu.wpi.cs.proteus.db.LogDAO;
-import edu.wpi.cs.proteus.http.GetImplementationResponse;
+import edu.wpi.cs.proteus.http.GetAllImplementationsRequest;
+import edu.wpi.cs.proteus.http.GetAllImplementationsResponse;
 import edu.wpi.cs.proteus.http.Response;
-import edu.wpi.cs.proteus.http.SimpleImplementationRequest;
-import edu.wpi.cs.proteus.model.Algorithm;
 import edu.wpi.cs.proteus.model.Implementation;
 import edu.wpi.cs.proteus.model.Log;
 
-public class GetImplementationLambdaFunctionHandler implements RequestStreamHandler {
+public class GetAllImplementationsLambdaFunctionHandler implements RequestStreamHandler {
 
 	Gson gson = new GsonBuilder().setPrettyPrinting().create();
     @Override
@@ -36,23 +36,24 @@ public class GetImplementationLambdaFunctionHandler implements RequestStreamHand
         LambdaLogger logger = context.getLogger();;
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("US-ASCII")));
         PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("US-ASCII"))));
+        GetAllImplementationsRequest getAllImplementationsRequest = null;
         
         try {
-        	SimpleImplementationRequest simpleImplementationRequest = gson.fromJson(reader, SimpleImplementationRequest.class);
+        	getAllImplementationsRequest = gson.fromJson(reader, GetAllImplementationsRequest.class);
         	logger.log("Stream Type: " + inputStream.getClass().toString());
         	logger.log("Input: " + reader.toString());
     		logger.log("Loading Lambda handler of GetImplementation");
     		
-			Map<String, String> result = getImplementation(simpleImplementationRequest);
+    		List<Map<String, String>> result = getAllImplementations(getAllImplementationsRequest);
 			
 			if (result != null) {
-				writer.write(gson.toJson(new GetImplementationResponse(200, result)));
+				writer.write(gson.toJson(new GetAllImplementationsResponse(200, result)));
 			} else {
-				writer.write(gson.toJson(new Response(400, "Failed to get implementation.")));
+				writer.write(gson.toJson(new Response(400, "Failed to get all implementations.")));
 			}
         }
         catch (Exception exception) {
-        	Response response = new Response(400, "Failed to get implementation: " + exception.getMessage());
+        	Response response = new Response(400, "Request: " + getAllImplementationsRequest.toString() + ". Failed to get implementation. " + exception.getMessage());
         	logger.log(exception.toString());
         	writer.write(gson.toJson(response));
         }
@@ -62,25 +63,26 @@ public class GetImplementationLambdaFunctionHandler implements RequestStreamHand
         }
     }
     
-    private Map<String, String> getImplementation(SimpleImplementationRequest simpleImplementationRequest) throws Exception {
+    private List<Map<String, String>> getAllImplementations(GetAllImplementationsRequest getAllImplementationsRequest) throws Exception {
     	ImplementationsDAO implementationsDAO = new ImplementationsDAO();
-//    	AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
-		String requestedBy = simpleImplementationRequest.getRequestedBy();
-//		Algorithm algorithm = null;
+		List<Implementation> implementations;
+		String requestedBy = getAllImplementationsRequest.getRequestedBy();
 		
 		try {
-			Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
+			String algorithmID = getAllImplementationsRequest.getAlgorithmID();
+			implementations = implementationsDAO.getAllImplementations(algorithmID);
 			
-			if (implementation != null) {
-//				algorithm = algorithmsDAO.getAlgorithmByID(implementation.getAlgorithmID());
-				Map<String, String> message = new HashMap<>();
-				message.put("implementationURL", implementation.getUrl());
-				message.put("implementationLanguage", implementation.getLanguage());
-				message.put("implementationDetails", implementation.getDetails());
-//				message.put("algorithmName", algorithm.getAlgorithmName());
-
+			if (implementations != null) {
+				List<Map<String, String>> message = new ArrayList<>();
+				for (Implementation i : implementations) {
+					Map<String, String> map = new HashMap<>();
+					map.put("implementationLanguage", i.getLanguage());
+					map.put("implementationID", i.getId());
+					message.add(map);
+				}
+				
 				if (message.size() > 0) {
-					Log entry = new Log(requestedBy, "Get Implementation", java.time.LocalDate.now().toString());
+					Log entry = new Log(requestedBy, "Get All Implementations", java.time.LocalDate.now().toString());
 					LogDAO ldao = new LogDAO();
 					if (ldao.addLogEntry(entry)) {
 						return message;

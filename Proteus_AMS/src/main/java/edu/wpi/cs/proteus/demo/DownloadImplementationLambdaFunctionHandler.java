@@ -28,9 +28,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import edu.wpi.cs.proteus.db.ImplementationsDAO;
+import edu.wpi.cs.proteus.db.LogDAO;
 import edu.wpi.cs.proteus.http.Response;
 import edu.wpi.cs.proteus.http.SimpleImplementationRequest;
 import edu.wpi.cs.proteus.model.Implementation;
+import edu.wpi.cs.proteus.model.Log;
 
 public class DownloadImplementationLambdaFunctionHandler implements RequestStreamHandler{
 
@@ -45,12 +47,9 @@ public class DownloadImplementationLambdaFunctionHandler implements RequestStrea
         	SimpleImplementationRequest simpleImplementationRequest = gson.fromJson(reader, SimpleImplementationRequest.class);
         	logger.log("Stream Type: " + inputStream.getClass().toString());
         	logger.log("Input: " + reader.toString());
-    		logger.log("Loading Lambda handler of RemoveImplementation");
+    		logger.log("Loading Lambda handler of DownloadImplementation");
     		
-    		ImplementationsDAO implementationsDAO = new ImplementationsDAO();
-			Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
-			String fileURL = implementation.getUrl();
-			String accessURL = generatePresignedURL(fileURL);
+    		String accessURL = downloadImplementation(simpleImplementationRequest);
 
 			if(accessURL != "ERROR") {
 				writer.write(gson.toJson(new Response(200, accessURL)));	
@@ -69,7 +68,30 @@ public class DownloadImplementationLambdaFunctionHandler implements RequestStrea
         }
     }
 
-    public static String generatePresignedURL(String key) throws IOException {
+    private String downloadImplementation(SimpleImplementationRequest simpleImplementationRequest) throws Exception {
+    	ImplementationsDAO implementationsDAO = new ImplementationsDAO();
+		
+    	try {
+	    	Implementation implementation = implementationsDAO.getImplementation(simpleImplementationRequest.getImplementationID());
+			String fileURL = implementation.getUrl();
+			String accessURL = generatePresignedURL(fileURL);
+			String requestedBy = simpleImplementationRequest.getRequestedBy();
+			
+			if (accessURL != "ERROR") {
+				Log entry = new Log(requestedBy, "Download Implementation", java.time.LocalDate.now().toString());
+				LogDAO ldao = new LogDAO();
+				if (ldao.addLogEntry(entry)) {
+					return accessURL;
+				}
+			}
+    	} catch (Exception e) {
+    		throw new Exception(e.getMessage());
+    	}
+			
+    	return "ERROR";
+    }
+    
+    private static String generatePresignedURL(String key) throws IOException {
         Regions clientRegion = Regions.US_EAST_2;
         String bucketName = "proteus-implementations";
         String objectKey = key;
