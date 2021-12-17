@@ -29,7 +29,8 @@ public class ClassificationDAO {
 		String id = resultSet.getString("classificationID");
 		String name = resultSet.getString("classificationName");
 		String superClass = resultSet.getString("superClassification");		
-		return new Classification(id, name, superClass);
+		String subClass = resultSet.getString("subClassification");
+		return new Classification(id, name, superClass,subClass);
 	}
 
 	public List<Classification> getAllClassifications() throws Exception
