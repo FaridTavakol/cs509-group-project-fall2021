@@ -4,10 +4,11 @@
 <script type="text/javascript">
 	var add_algorithm_url = "https://ic4yt9raic.execute-api.us-east-2.amazonaws.com/beta/addAlgorithm";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var get_algorithmIdByName_url = "https://lzywwxkpk9.execute-api.us-east-2.amazonaws.com/beta/GetAlgorithmIdByName"
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", getClassification_url, true);
-	
+
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
@@ -46,16 +47,61 @@
 
 		if (statusCode == 200) {
 
+			// After successfully addding the algorithm now its time to get the Id of the algorithm to pass to the next page.
+			// So creating another request to retrieve the Id of the newly created algorithm
 			var msg = document.getElementById("msg");
-			sessionStorage.setItem("algorithmName",
-					document.addAlgorithmForm.algorithmName.value);
-			sessionStorage.setItem("algorithmDescription",
-					document.addAlgorithmForm.details.value);
-			msg.innerHTML = "successfully added the algorithm";
-			window.location.href = "AlgorithmMainPage.html";
-		} else {
+			/*					*/
+			var data = {};
+			data["algorithmName"] = document.addAlgorithmForm.algorithmName.value;
+			console.log("2");
+
+			var js = JSON.stringify(data);
+			console.log("JS:" + js);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", get_algorithmIdByName_url, true);
+			console.log("3");
+			// send the collected data as JSON
+			xhr.send(js);
+
+			// This will process results and update HTML as appropriate. 
+			xhr.onloadend = function() {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					if (xhr.status == 200) {
+						console.log("XHR:" + xhr.responseText);
+						processAlgorithmIdResponse(xhr.responseText);
+					} else if (xhr.status == 400) {
+						alert("unable to process request");
+					}
+				} else {
+					processResponse("N/A");
+				}
+			};
+			/*					*/
+			} else {
 			// Update computation result
 			var msg = document.getElementById("msg");
+			msg.innerHTML = js["Message"];
+		}
+
+	}
+	function processAlgorithmIdResponse(result) {
+		console.log("result:" + result);
+		var js = JSON.parse(result);
+		var msg = document.getElementById("msg");
+
+		var role = js["errorMessage"];
+		var statusCode = js["statusCode"];
+		var algorithmId = js["algorithmId"];
+
+		if (statusCode == 200) {
+			sessionStorage.setItem("algorithmId", algorithmId);
+			msg.innerHTML = "successfully added the algorithm";
+			window.location.href = "GetAlgorithmMainPage.html";
+		} else {
+			// Update computation result
+			var msg = document.getElementById("Msg");
 			msg.innerHTML = js["Message"];
 		}
 

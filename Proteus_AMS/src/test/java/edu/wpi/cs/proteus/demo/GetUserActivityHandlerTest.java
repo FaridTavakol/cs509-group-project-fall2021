@@ -18,17 +18,11 @@ public class GetUserActivityHandlerTest {
 
     private static Object input;
 
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
-
     private Context createContext() {
         TestContext ctx = new TestContext();
 
         // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
+        ctx.setFunctionName("compute");
 
         return ctx;
     }
@@ -38,9 +32,14 @@ public class GetUserActivityHandlerTest {
         GetUserActivityHandler handler = new GetUserActivityHandler();
         Context ctx = createContext();
 
-        AllUserActivityResponse output = handler.handleRequest(input, ctx);
-
+        String SAMPLE_INPUT_STRING = "{\"email\": \"atifa_sarwar@hotmail.com\", \"password\": \"1234\"}";
+        
+        AllUserActivityResponse output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
+        Assert.assertEquals(200, output.httpCode);
         // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        
+        output = new AllUserActivityResponse(400, "");
+        Assert.assertEquals(400, output.httpCode);
+        
     }
 }

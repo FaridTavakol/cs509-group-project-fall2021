@@ -2,11 +2,12 @@
 
 <head>
 <script type="text/javascript">
-	var removeClassification_url = "";
+	var Reclassify_algorithm_url = "https://qx81z5385g.execute-api.us-east-2.amazonaws.com/beta/ReclassifyAlgorithm";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
-
+	var algorithmId = sessionStorage.getItem("algorithmId");
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", getClassification_url, true);
+
 	xhr.send(null); // This will process results and update HTML as appropriate. 
 	xhr.onloadend = function() {
 		console.log(xhr);
@@ -30,48 +31,100 @@
 		}
 	};
 
-	function notEmpty(classificationName) {
+	function notEmpty(algorithmName, classificationName) {
 
-		if (classificationName === "")
+		if (algorithmName === "" || classificationName === "")
 			return false;
 		return true;
 	}
-	function processResponse(result) {
-		console.log("result:" + result);
-		var js = JSON.parse(result);
+// 	function processResponse(result) {
+// 		console.log("result:" + result);
+// 		var js = JSON.parse(result);
 
-		var message = js["Message"];
-		var statusCode = js["statusCode"];
+// 		var message = js["Message"];
+// 		var statusCode = js["statusCode"];
+
+// 		if (statusCode == 200) {
+
+// 			// After successfully addding the algorithm now its time to get the Id of the algorithm to pass to the next page.
+// 			// So creating another request to retrieve the Id of the newly created algorithm
+// 			var msg = document.getElementById("msg");
+// 			/*					*/
+// 			var data = {};
+// 			data["algorithmName"] = document.addAlgorithmForm.algorithmName.value;
+// 			console.log("2");
+
+// 			var js = JSON.stringify(data);
+// 			console.log("JS:" + js);
+// 			var xhr = new XMLHttpRequest();
+// 			xhr.open("POST", get_algorithmIdByName_url, true);
+// 			console.log("3");
+// 			// send the collected data as JSON
+// 			xhr.send(js);
+
+// 			// This will process results and update HTML as appropriate. 
+// 			xhr.onloadend = function() {
+// 				console.log(xhr);
+// 				console.log(xhr.request);
+// 				if (xhr.readyState == XMLHttpRequest.DONE) {
+// 					if (xhr.status == 200) {
+// 						console.log("XHR:" + xhr.responseText);
+// 						processAlgorithmIdResponse(xhr.responseText);
+// 					} else if (xhr.status == 400) {
+// 						alert("unable to process request");
+// 					}
+// 				} else {
+// 					processResponse("N/A");
+// 				}
+// 			};
+// 			/*					*/
+// 			} else {
+// 			// Update computation result
+// 			var msg = document.getElementById("msg");
+// 			msg.innerHTML = js["Message"];
+// 		}
+
+// 	}
+	function processReclassifyResponse(result) {
+		console.log("result:" + result);
+		var js1 = JSON.parse(result);
+		var msg = document.getElementById("msg");
+
+		var role = js1["errorMessage"];
+		var statusCode = js1["statusCode"];
+		
 
 		if (statusCode == 200) {
-			sessionStorage.setItem("classificationName", message);
-			var msg = document.getElementById("msg");
-            msg.innerHTML = "Successfully Removed";
-            
+			msg.innerHTML = "successfully added the algorithm";
+			window.location.href = "Registered.html";
 		} else {
 			// Update computation result
-			var msg = document.getElementById("msg");
+			var msg = document.getElementById("Msg");
 			msg.innerHTML = js["Message"];
 		}
 
 	}
 
 	function handleClick(e) {
-		var form = document.removeClassificationForm;
-		var classificationName = document.getElementById("classificationName").value;
+		var form = document.reclassifyAlgorithmForm;
+		var classificationId = document.getElementById("Classification").value;
+		
 
-		if (notEmpty(classificationName)) {
+		if (notEmpty(algorithmId, classificationId)) {
 			console.log("1");
 
 			var data = {};
-			data["classificationName"] = classificationName;
+			data["algorithmId"] = algorithmId;
+			data["classificationId"] = classificationId;
+			<!--data["details"] = details;
+			-->
 
 			console.log("2");
 
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", removeClassification_url, true);
+			xhr.open("POST", Reclassify_algorithm_url, true);
 			console.log("3");
 			// send the collected data as JSON
 			xhr.send(js);
@@ -83,7 +136,7 @@
 				if (xhr.readyState == XMLHttpRequest.DONE) {
 					if (xhr.status == 200) {
 						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
+						processReclassifyResponse(xhr.responseText);
 					} else if (xhr.status == 400) {
 						alert("unable to process request");
 					}
@@ -93,6 +146,10 @@
 			};
 		} else {
 			console.log("Inputs invalid:")
+			if (algorithmName === "") {
+				console.log("Algorithm name is empty/invalid - "
+						+ algorithmName)
+			}
 			if (classificationName === "") {
 				console.log("Classification name is empty/invalid - "
 						+ classificationName)
@@ -122,10 +179,10 @@
 					aria-expanded="false"> Classification </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
-						<li><a class="dropdown-item" href="GetClassification.html">Get</a></li>
-						<li><a class="dropdown-item" href="ClassificationHeirarchy.html">Get Hierarchy</a></li>
-						<li><a class="dropdown-item" href="MergeClassification.html">Merge</a></li>
-						<li><a class="dropdown-item" href="RemoveClassification.html">Remove</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+						<li><a class="dropdown-item" href="#">Merge</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
 					</ul></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle text-black" href="#"
@@ -133,7 +190,7 @@
 					aria-expanded="false"> Algorithms </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms">Get</a></li>
 						<li><a class="dropdown-item" href="#">Reclassify</a></li>
 						<li><a class="dropdown-item" href="#">Remove</a></li>
 
@@ -172,17 +229,18 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Remove Classification</div>
+					<div class="card-header">Reclassify Algorithm</div>
 					<div class="card-body">
-						<form name="removeClassificationForm" method="post" name="removeClassification">
+						<form name="reclassifyAlgorithmForm" method="post" name="addAlgorithm">
 							<div class="mb-3">
-								<label class="form-label">Classification:</label><select
+								<label class="form-label">Choose a Classification:</label><select
 									class="form-select" aria-label="Default select example"
 									id="Classification">
 								</select>
 							</div>
+							
 							<div class="d-flex justify-content-center">
-								<input type="button" value="Remove" class="btn btn-primary"
+								<input type="button" value="Reclassify" class="btn btn-primary"
 									onClick="JavaScript:handleClick(this)">
 							</div>
 							<div class="mb-3">

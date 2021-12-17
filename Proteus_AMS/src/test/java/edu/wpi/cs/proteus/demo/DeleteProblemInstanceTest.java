@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.cs.proteus.http.GetObjectsByID;
 import edu.wpi.cs.proteus.http.Response;
 
 /**
@@ -27,7 +28,7 @@ public class DeleteProblemInstanceTest {
         TestContext ctx = new TestContext();
 
         // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
+        ctx.setFunctionName("compute");
 
         return ctx;
     }
@@ -37,9 +38,17 @@ public class DeleteProblemInstanceTest {
         DeleteProblemInstance handler = new DeleteProblemInstance();
         Context ctx = createContext();
 
-        Response output = handler.handleRequest(input, ctx);
+
+        String SAMPLE_INPUT_STRING = "{\"ID\":\"4\",\"requestedBy\":\"A\"}";
+        Response output = handler.handleRequest(SAMPLE_INPUT_STRING, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        Assert.assertEquals(200,output.statusCode);
+       
+        GetObjectsByID a = new GetObjectsByID();
+        a.setID("12");
+        a.setRequestedBy("ABC");
+        
+        a = new GetObjectsByID("12","ABC");
     }
 }

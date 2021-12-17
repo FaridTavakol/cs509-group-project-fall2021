@@ -3,6 +3,32 @@
 <head>
     <script type="text/javascript">
         var add_url = "https://imim0zqxna.execute-api.us-east-2.amazonaws.com/beta/addClassification";
+        var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+        
+        var xhr = new XMLHttpRequest();
+		xhr.open("GET", getClassification_url, true);
+		xhr.send(null); // This will process results and update HTML as appropriate. 
+		xhr.onloadend = function() {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 200) {
+					var select = document.getElementById("superClassification");
+					var js = JSON.parse(xhr.responseText);
+					var res = js["list"];
+					for (var i = 0; i < res.length; i++) {
+						var option = document.createElement("option");
+						option.value = res[i].classificationName;
+						option.text = res[i].classificationName;
+						select.appendChild(option);
+					}
+				} else if (xhr.status == 400) {
+					alert("unable to process request");
+				}
+			} else {
+				alert("unable to process request");
+			}
+		};
 
         function notEmpty() {
             var form = document.AddClassificationForm;
@@ -91,10 +117,10 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	    <li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
-	    <li><a class="dropdown-item" href="#">Get</a></li>
-            <li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
-	    <li><a class="dropdown-item" href="#">Merge</a></li>
-            <li><a class="dropdown-item" href="#">Remove</a></li>
+	    <li><a class="dropdown-item" href="GetClassification.html">Get</a></li>
+        <li><a class="dropdown-item" href="ClassificationHeirarchy.html">Get Hierarchy</a></li>
+	    <li><a class="dropdown-item" href="MergeClassification.html">Merge</a></li>
+        <li><a class="dropdown-item" href="RemoveClassification.html">Remove</a></li>
           </ul>
         </li>
 <li class="nav-item dropdown">
@@ -159,9 +185,11 @@
                                     class="form-control" placeholder="For example: Sorting Algorithms" />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Name of Super Classification (If Applicable):</label> <input name="superClassification" value=""
-                                    class="form-control" placeholder="(Optional)" />
-                            </div>
+								<label class="form-label">Super Classification:</label><select
+									class="form-select" aria-label="Default select example"
+									id="superClassification">
+								</select>
+							</div>
                             <div class="d-flex justify-content-center">
                                 <input type="button" value="Add" class="btn btn-primary"
                                     onClick="JavaScript:handleClick(this)">

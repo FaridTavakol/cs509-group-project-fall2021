@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var removeClassification_url = "";
+	var getClassification_url = "";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 
 	var xhr = new XMLHttpRequest();
@@ -46,7 +46,7 @@
 		if (statusCode == 200) {
 			sessionStorage.setItem("classificationName", message);
 			var msg = document.getElementById("msg");
-            msg.innerHTML = "Successfully Removed";
+            msg.innerHTML = "Successfully Retrieved";
             
 		} else {
 			// Update computation result
@@ -71,7 +71,7 @@
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", removeClassification_url, true);
+			xhr.open("POST", getClassification_url, true);
 			console.log("3");
 			// send the collected data as JSON
 			xhr.send(js);
@@ -172,9 +172,9 @@
 			<div class="col-2"></div>
 			<div class="col-8">
 				<div class="card">
-					<div class="card-header">Remove Classification</div>
+					<div class="card-header">Get Classification</div>
 					<div class="card-body">
-						<form name="removeClassificationForm" method="post" name="removeClassification">
+						<form name="getClassificationForm" method="post" name="getClassification">
 							<div class="mb-3">
 								<label class="form-label">Classification:</label><select
 									class="form-select" aria-label="Default select example"
@@ -182,7 +182,7 @@
 								</select>
 							</div>
 							<div class="d-flex justify-content-center">
-								<input type="button" value="Remove" class="btn btn-primary"
+								<input type="button" value="Select" class="btn btn-primary"
 									onClick="JavaScript:handleClick(this)">
 							</div>
 							<div class="mb-3">

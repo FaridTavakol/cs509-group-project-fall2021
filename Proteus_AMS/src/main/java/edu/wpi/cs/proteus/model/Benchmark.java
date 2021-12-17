@@ -39,6 +39,10 @@ public class Benchmark {
 		this.cache = cache;
 		this.requestedBy = requestedBy;
 	}
+	public Benchmark()
+	{
+		
+	}
 	public String getId() {
 		return id;
 	}

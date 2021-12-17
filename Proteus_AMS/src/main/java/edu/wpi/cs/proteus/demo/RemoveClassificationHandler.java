@@ -34,8 +34,7 @@ public class RemoveClassificationHandler implements RequestHandler<RemoveClassif
 		ClassificationDAO dao = new ClassificationDAO();
 		
 		System.out.println("removeClassification");
-		Classification classification = dao.getClassification(name);
-		return dao.deleteClassification(classification);
+		return dao.removeClassification(name);
 	}
 
 }

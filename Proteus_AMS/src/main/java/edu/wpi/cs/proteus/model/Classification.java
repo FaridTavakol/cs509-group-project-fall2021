@@ -7,22 +7,21 @@ public class Classification {
 	
 	String classificationID;
 	String classificationName;
-	String ugh = "";
 	String superClassification;
-	List<Classification> subClassifications;
+	String hNum;
 	
 	public Classification(String id, String name, String superClass) {
 		this.classificationID = id;
 		this.classificationName = name;
 		this.superClassification = superClass;
-		this.subClassifications = new LinkedList<Classification>();
+		this.hNum = "0";
 	}
 	
-	public Classification(String id, String name, String superClass, List<Classification> subClasses) {
+	public Classification(String id, String name, String superClass, String hNum) {
 		this.classificationID = id;
 		this.classificationName = name;
 		this.superClassification = superClass;
-		this.subClassifications = subClasses;
+		this.hNum = hNum;
 	}
 	
 	public Classification() {
@@ -49,8 +48,15 @@ public class Classification {
 	public String getSuperClassification() {
 		return this.superClassification;
 	}
+	
+	public void setH(String h) {
+		this.hNum = h;
+	}
+	public String getH() {
+		return this.hNum;
+	}
 	public String toString() {
-		String s = classificationID + ", " + classificationName + ", " + superClassification + ", " + subClassifications;
+		String s = classificationID + ", " + classificationName + ", " + superClassification + ", " + hNum;
 		return s;
 	}
 
