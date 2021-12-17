@@ -2,7 +2,7 @@
 
 <head>
 <script type="text/javascript">
-	var removeClassification_url = "";
+	var removeClassification_url = "https://6x2blxeyr8.execute-api.us-east-2.amazonaws.com/beta/removeClassification";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
 
 	var xhr = new XMLHttpRequest();
@@ -18,7 +18,7 @@
 				var res = js["list"];
 				for (var i = 0; i < res.length; i++) {
 					var option = document.createElement("option");
-					option.value = res[i].classificationID;
+					option.value = res[i].classificationName;
 					option.text = res[i].classificationName;
 					select.appendChild(option);
 				}
@@ -40,8 +40,8 @@
 		console.log("result:" + result);
 		var js = JSON.parse(result);
 
-		var message = js["Message"];
-		var statusCode = js["statusCode"];
+		var message = js["response"];
+		var statusCode = js["httpCode"];
 
 		if (statusCode == 200) {
 			sessionStorage.setItem("classificationName", message);
@@ -58,7 +58,7 @@
 
 	function handleClick(e) {
 		var form = document.removeClassificationForm;
-		var classificationName = document.getElementById("classificationName").value;
+		var classificationName = document.getElementById("Classification").value;
 
 		if (notEmpty(classificationName)) {
 			console.log("1");
