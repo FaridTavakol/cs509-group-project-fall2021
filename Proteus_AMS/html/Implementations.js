@@ -59,7 +59,6 @@ function handleClick(e) {
                     sessionStorage.setItem("implementationURL", res.implementationURL);
                     sessionStorage.setItem("implementationDetails", res.implemnetationDetails);
                     sessionStorage.setItem("implementationLanguage", res.implementationLanguage);
-                    // sessionStorage.setItem("algorithmName", res.algorithmName);
                     
                     window.location.href = "Implementation.html";
                 } else if (xhr.status == 400) {

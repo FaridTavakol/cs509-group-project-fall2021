@@ -1,6 +1,6 @@
 var add_url = "https://8j7a137nnf.execute-api.us-east-2.amazonaws.com/beta/addImplementation";
-function notEmpty(algorithmName, language, url) {
-    return !(algorithmName === "" || language === "" || url === "");
+function notEmpty(algorithmID, language, url) {
+    return !(algorithmID === "" || language === "" || url === "");
 }
 
 function processResponse(result) {
@@ -24,7 +24,7 @@ function processResponse(result) {
 function handleClick(e) {
     var details = document.getElementById('details').value;
     var url = document.getElementById('theFile').value.split(/(\\|\/)/g).pop();
-    var algorithmName = sessionStorage.getItem("algorithmName");
+    var algorithmID = sessionStorage.getItem("algorithmId");
     var extRE = /(?:\.([^.]+))?$/;
     var extension = extRE.exec(url)[1];
     var language = "Other";
@@ -51,11 +51,11 @@ function handleClick(e) {
     
     var re = /(\.java|\.html|\.h|\.H|\.hxx|\.Hxx|\.HXX|\.c|\.CPP|\.cxx|\.CXX|\.pl|\.PL|\.sbl|\.sh|\.py|\.cs|\.vb|\.js|\.ts|\.tsx|\.jsx|\.php|\.phps|\.swift|\.sql|\.rb|\.m|\.asm|\.s|\.pl|\.PL|\.mat|\.r)$/i;
     
-    if (notEmpty(algorithmName, language, url) && re.exec(url)) {
+    if (notEmpty(algorithmID, language, url) && re.exec(url)) {
         console.log("Valid Input.")
         setTimeout(function() {
             var data = {};
-            data["algorithmName"] = algorithmName;
+            data["algorithmID"] = algorithmID;
             data["language"] = language;
             data["details"] = details;
             data["url"] = url;
@@ -85,8 +85,8 @@ function handleClick(e) {
         }, 100);
     } else {
         var msg = document.getElementById("Msg");
-        if (notEmpty(algorithmName, language, url)) {
-            console.log("Algo name  - " + algorithmName);
+        if (notEmpty(algorithmID, language, url)) {
+            console.log("Algo name  - " + algorithmID);
             console.log("Language  - " + language);
             console.log("Url  - " + url);
             msg.innerHTML = "Please check your input. The file may not have been selected properly.";
@@ -94,17 +94,5 @@ function handleClick(e) {
         if (!re.exec(url)) {
             alert("File extension not supported!");
         }
-    }
-    
-    
-    function SubmitWithCallback(form, frame, successFunction) {
-        var callback = function () {
-            if(successFunction)
-                successFunction();
-            frame.onload = null;
-        };
-
-        frame.onload = callback;
-        form.submit();
     }
 }

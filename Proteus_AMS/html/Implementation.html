@@ -2,11 +2,9 @@
 <html lang="en">
 <script>
     window.onload = function() {
-        var algorithmName = sessionStorage.getItem("algorithmName");
         var details = sessionStorage.getItem("implementationDetails");
         var language = sessionStorage.getItem("implementationLanguage");
-        document.getElementById('algoName').innerHTML = algorithmName + "'s Implementation in " + language;
-        document.getElementById('algorithmLink').innerHTML = algorithmName;
+        document.getElementById('algoName').innerHTML = "Algorithm Implementation in " + language;
         document.getElementById('details').innerHTML = "Implementation details: " + details;
     };
 </script>
@@ -91,7 +89,7 @@
                     <div class="m-1 m-lg-2">
                         <h3 class="display-3 fw-bold" id="algoName">Algorithm X Implementation</h3>
                         <p class="card-text" id="details">Information about implementation.</p>
-                        <a class="nav-link" href="GetAlgorithmMainPage.html" id="algorithmLink">Algorithm</a>
+                        <a class="nav-link" href="GetAlgorithmMainPage.html" id="algorithmLink">Return to Algorithm Page</a>
                         <div class="mb-3">
                             <label class="form-label" id="Msg"></label>
                         </div>
