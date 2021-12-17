@@ -8,12 +8,15 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.cs.proteus.http.GetAlgorithmByIdRequest;
+import edu.wpi.cs.proteus.http.GetAlgorithmByIdResponse;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class GetAlgorithmByIdHandlerTest {
 
-    private static Object input;
+    private static GetAlgorithmByIdRequest input;
 
     @BeforeClass
     public static void createInput() throws IOException {
@@ -35,7 +38,7 @@ public class GetAlgorithmByIdHandlerTest {
         GetAlgorithmByIdHandler handler = new GetAlgorithmByIdHandler();
         Context ctx = createContext();
 
-        String output = handler.handleRequest(input, ctx);
+        GetAlgorithmByIdResponse output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);
