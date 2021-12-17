@@ -38,7 +38,7 @@ public class ReclassifyAlgorithmHandlerTest {
         ReclassifyAlgorithmHandler handler = new ReclassifyAlgorithmHandler();
         Context ctx = createContext();
 
-        Response output = handler.handleRequest(input, ctx);
+   //     Response output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
        // Assert.assertEquals(200, output.statusCode);

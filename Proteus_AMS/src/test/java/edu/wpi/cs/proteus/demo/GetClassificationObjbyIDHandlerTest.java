@@ -40,6 +40,6 @@ public class GetClassificationObjbyIDHandlerTest {
         GetClassificationResponse output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+        Assert.assertEquals(200, output.httpCode);
     }
 }
