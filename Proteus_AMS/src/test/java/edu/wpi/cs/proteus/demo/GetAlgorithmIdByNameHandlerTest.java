@@ -1,3 +1,4 @@
+
 package edu.wpi.cs.proteus.demo;
 
 import org.junit.Test;
@@ -5,23 +6,16 @@ import org.junit.Test;
 import com.amazonaws.services.lambda.runtime.Context;
 
 import edu.wpi.cs.proteus.db.AlgorithmsDAO;
-import edu.wpi.cs.proteus.http.GetAlgorithmByIdRequest;
-import edu.wpi.cs.proteus.http.GetAlgorithmByIdResponse;
+import edu.wpi.cs.proteus.http.GetAlgorithmIdByNameRequest;
+import edu.wpi.cs.proteus.http.GetAlgorithmIdByNameResponse;
 import edu.wpi.cs.proteus.model.Algorithm;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class GetAlgorithmByIdHandlerTest {
+public class GetAlgorithmIdByNameHandlerTest {
 
-	public GetAlgorithmByIdRequest input = new GetAlgorithmByIdRequest("4");
-
-//	@BeforeClass
-//	public static void createInput() throws IOException
-//	{
-//		// TODO: set up your sample input object here.
-//		input = null;
-//	}
+	public GetAlgorithmIdByNameRequest input = new GetAlgorithmIdByNameRequest("33");
 
 	private Context createContext()
 	{
@@ -34,20 +28,21 @@ public class GetAlgorithmByIdHandlerTest {
 	}
 
 	@Test
-	public void testGetAlgorithmByIdHandler() throws Exception
+	public void testGetAlgorithmIdByNameHandler() throws Exception
 	{
 		AlgorithmsDAO dao = new AlgorithmsDAO();
-		Algorithm algo = new Algorithm("203", "1", "4");
+		Algorithm algo = new Algorithm("33", "1", "55");
 		dao.addAlgorithm(algo);
 
-		GetAlgorithmByIdHandler handler = new GetAlgorithmByIdHandler();
+		GetAlgorithmIdByNameHandler handler = new GetAlgorithmIdByNameHandler();
 		Context ctx = createContext();
-//		input.setID("1");
-		GetAlgorithmByIdResponse output = handler.handleRequest(input, ctx);
+//			input.setID("1");
+		GetAlgorithmIdByNameResponse output = handler.handleRequest(input, ctx);
 
 		// TODO: validate output here if needed.
 		String ID = output.algorithmId;
+		input.getAlgorithmName();
 
+		input=new GetAlgorithmIdByNameRequest();
 	}
-
 }
