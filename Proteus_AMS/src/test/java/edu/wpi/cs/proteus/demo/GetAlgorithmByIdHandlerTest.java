@@ -49,4 +49,5 @@ public class GetAlgorithmByIdHandlerTest {
 		String ID = output.algorithmId;
 
 	}
+
 }

@@ -29,7 +29,8 @@ public class ClassificationDAO {
 		String id = resultSet.getString("classificationID");
 		String name = resultSet.getString("classificationName");
 		String superClass = resultSet.getString("superClassification");		
-		return new Classification(id, name, superClass);
+		String subClass = resultSet.getString("subClassification");
+		return new Classification(id, name, superClass,subClass);
 	}
 
 	public List<Classification> getAllClassifications() throws Exception
@@ -232,9 +233,11 @@ public class ClassificationDAO {
 			if(!c.getSuperClassification().equals("")) {
 				
 				if(!deleteClassification(c)) return false;
-				Classification superClass = getClassification(c.getSuperClassification());
 				
-				//Removes Algorithms
+				Classification superClass = getClassification(c.getSuperClassification());
+				reclassifyChildren(c, superClass);
+				
+				//Reclassifies Algorithms
 				PreparedStatement ps = conn.prepareStatement("SELECT * FROM Algorithms WHERE classificationId=?;");
 				ps.setString(1, c.getClassificationID());
 				ResultSet rs = ps.executeQuery();
@@ -251,6 +254,71 @@ public class ClassificationDAO {
 			}else return false;
 		}catch(Exception e) {
 			throw new Exception("Failed to remove classification: " + e.getMessage());
+		}
+	}
+	
+	public void reclassifyChildren(Classification c, Classification superClass) throws Exception{
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
+			ps.setString(1, c.getClassificationName());
+			ResultSet resultSet = ps.executeQuery();
+			
+			String subClass = "";
+			
+			while (resultSet.next())
+			{
+				subClass = resultSet.getString("subClassification");
+			}
+			resultSet.close();
+			ps.close();
+			
+			if(!subClass.equals("")) {
+				String[] subC = subClass.split(",");
+				subClass = "";
+				
+				for(String x: subC) {
+					if(!x.equals(c.getClassificationName())) {
+						PreparedStatement ps1 = conn.prepareStatement("UPDATE Classification SET superClassification= ? WHERE classificationName=?;");
+						ps1.setString(1, superClass.getClassificationName());
+						ps1.setString(2, x);
+						int affected = ps1.executeUpdate();
+						ps1.close();
+						subClass += x + ",";
+					}
+				}
+				subClass.substring(0, subClass.length() - 1);
+			}
+			
+			PreparedStatement ps2 = conn.prepareStatement("SELECT * FROM Classification WHERE classificationName=?;");
+			ps2.setString(1, superClass.getClassificationName());
+			ResultSet rs2 = ps2.executeQuery();
+			
+			String superSub = "";
+			
+			while (rs2.next())
+			{
+				superSub = rs2.getString("subClassification");
+			}
+			rs2.close();
+			ps2.close();
+			
+			String superS[] = superSub.split(",");
+			superSub = "";
+			for(String x: superS) {
+				if(!x.equals(c.getClassificationName())){
+					superSub += x + ",";
+				}
+			}
+			if(subClass.equals("")) superSub.substring(0, superSub.length() - 1);
+			
+			PreparedStatement ps1 = conn.prepareStatement("UPDATE Classification SET subClassification= ? WHERE classificationName=?;");
+			ps1.setString(1, superSub + subClass);
+			ps1.setString(2, superClass.getClassificationName());
+			int affected = ps1.executeUpdate();
+			ps1.close();
+
+		}catch(Exception e) {
+			throw new Exception("Cannot reclassify children: " + e.getMessage());
 		}
 	}
 
@@ -356,7 +424,9 @@ public class ClassificationDAO {
 			Classification c1 = getClassification(one);
 			Classification c2 = getClassification(two);
 			
-			if(deleteClassification(c2)) {
+			if(c1.getSuperClassification().equals(c2.getSuperClassification()) && !c1.getSuperClassification().equals("") && !c2.getSuperClassification().equals("")) {
+				reclassifyChildren(c2,getClassification(c2.getSuperClassification()));
+				deleteClassification(c2);
 				PreparedStatement ps = conn.prepareStatement("SELECT * FROM Algorithms WHERE classificationId=?;");
 				ps.setString(1, c2.getClassificationID());
 				ResultSet rs = ps.executeQuery();
@@ -368,6 +438,8 @@ public class ClassificationDAO {
 				
 				ps.close();
 				rs.close();
+				
+				return true;
 			}
 			
 		}catch (Exception e) {

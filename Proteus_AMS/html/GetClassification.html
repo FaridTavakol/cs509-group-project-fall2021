@@ -4,6 +4,7 @@
 <script type="text/javascript">
 	var getClassification_url = "";
 	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var classification_detail = "https://3wnredu2pk.execute-api.us-east-2.amazonaws.com/beta/getClassificationByID"
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", getClassification_url, true);
@@ -55,35 +56,79 @@
 		}
 
 	}
+	function addRow(Name, Parent, Children) {
+
+		var table = document.getElementById('dataTable');
+
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+
+		var cell1 = row.insertCell(0);
+		var element1 = document.createElement("label");
+		element1.name = "piname";
+		element1.innerHTML = Name;
+		element1.className = "form-label";
+		cell1.appendChild(element1);
+
+		var cell2 = row.insertCell(1);
+		var element2 = document.createElement("label");
+		element2.name = "parent";
+		element2.innerHTML = Parent;
+		element2.className = "form-label";
+		cell2.appendChild(element2);
+
+		var cell3 = row.insertCell(2);
+		var element3 = document.createElement("label");
+		element3.name = "children";
+		element3.innerHTML = Children;
+		element3.className = "form-label";
+		cell3.appendChild(element3);
+
+	}
+	function removeTableRows() {
+		var elmtTable = document.getElementById("dataTable");
+		var tableRows = elmtTable.getElementsByTagName('tr');
+		var rowCount = tableRows.length;
+
+		for (var x = rowCount - 1; x > 0; x--) {
+			elmtTable.deleteRow(x);
+		}
+	}
 
 	function handleClick(e) {
-		var form = document.removeClassificationForm;
-		var classificationName = document.getElementById("classificationName").value;
+		var classificationID = document.getElementById("Classification").value;
 
-		if (notEmpty(classificationName)) {
-			console.log("1");
-
+		if (notEmpty(classificationID)) {
 			var data = {};
-			data["classificationName"] = classificationName;
-
-			console.log("2");
+			data["ID"] = classificationID;
+			data["requestedBY"] = "A";
 
 			var js = JSON.stringify(data);
 			console.log("JS:" + js);
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", getClassification_url, true);
-			console.log("3");
-			// send the collected data as JSON
+			xhr.open("POST", classification_detail, true);
 			xhr.send(js);
-
-			// This will process results and update HTML as appropriate. 
 			xhr.onloadend = function() {
 				console.log(xhr);
 				console.log(xhr.request);
 				if (xhr.readyState == XMLHttpRequest.DONE) {
 					if (xhr.status == 200) {
 						console.log("XHR:" + xhr.responseText);
-						processResponse(xhr.responseText);
+						//Show the obj in table
+						var js = JSON.parse(xhr.responseText);
+						var res = js["classification"];
+						removeTableRows()
+						document.getElementById("dataTable").style.display = 'block';
+
+						if (res.superClassification === '') {
+							res.superClassification = "-"
+						}
+						if (res.h === ' ') {
+							res.h = "-"
+						}
+						addRow(res.classificationName, res.superClassification,
+								res.h);
+
 					} else if (xhr.status == 400) {
 						alert("unable to process request");
 					}
@@ -92,13 +137,13 @@
 				}
 			};
 		} else {
-			console.log("Inputs invalid:")
 			if (classificationName === "") {
 				console.log("Classification name is empty/invalid - "
 						+ classificationName)
+				var msg = document.getElementById("msg");
+				msg.innerHTML = "Kindly Check your Inputs!";
 			}
-			var msg = document.getElementById("msg");
-			msg.innerHTML = "Kindly Check your Inputs!";
+
 		}
 	}
 </script>
@@ -294,6 +339,22 @@
 								<input type="button" value="Select" class="btn btn-primary"
 									onClick="JavaScript:handleClick(this)">
 							</div>
+							<div class="row justify-content-center">
+								<div class="col-auto">
+									<table id="dataTable" class="table" style='display: none'>
+										<thead>
+											<tr>
+												<th scope="col">Name</th>
+												<th scope="col">Parent</th>
+												<th scope="col">Children</th>
+											</tr>
+										</thead>
+
+									</table>
+								</div>
+							</div>
+
+
 							<div class="mb-3">
 								<label id="msg" class="form-label"></label>
 							</div>

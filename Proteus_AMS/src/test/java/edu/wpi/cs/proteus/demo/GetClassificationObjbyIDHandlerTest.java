@@ -8,12 +8,12 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.cs.proteus.http.Response;
+import edu.wpi.cs.proteus.http.GetClassificationResponse;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class RemoveBenchmarkTest {
+public class GetClassificationObjbyIDHandlerTest {
 
     private static Object input;
 
@@ -33,11 +33,11 @@ public class RemoveBenchmarkTest {
     }
 
     @Test
-    public void testRemoveBenchmark() {
-        RemoveBenchmarkHandler handler = new RemoveBenchmarkHandler();
+    public void testGetClassificationObjbyIDHandler() {
+        GetClassificationObjbyIDHandler handler = new GetClassificationObjbyIDHandler();
         Context ctx = createContext();
 
-        Response output = handler.handleRequest(input, ctx);
+        GetClassificationResponse output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);
