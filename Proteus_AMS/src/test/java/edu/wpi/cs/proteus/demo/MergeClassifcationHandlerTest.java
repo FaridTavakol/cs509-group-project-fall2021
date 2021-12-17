@@ -37,9 +37,11 @@ public class MergeClassifcationHandlerTest {
 		MergeClassificationHandler handler = new MergeClassificationHandler();
 		Context ctx = createContext();
 
+		ClassificationDAO dao= new ClassificationDAO();
+		
 		input=new MergeClassificationRequest("test1", "test2");
-		input.setClassificationOne("test3");
-		input.setClassificationTwo("Add");
+		input.setClassificationOne("test1");
+		input.setClassificationTwo("test2");
 		input.getClassificationOne();
 		input.getClassificationTwo();
 		
@@ -57,11 +59,9 @@ public class MergeClassifcationHandlerTest {
 		output = handler.handleRequest(input, ctx);
 
 		// TODO: validate output here if needed.
-		Assert.assertEquals(400, output.httpCode);
-		
-		ClassificationDAO dao= new ClassificationDAO();
+		Assert.assertEquals(422, output.httpCode);
+
 		dao.getAllClassifications();
-		
 		
 	}
 }
