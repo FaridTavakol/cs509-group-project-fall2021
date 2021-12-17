@@ -1,10 +1,10 @@
-package edu.wpi.cs.proteus.db;
+package edu.wpi.cs.proteus.demo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DatabaseUtil {
- 
+
     // These should never be stored directly in code.  I am doing this quickly complete the 
     // demonstration code. The appropriate solution is to store these values in environment
     // variables that are accessed by the Lambda function at run time like this
@@ -51,7 +51,7 @@ public class DatabaseUtil {
         if (rdsMySqlDatabaseUrl == null) {
             System.err.println("Environment variable rdsMySqlDatabaseUrl is not set!");
         }
-         
+        
         try {
             System.out.println("start connecting......");
             Class.forName("com.mysql.cj.jdbc.Driver"); 
