@@ -8,12 +8,15 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.cs.proteus.http.ReclassifyAlgorithmRequest;
+import edu.wpi.cs.proteus.http.Response;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class ReclassifyAlgorithmHandlerTest {
 
-    private static Object input;
+    private static ReclassifyAlgorithmRequest input;
 
     @BeforeClass
     public static void createInput() throws IOException {
@@ -35,7 +38,7 @@ public class ReclassifyAlgorithmHandlerTest {
         ReclassifyAlgorithmHandler handler = new ReclassifyAlgorithmHandler();
         Context ctx = createContext();
 
-        String output = handler.handleRequest(input, ctx);
+        Response output = handler.handleRequest(input, ctx);
 
         // TODO: validate output here if needed.
         Assert.assertEquals("Hello from Lambda!", output);

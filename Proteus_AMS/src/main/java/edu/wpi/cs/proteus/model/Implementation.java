@@ -11,7 +11,6 @@ public class Implementation {
 	String algorithmID;
 	List<String> benchmarkIDs;
 
-
 	public Implementation(String id, String url, String details, String language, String algorithmID,
 			List<String> benchmarkIDs) {
 		this.id = id;
@@ -22,15 +21,6 @@ public class Implementation {
 		this.benchmarkIDs = benchmarkIDs;
 	}
 	
-	@Override
-	public String toString() {
-		String implementation = "implementationID=" + this.id + ",algorithmID=" + this.algorithmID + ",url=" + this.url + ",details=" + this.details + ",benchmarkIDs=";
-		for (String s : this.benchmarkIDs) {
-			implementation = implementation + s + "/";
-		}
-		return implementation;
-	}
-
 	public String getId() {
 		return this.id;
 	}
@@ -70,7 +60,7 @@ public class Implementation {
 	public void setAlgorithmID(String algorithmID) {
 		this.algorithmID = algorithmID;
 	}
-
+	
 	public List<String> getBenchmarkIDs() {
 		return this.benchmarkIDs;
 	}
@@ -78,4 +68,6 @@ public class Implementation {
 	public void setBenchmarkIDs(List<String> benchmarkIDs) {
 		this.benchmarkIDs = benchmarkIDs;
 	}
+
 }
+

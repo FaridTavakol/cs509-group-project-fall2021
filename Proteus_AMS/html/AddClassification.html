@@ -1,210 +1,329 @@
 <html>
 
 <head>
-    <script type="text/javascript">
-        var add_url = "https://imim0zqxna.execute-api.us-east-2.amazonaws.com/beta/addClassification";
-        var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
-        
-        var xhr = new XMLHttpRequest();
-		xhr.open("GET", getClassification_url, true);
-		xhr.send(null); // This will process results and update HTML as appropriate. 
-		xhr.onloadend = function() {
-			console.log(xhr);
-			console.log(xhr.request);
-			if (xhr.readyState == XMLHttpRequest.DONE) {
-				if (xhr.status == 200) {
-					var select = document.getElementById("superClassification");
-					var js = JSON.parse(xhr.responseText);
-					var res = js["list"];
-					for (var i = 0; i < res.length; i++) {
-						var option = document.createElement("option");
-						option.value = res[i].classificationName;
-						option.text = res[i].classificationName;
-						select.appendChild(option);
-					}
-				} else if (xhr.status == 400) {
-					alert("unable to process request");
+<script type="text/javascript">
+	var add_url = "https://imim0zqxna.execute-api.us-east-2.amazonaws.com/beta/addClassification";
+	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", getClassification_url, true);
+	xhr.send(null); // This will process results and update HTML as appropriate. 
+	xhr.onloadend = function() {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			if (xhr.status == 200) {
+				var select = document.getElementById("superClassification");
+				var js = JSON.parse(xhr.responseText);
+				var res = js["list"];
+				for (var i = 0; i < res.length; i++) {
+					var option = document.createElement("option");
+					option.value = res[i].classificationName;
+					option.text = res[i].classificationName;
+					select.appendChild(option);
 				}
-			} else {
+			} else if (xhr.status == 400) {
 				alert("unable to process request");
 			}
-		};
+		} else {
+			alert("unable to process request");
+		}
+	};
 
-        function notEmpty() {
-            var form = document.AddClassificationForm;
-            var classificationName = form.classificationName.value;
+	function notEmpty() {
+		var form = document.AddClassificationForm;
+		var classificationName = form.classificationName.value;
 
-            if (classificationName === "")
-                return false;
-            return true;
-        }
-        function processResponse(result) {
-            // Can grab any DIV or SPAN HTML element and can then manipulate its
-            // contents dynamically via javascript
-            console.log("result:" + result);
-            var js = JSON.parse(result);
+		if (classificationName === "")
+			return false;
+		return true;
+	}
+	function processResponse(result) {
+		// Can grab any DIV or SPAN HTML element and can then manipulate its
+		// contents dynamically via javascript
+		console.log("result:" + result);
+		var js = JSON.parse(result);
 
-            var message = js["response"];
-            var statusCode = js["httpCode"];
+		var message = js["response"];
+		var statusCode = js["httpCode"];
 
-            if (statusCode === 200) {
+		if (statusCode === 200) {
 
-                sessionStorage.setItem("classificationName", message);
-  				var msg = document.getElementById("msg");
-                msg.innerHTML = "Successfully Added";
-            } else {
-                // Update computation result
-                var msg = document.getElementById("msg");
-                msg.innerHTML = js["response"];
-            }
+			sessionStorage.setItem("classificationName", message);
+			var msg = document.getElementById("msg");
+			msg.innerHTML = "Successfully Added";
+		} else {
+			// Update computation result
+			var msg = document.getElementById("msg");
+			msg.innerHTML = js["response"];
+		}
 
-        }
+	}
 
-        function handleClick(e) {
-            var form = document.AddClassificationForm;
-            var classificationName = form.classificationName.value;
-            var superClassification = form.superClassification.value;
+	function handleClick(e) {
+		var form = document.AddClassificationForm;
+		var classificationName = form.classificationName.value;
+		var superClassification = form.superClassification.value;
 
-            if (notEmpty()) {
+		if (notEmpty()) {
 
-                var data = {};
-                data["classificationName"] = classificationName;
-                data["superClassification"] = superClassification;
+			var data = {};
+			data["classificationName"] = classificationName;
+			data["superClassification"] = superClassification;
 
-                var js = JSON.stringify(data);
-                console.log("JS:" + js);
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", add_url, true);
+			var js = JSON.stringify(data);
+			console.log("JS:" + js);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", add_url, true);
 
-                // send the collected data as JSON
-                xhr.send(js);
+			// send the collected data as JSON
+			xhr.send(js);
 
-                // This will process results and update HTML as appropriate. 
-                xhr.onloadend = function () {
-                    console.log(xhr);
-                    console.log(xhr.request);
-                    if (xhr.readyState == XMLHttpRequest.DONE) {
-                        if (xhr.status == 200) {
-                            console.log("XHR:" + xhr.responseText);
-                            processResponse(xhr.responseText);
-                        } else if (xhr.status == 400) {
-                            alert("unable to process request");
-                        }
-                    } else {
-                        processResponse("N/A");
-                    }
-                };
-            } else {
-                var msg = document.getElementById("msg");
-                msg.innerHTML = "Kindly check your inputs. All inputs are required.";
-            }
-        }
-    </script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+			// This will process results and update HTML as appropriate. 
+			xhr.onloadend = function() {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					if (xhr.status == 200) {
+						console.log("XHR:" + xhr.responseText);
+						processResponse(xhr.responseText);
+					} else if (xhr.status == 400) {
+						alert("unable to process request");
+					}
+				} else {
+					processResponse("N/A");
+				}
+			};
+		} else {
+			var msg = document.getElementById("msg");
+			msg.innerHTML = "Kindly check your inputs. All inputs are required.";
+		}
+	}
+</script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
 
 
-    <title>Algorithm Management System</title>
+<title>Algorithm Management System</title>
 </head>
 
 <body>
- <nav class="py-2 bg-light border-bottom">
-      <div class="container d-flex flex-wrap">
-      <ul class="nav me-auto text-black">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Classification
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	    <li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
-	    <li><a class="dropdown-item" href="GetClassification.html">Get</a></li>
-        <li><a class="dropdown-item" href="ClassificationHeirarchy.html">Get Hierarchy</a></li>
-	    <li><a class="dropdown-item" href="MergeClassification.html">Merge</a></li>
-        <li><a class="dropdown-item" href="RemoveClassification.html">Remove</a></li>
-          </ul>
-        </li>
-<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Algorithms
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	    <li><a class="dropdown-item"  href="AddAlgorithm.html">Add</a></li>
-            <li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
-	   <li><a class="dropdown-item" href="#">Reclassify</a></li>
-	  <li><a class="dropdown-item" href="#">Remove</a></li>
-           
-          </ul>
-        </li>
-	<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Problem Instance
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	  <li><a class="dropdown-item" href="#">Add</a></li>
-	  <li><a class="dropdown-item" href="#">Remove</a></li>
-	  <li><a class="dropdown-item" href="#">Get</a></li>
-           
-          </ul>
-        </li>
-	<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle text-black" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Implementation
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-	    <li><a class="dropdown-item" href="AddImplementation.html">Upload</a></li>
-            <li><a class="dropdown-item" href="#">Download</a></li>
-	   <li><a class="dropdown-item" href="#">Remove</a></li>
-	  <li><a class="dropdown-item" href="#">Get</a></li>           
-          </ul>
-        </li>
-  <ul class="nav">
-        <li class="nav-item text-black"><a href="Home.html" class="nav-link link-dark px-2 text-black">Log out</a></li>
-      </ul>
-</div>    
-  </nav>
-    <header class="py-3 mb-4 border-bottom bg-dark">
-        <div class="container d-flex flex-wrap justify-content-center">
-            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32">
-                    <use xlink:href="#bootstrap" />
-                </svg> <span class="fs-4 text-white">Algorithm Management System</span>
-            </a>
+	<nav class="py-2 bg-light border-bottom" id='admin'
+		style='display: none'>
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item"
+							href=" RemoveClassification.html">Delete</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Implementation </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Delete</a></li>
 
-        </div>
-    </header>
-    <div class="container">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-                <div class="card">
-                    <div class="card-header">Add Classification</div>
-                    <div class="card-body">
-                        <form name="AddClassificationForm" method="post">
-                            <div class="mb-3">
-                                <label class="form-label">Name of Classification:</label> <input name="classificationName" value=""
-                                    class="form-control" placeholder="For example: Sorting Algorithms" />
-                            </div>
-                            <div class="mb-3">
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Problem Instance </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item"
+							href="RemoveProblemInstance.html">Delete</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Benchmarks </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="RemoveBenchmark.html">Delete</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Users </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="RemoveUser.html">Delete</a></li>
+						<li><a class="dropdown-item" href="ViewUser.html">View</a></li>
+						<li><a class="dropdown-item" href="GetUserActivity.html">Get
+								Activity</a></li>
+					</ul></li>
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Home.html"
+						onclick="clearSessions();"
+						class="nav-link link-dark px-2 text-black">Log out</a></li>
+				</ul>
+		</div>
+	</nav>
+
+	<nav class="py-2 bg-light border-bottom" id='register'
+		style='display: none'>
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+						<li><a class="dropdown-item" href="GetClassification.html">Get</a></li>
+						<li><a class="dropdown-item"
+							href="ClassificationHeirarchy.html">Get Hierarchy</a></li>
+						<li><a class="dropdown-item" href="MergeClassifications.html">Merge</a></li>
+						<li><a class="dropdown-item" href="RemoveClassification.html">Remove</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Algorithms </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Reclassify</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Remove</a></li>
+
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Implementation </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Add</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Download</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Remove</a></li>
+
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Problem Instance </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="addProblemInstance.html">Add</a></li>
+						<li><a class="dropdown-item"
+							href="RemoveProblemInstance.html">Remove</a></li>
+						<li><a class="dropdown-item" href="GetProblemInstance.html">Get</a></li>
+					</ul></li>
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Home.html"
+						onclick="clearSessions();"
+						class="nav-link link-dark px-2 text-black">Log out</a></li>
+				</ul>
+		</div>
+	</nav>
+
+	<nav class="py-2 bg-light border-bottom" id='anonymous'
+		style='display: none'>
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="GetClassification.html">View</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Algorithms </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">View</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Benchmark </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="addbenchmark.html">Upload</a></li>
+						<li><a class="dropdown-item" href="GetBenchmark.html">Get</a></li>
+					</ul></li>
+
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Register.html"
+						class="nav-link link-dark px-2 text-black">Register</a></li>
+					<li class="nav-item text-black"><a href="login.html"
+						class="nav-link link-dark px-2 text-black">Login</a></li>
+				</ul>
+		</div>
+	</nav>
+
+	<header class="py-3 mb-4 border-bottom bg-dark">
+		<div class="container d-flex flex-wrap justify-content-center">
+			<a
+				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+				<svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm
+					Management System</span>
+			</a>
+
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="card">
+					<div class="card-header">Add Classification</div>
+					<div class="card-body">
+						<form name="AddClassificationForm" method="post">
+							<div class="mb-3">
+								<label class="form-label">Name of Classification:</label> <input
+									name="classificationName" value="" class="form-control"
+									placeholder="For example: Sorting Algorithms" />
+							</div>
+							<div class="mb-3">
 								<label class="form-label">Super Classification:</label><select
 									class="form-select" aria-label="Default select example"
 									id="superClassification">
 								</select>
 							</div>
-                            <div class="d-flex justify-content-center">
-                                <input type="button" value="Add" class="btn btn-primary"
-                                    onClick="JavaScript:handleClick(this)">
-                            </div>
-                            <div class="mb-3">
-                                <label id="msg" class="form-label"></label>
-                            </div>
+							<div class="d-flex justify-content-center">
+								<input type="button" value="Add" class="btn btn-primary"
+									onClick="JavaScript:handleClick(this)">
+							</div>
+							<div class="mb-3">
+								<label id="msg" class="form-label"></label>
+							</div>
 
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var role = sessionStorage.getItem("role");
+		if (role == 'Admin') {
+			document.getElementById("admin").style.display = 'block';
+		} else if (role == 'Register') {
+			document.getElementById("register").style.display = 'block';
+		} else {
+			document.getElementById("anonymous").style.display = 'block';
+		}
 
+		function clearSessions() {
+			sessionStorage.clear();
+		}
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
 </body>
 
 </html>

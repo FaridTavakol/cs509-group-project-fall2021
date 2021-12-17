@@ -37,54 +37,54 @@
 			return false;
 		return true;
 	}
-// 	function processResponse(result) {
-// 		console.log("result:" + result);
-// 		var js = JSON.parse(result);
+	// 	function processResponse(result) {
+	// 		console.log("result:" + result);
+	// 		var js = JSON.parse(result);
 
-// 		var message = js["Message"];
-// 		var statusCode = js["statusCode"];
+	// 		var message = js["Message"];
+	// 		var statusCode = js["statusCode"];
 
-// 		if (statusCode == 200) {
+	// 		if (statusCode == 200) {
 
-// 			// After successfully addding the algorithm now its time to get the Id of the algorithm to pass to the next page.
-// 			// So creating another request to retrieve the Id of the newly created algorithm
-// 			var msg = document.getElementById("msg");
-// 			/*					*/
-// 			var data = {};
-// 			data["algorithmName"] = document.addAlgorithmForm.algorithmName.value;
-// 			console.log("2");
+	// 			// After successfully addding the algorithm now its time to get the Id of the algorithm to pass to the next page.
+	// 			// So creating another request to retrieve the Id of the newly created algorithm
+	// 			var msg = document.getElementById("msg");
+	// 			/*					*/
+	// 			var data = {};
+	// 			data["algorithmName"] = document.addAlgorithmForm.algorithmName.value;
+	// 			console.log("2");
 
-// 			var js = JSON.stringify(data);
-// 			console.log("JS:" + js);
-// 			var xhr = new XMLHttpRequest();
-// 			xhr.open("POST", get_algorithmIdByName_url, true);
-// 			console.log("3");
-// 			// send the collected data as JSON
-// 			xhr.send(js);
+	// 			var js = JSON.stringify(data);
+	// 			console.log("JS:" + js);
+	// 			var xhr = new XMLHttpRequest();
+	// 			xhr.open("POST", get_algorithmIdByName_url, true);
+	// 			console.log("3");
+	// 			// send the collected data as JSON
+	// 			xhr.send(js);
 
-// 			// This will process results and update HTML as appropriate. 
-// 			xhr.onloadend = function() {
-// 				console.log(xhr);
-// 				console.log(xhr.request);
-// 				if (xhr.readyState == XMLHttpRequest.DONE) {
-// 					if (xhr.status == 200) {
-// 						console.log("XHR:" + xhr.responseText);
-// 						processAlgorithmIdResponse(xhr.responseText);
-// 					} else if (xhr.status == 400) {
-// 						alert("unable to process request");
-// 					}
-// 				} else {
-// 					processResponse("N/A");
-// 				}
-// 			};
-// 			/*					*/
-// 			} else {
-// 			// Update computation result
-// 			var msg = document.getElementById("msg");
-// 			msg.innerHTML = js["Message"];
-// 		}
+	// 			// This will process results and update HTML as appropriate. 
+	// 			xhr.onloadend = function() {
+	// 				console.log(xhr);
+	// 				console.log(xhr.request);
+	// 				if (xhr.readyState == XMLHttpRequest.DONE) {
+	// 					if (xhr.status == 200) {
+	// 						console.log("XHR:" + xhr.responseText);
+	// 						processAlgorithmIdResponse(xhr.responseText);
+	// 					} else if (xhr.status == 400) {
+	// 						alert("unable to process request");
+	// 					}
+	// 				} else {
+	// 					processResponse("N/A");
+	// 				}
+	// 			};
+	// 			/*					*/
+	// 			} else {
+	// 			// Update computation result
+	// 			var msg = document.getElementById("msg");
+	// 			msg.innerHTML = js["Message"];
+	// 		}
 
-// 	}
+	// 	}
 	function processReclassifyResponse(result) {
 		console.log("result:" + result);
 		var js1 = JSON.parse(result);
@@ -92,7 +92,6 @@
 
 		var role = js1["errorMessage"];
 		var statusCode = js1["statusCode"];
-		
 
 		if (statusCode == 200) {
 			msg.innerHTML = "successfully added the algorithm";
@@ -108,7 +107,6 @@
 	function handleClick(e) {
 		var form = document.reclassifyAlgorithmForm;
 		var classificationId = document.getElementById("Classification").value;
-		
 
 		if (notEmpty(algorithmId, classificationId)) {
 			console.log("1");
@@ -170,7 +168,63 @@
 </head>
 
 <body>
-	<nav class="py-2 bg-light border-bottom">
+	<nav class="py-2 bg-light border-bottom" id='admin'
+		style='display: none'>
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item"
+							href=" RemoveClassification.html">Delete</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Implementation </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Delete</a></li>
+
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Problem Instance </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item"
+							href="RemoveProblemInstance.html">Delete</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Benchmarks </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="RemoveBenchmark.html">Delete</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Users </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="RemoveUser.html">Delete</a></li>
+						<li><a class="dropdown-item" href="ViewUser.html">View</a></li>
+						<li><a class="dropdown-item" href="GetUserActivity.html">Get
+								Activity</a></li>
+					</ul></li>
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Home.html"
+						onclick="clearSessions();"
+						class="nav-link link-dark px-2 text-black">Log out</a></li>
+				</ul>
+		</div>
+	</nav>
+
+	<nav class="py-2 bg-light border-bottom" id='register'
+		style='display: none'>
 		<div class="container d-flex flex-wrap">
 			<ul class="nav me-auto text-black">
 				<li class="nav-item dropdown"><a
@@ -179,10 +233,11 @@
 					aria-expanded="false"> Classification </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-						<li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
-						<li><a class="dropdown-item" href="#">Merge</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
+						<li><a class="dropdown-item" href="GetClassification.html">Get</a></li>
+						<li><a class="dropdown-item"
+							href="ClassificationHeirarchy.html">Get Hierarchy</a></li>
+						<li><a class="dropdown-item" href="MergeClassifications.html">Merge</a></li>
+						<li><a class="dropdown-item" href="RemoveClassification.html">Remove</a></li>
 					</ul></li>
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle text-black" href="#"
@@ -190,31 +245,82 @@
 					aria-expanded="false"> Algorithms </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
-						<li><a class="dropdown-item" href="AllAlgorithms">Get</a></li>
-						<li><a class="dropdown-item" href="#">Reclassify</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Reclassify</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Remove</a></li>
 
 					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Implementation </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Add</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Download</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Get</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms.html">Remove</a></li>
+
+					</ul></li>
+
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle text-black" href="#"
 					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
 					aria-expanded="false"> Problem Instance </a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href="#">Add</a></li>
-						<li><a class="dropdown-item" href="#">Remove</a></li>
-						<li><a class="dropdown-item" href="#">Get</a></li>
-
+						<li><a class="dropdown-item" href="addProblemInstance.html">Add</a></li>
+						<li><a class="dropdown-item"
+							href="RemoveProblemInstance.html">Remove</a></li>
+						<li><a class="dropdown-item" href="GetProblemInstance.html">Get</a></li>
 					</ul></li>
-
 				<ul class="nav">
 					<li class="nav-item text-black"><a href="Home.html"
+						onclick="clearSessions();"
 						class="nav-link link-dark px-2 text-black">Log out</a></li>
 				</ul>
 		</div>
 	</nav>
+
+	<nav class="py-2 bg-light border-bottom" id='anonymous'
+		style='display: none'>
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="GetClassification.html">View</a></li>
+					</ul></li>
+
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Algorithms </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AllAlgorithms.html">View</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Benchmark </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="addbenchmark.html">Upload</a></li>
+						<li><a class="dropdown-item" href="GetBenchmark.html">Get</a></li>
+					</ul></li>
+
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Register.html"
+						class="nav-link link-dark px-2 text-black">Register</a></li>
+					<li class="nav-item text-black"><a href="login.html"
+						class="nav-link link-dark px-2 text-black">Login</a></li>
+				</ul>
+		</div>
+	</nav>
+
 	<header class="py-3 mb-4 border-bottom bg-dark">
 		<div class="container d-flex flex-wrap justify-content-center">
-			<a href="/"
+			<a
 				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
 				<svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap" />
@@ -231,14 +337,15 @@
 				<div class="card">
 					<div class="card-header">Reclassify Algorithm</div>
 					<div class="card-body">
-						<form name="reclassifyAlgorithmForm" method="post" name="addAlgorithm">
+						<form name="reclassifyAlgorithmForm" method="post"
+							name="addAlgorithm">
 							<div class="mb-3">
 								<label class="form-label">Choose a Classification:</label><select
 									class="form-select" aria-label="Default select example"
 									id="Classification">
 								</select>
 							</div>
-							
+
 							<div class="d-flex justify-content-center">
 								<input type="button" value="Reclassify" class="btn btn-primary"
 									onClick="JavaScript:handleClick(this)">
@@ -253,6 +360,20 @@
 			</div>
 		</div>
 	</div>
+	<script>
+		var role = sessionStorage.getItem("role");
+		if (role == 'Admin') {
+			document.getElementById("admin").style.display = 'block';
+		} else if (role == 'Register') {
+			document.getElementById("register").style.display = 'block';
+		} else {
+			document.getElementById("anonymous").style.display = 'block';
+		}
+
+		function clearSessions() {
+			sessionStorage.clear();
+		}
+	</script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
