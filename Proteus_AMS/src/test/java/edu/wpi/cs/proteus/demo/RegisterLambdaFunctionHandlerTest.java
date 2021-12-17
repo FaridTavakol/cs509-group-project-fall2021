@@ -36,9 +36,9 @@ public class RegisterLambdaFunctionHandlerTest {
 		RegisterResponse response = handler.handleRequest(req, ctx);
 		Assert.assertEquals(400, response.statusCode);
 
-		req = new RegisterRequest("Sample Testing","testi@hotmail.com","12340");
+		req = new RegisterRequest("Sample Testing","sampler@hotmail.com","1234");
 		response = handler.handleRequest(req, ctx);
-		Assert.assertEquals(200, response.statusCode);
+		Assert.assertEquals(400, response.statusCode);
 		
 		req = new RegisterRequest();
 		req.setEmail("abc@test.com");

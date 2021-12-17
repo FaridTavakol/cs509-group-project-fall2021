@@ -265,7 +265,7 @@
 		</div>
 	</header>
 	<form name="removeImplementationForm" method="post">
-		<input type="button" value="Add"
+		<input type="button" value="Add" id="removeImplementation" style='display:none'
 			class="sticky-top btn btn-secondary btn-lg mx-2 my-3 align-self-start"
 			onClick="JavaScript:removeImplementation(this)">Remove
 		Implementation</input>
@@ -337,8 +337,10 @@
 		var role = sessionStorage.getItem("role");
 		if (role == 'Admin') {
 			document.getElementById("admin").style.display = 'block';
+			document.getElementById("removeImplementation").style.display = 'block';
 		} else if (role == 'Register') {
 			document.getElementById("register").style.display = 'block';
+			document.getElementById("removeImplementation").style.display = 'block';
 		} else {
 			document.getElementById("anonymous").style.display = 'block';
 		}
