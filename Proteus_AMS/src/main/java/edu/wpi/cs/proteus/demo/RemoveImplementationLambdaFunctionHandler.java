@@ -49,7 +49,6 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
 	        
 			if(result) {
 				String response = "Implementation removed successfully!";
-				//if (!deleteResult) response = response + " But failed to remove file from S3.";
 				writer.write(gson.toJson(new Response(200, response)));	
 			} else {
 				writer.write(gson.toJson(new Response(400, "Failed to remove implementation from the database.")));
@@ -72,7 +71,6 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
 			String requestedBy = simpleImplementationRequest.getRequestedBy();
 			
 			boolean result = implementationsDAO.removeImplementation(simpleImplementationRequest.getImplementationID());
-			//boolean deleteResult = removeFileFromS3(implementation.getUrl());
 			
 			if (result) {
 				Log entry = new Log(requestedBy, "Remove Implementation", java.time.LocalDate.now().toString());
@@ -84,49 +82,5 @@ public class RemoveImplementationLambdaFunctionHandler implements RequestStreamH
     	}
 		
     	return false;
-    }
-    
-    private static boolean removeFileFromS3(String key) throws IOException {
-        Regions clientRegion = Regions.US_EAST_2;
-        String bucketName = "proteus-implementations";
-        String objectKey = key;
-    	final String accessKey;
-    	final String secretKey;
-    	AmazonS3 s3Client = null;
-
-        try {
-        	accessKey = System.getenv("accessKey");
-    		if (accessKey == null) {
-    			System.err.println("Environment variable accessKey is not set!");
-    		}
-    		secretKey = System.getenv("secretKey");
-    		if (secretKey == null) {
-    			System.err.println("Environment variable secretKey is not set!");
-    		}
-    		
-            s3Client = AmazonS3ClientBuilder.standard()
-                    .withRegion(clientRegion)
-                    .withPathStyleAccessEnabled(true)
-                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
-                    .build();
-
-        	s3Client.deleteObject(bucketName, objectKey);
-
-            return true;
-        } catch (AmazonServiceException e) {
-            // The call was transmitted successfully, but Amazon S3 couldn't process 
-            // it, so it returned an error response.
-            e.printStackTrace();
-        } catch (SdkClientException e) {
-            // Amazon S3 couldn't be contacted for a response, or the client
-            // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
-        } finally {
-            if(s3Client != null) {
-            	s3Client.shutdown();
-            }           
-        }
-        
-		return false;
     }
 }
