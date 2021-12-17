@@ -222,6 +222,37 @@ public class ClassificationDAO {
 			throw new Exception("Failed to delete classification: " + e.getMessage());
 		}
 	}
+	
+	public boolean removeClassification(String classificationName) throws Exception{
+		try {
+			AlgorithmsDAO aDao = new AlgorithmsDAO();
+			
+			Classification c = getClassification(classificationName);
+			
+			if(!c.getSuperClassification().equals("")) {
+				
+				if(!deleteClassification(c)) return false;
+				Classification superClass = getClassification(c.getSuperClassification());
+				
+				//Removes Algorithms
+				PreparedStatement ps = conn.prepareStatement("SELECT * FROM Algorithms WHERE classificationId=?;");
+				ps.setString(1, c.getClassificationID());
+				ResultSet rs = ps.executeQuery();
+				
+				while(rs.next()) {
+					String aID = rs.getString("algorithmId");
+					aDao.reclassifyAlgorithm(aID, superClass.getClassificationID());
+				}
+				
+				ps.close();
+				rs.close();
+				
+				return true;
+			}else return false;
+		}catch(Exception e) {
+			throw new Exception("Failed to remove classification: " + e.getMessage());
+		}
+	}
 
 	public boolean addClassification(Classification obj) throws Exception
 	{
@@ -320,11 +351,23 @@ public class ClassificationDAO {
 	
 	public boolean mergeClassification(String one, String two) throws Exception{
 		try {
+			AlgorithmsDAO aDAO = new AlgorithmsDAO();
+			
 			Classification c1 = getClassification(one);
 			Classification c2 = getClassification(two);
 			
 			if(deleteClassification(c2)) {
-				//reclassify all algorithms with classification two id
+				PreparedStatement ps = conn.prepareStatement("SELECT * FROM Algorithms WHERE classificationId=?;");
+				ps.setString(1, c2.getClassificationID());
+				ResultSet rs = ps.executeQuery();
+				
+				while(rs.next()) {
+					String aID = rs.getString("algorithmId");
+					aDAO.reclassifyAlgorithm(aID, c1.getClassificationID());
+				}
+				
+				ps.close();
+				rs.close();
 			}
 			
 		}catch (Exception e) {
