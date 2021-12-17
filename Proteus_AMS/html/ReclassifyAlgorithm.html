@@ -1,0 +1,262 @@
+<html>
+
+<head>
+<script type="text/javascript">
+	var Reclassify_algorithm_url = "https://qx81z5385g.execute-api.us-east-2.amazonaws.com/beta/ReclassifyAlgorithm";
+	var getClassification_url = " https://grq03r7hd5.execute-api.us-east-2.amazonaws.com/beta/allClassifications";
+	var algorithmId = sessionStorage.getItem("algorithmId");
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", getClassification_url, true);
+
+	xhr.send(null); // This will process results and update HTML as appropriate. 
+	xhr.onloadend = function() {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			if (xhr.status == 200) {
+				var select = document.getElementById("Classification");
+				var js = JSON.parse(xhr.responseText);
+				var res = js["list"];
+				for (var i = 0; i < res.length; i++) {
+					var option = document.createElement("option");
+					option.value = res[i].classificationID;
+					option.text = res[i].classificationName;
+					select.appendChild(option);
+				}
+			} else if (xhr.status == 400) {
+				alert("unable to process request");
+			}
+		} else {
+			alert("unable to process request");
+		}
+	};
+
+	function notEmpty(algorithmName, classificationName) {
+
+		if (algorithmName === "" || classificationName === "")
+			return false;
+		return true;
+	}
+// 	function processResponse(result) {
+// 		console.log("result:" + result);
+// 		var js = JSON.parse(result);
+
+// 		var message = js["Message"];
+// 		var statusCode = js["statusCode"];
+
+// 		if (statusCode == 200) {
+
+// 			// After successfully addding the algorithm now its time to get the Id of the algorithm to pass to the next page.
+// 			// So creating another request to retrieve the Id of the newly created algorithm
+// 			var msg = document.getElementById("msg");
+// 			/*					*/
+// 			var data = {};
+// 			data["algorithmName"] = document.addAlgorithmForm.algorithmName.value;
+// 			console.log("2");
+
+// 			var js = JSON.stringify(data);
+// 			console.log("JS:" + js);
+// 			var xhr = new XMLHttpRequest();
+// 			xhr.open("POST", get_algorithmIdByName_url, true);
+// 			console.log("3");
+// 			// send the collected data as JSON
+// 			xhr.send(js);
+
+// 			// This will process results and update HTML as appropriate. 
+// 			xhr.onloadend = function() {
+// 				console.log(xhr);
+// 				console.log(xhr.request);
+// 				if (xhr.readyState == XMLHttpRequest.DONE) {
+// 					if (xhr.status == 200) {
+// 						console.log("XHR:" + xhr.responseText);
+// 						processAlgorithmIdResponse(xhr.responseText);
+// 					} else if (xhr.status == 400) {
+// 						alert("unable to process request");
+// 					}
+// 				} else {
+// 					processResponse("N/A");
+// 				}
+// 			};
+// 			/*					*/
+// 			} else {
+// 			// Update computation result
+// 			var msg = document.getElementById("msg");
+// 			msg.innerHTML = js["Message"];
+// 		}
+
+// 	}
+	function processReclassifyResponse(result) {
+		console.log("result:" + result);
+		var js1 = JSON.parse(result);
+		var msg = document.getElementById("msg");
+
+		var role = js1["errorMessage"];
+		var statusCode = js1["statusCode"];
+		
+
+		if (statusCode == 200) {
+			msg.innerHTML = "successfully added the algorithm";
+			window.location.href = "Registered.html";
+		} else {
+			// Update computation result
+			var msg = document.getElementById("Msg");
+			msg.innerHTML = js["Message"];
+		}
+
+	}
+
+	function handleClick(e) {
+		var form = document.reclassifyAlgorithmForm;
+		var classificationId = document.getElementById("Classification").value;
+		
+
+		if (notEmpty(algorithmId, classificationId)) {
+			console.log("1");
+
+			var data = {};
+			data["algorithmId"] = algorithmId;
+			data["classificationId"] = classificationId;
+			<!--data["details"] = details;
+			-->
+
+			console.log("2");
+
+			var js = JSON.stringify(data);
+			console.log("JS:" + js);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", Reclassify_algorithm_url, true);
+			console.log("3");
+			// send the collected data as JSON
+			xhr.send(js);
+
+			// This will process results and update HTML as appropriate. 
+			xhr.onloadend = function() {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					if (xhr.status == 200) {
+						console.log("XHR:" + xhr.responseText);
+						processReclassifyResponse(xhr.responseText);
+					} else if (xhr.status == 400) {
+						alert("unable to process request");
+					}
+				} else {
+					processResponse("N/A");
+				}
+			};
+		} else {
+			console.log("Inputs invalid:")
+			if (algorithmName === "") {
+				console.log("Algorithm name is empty/invalid - "
+						+ algorithmName)
+			}
+			if (classificationName === "") {
+				console.log("Classification name is empty/invalid - "
+						+ classificationName)
+			}
+			var msg = document.getElementById("msg");
+			msg.innerHTML = "Kindly Check your Inputs!";
+		}
+	}
+</script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+
+
+<title>Algorithm Management System</title>
+</head>
+
+<body>
+	<nav class="py-2 bg-light border-bottom">
+		<div class="container d-flex flex-wrap">
+			<ul class="nav me-auto text-black">
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Classification </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddClassification.html">Add</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+						<li><a class="dropdown-item" href="#">Get Hierarchy</a></li>
+						<li><a class="dropdown-item" href="#">Merge</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Algorithms </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="AddAlgorithm.html">Add</a></li>
+						<li><a class="dropdown-item" href="AllAlgorithms">Get</a></li>
+						<li><a class="dropdown-item" href="#">Reclassify</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+
+					</ul></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle text-black" href="#"
+					id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+					aria-expanded="false"> Problem Instance </a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="#">Add</a></li>
+						<li><a class="dropdown-item" href="#">Remove</a></li>
+						<li><a class="dropdown-item" href="#">Get</a></li>
+
+					</ul></li>
+
+				<ul class="nav">
+					<li class="nav-item text-black"><a href="Home.html"
+						class="nav-link link-dark px-2 text-black">Log out</a></li>
+				</ul>
+		</div>
+	</nav>
+	<header class="py-3 mb-4 border-bottom bg-dark">
+		<div class="container d-flex flex-wrap justify-content-center">
+			<a href="/"
+				class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+				<svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg> <span class="fs-4 text-white">Algorithm
+					Management System</span>
+			</a>
+
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="card">
+					<div class="card-header">Reclassify Algorithm</div>
+					<div class="card-body">
+						<form name="reclassifyAlgorithmForm" method="post" name="addAlgorithm">
+							<div class="mb-3">
+								<label class="form-label">Choose a Classification:</label><select
+									class="form-select" aria-label="Default select example"
+									id="Classification">
+								</select>
+							</div>
+							
+							<div class="d-flex justify-content-center">
+								<input type="button" value="Reclassify" class="btn btn-primary"
+									onClick="JavaScript:handleClick(this)">
+							</div>
+							<div class="mb-3">
+								<label id="msg" class="form-label"></label>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
