@@ -1,6 +1,7 @@
 package edu.wpi.cs.proteus.model;
 
 public class Benchmark {
+
 	String id;
 	String implemetationid;
 	String probleminstanceid;

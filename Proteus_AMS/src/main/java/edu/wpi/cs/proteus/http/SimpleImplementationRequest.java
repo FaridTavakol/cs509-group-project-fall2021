@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SimpleImplementationRequest {
 	@JsonProperty("implementationID") String implementationID;
+	@JsonProperty("requestedBy") String requestedBy;
 
 	public String getImplementationID() {
 		return this.implementationID;
@@ -14,9 +15,18 @@ public class SimpleImplementationRequest {
 		this.implementationID = id;
 	}
 	
+	public String getRequestedBy() {
+		return this.requestedBy;
+	}
+	
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
+	}
+	
 	@JsonCreator
-	public SimpleImplementationRequest(@JsonProperty("implementationID") String implementationID) {
+	public SimpleImplementationRequest(@JsonProperty("implementationID") String implementationID, @JsonProperty("requestedBy") String requestedBy) {
 		this.implementationID = implementationID;
+		this.requestedBy = requestedBy;
 	}
 	
 	public SimpleImplementationRequest() {

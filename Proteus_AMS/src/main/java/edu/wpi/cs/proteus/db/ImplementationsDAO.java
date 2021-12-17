@@ -5,10 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
-import edu.wpi.cs.proteus.model.Algorithm;
 import edu.wpi.cs.proteus.model.Implementation;
 
 /**
@@ -51,15 +48,15 @@ public class ImplementationsDAO {
 			return implementations;
 
 		} catch (Exception e) {
-			throw new Exception("Failed in getting implementations: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
+			throw new Exception("Failed in getting implementations: " + e.getMessage());
 		}
 	}
 
-	public List<Implementation> getAllImplementations(String algoID) throws Exception {
+	public List<Implementation> getAllImplementations(String algorithmID) throws Exception {
 		try {
 			Statement stmt = conn.createStatement();
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName +" WHERE algorithmID=?;");
-			ps.setString(1, algoID);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + tblName + " WHERE algorithmID=?;");
+			ps.setString(1, algorithmID);
 			ResultSet resultSet = ps.executeQuery();
 			List<Implementation> implementations = new ArrayList<>();
 
@@ -70,12 +67,13 @@ public class ImplementationsDAO {
 				}
 				resultSet.close();
 				stmt.close();
+				
+				return implementations;
 			}
 
-			return implementations;
-
+			return null;
 		} catch (Exception e) {
-			throw new Exception("Failed in getting implementations by AlgoID: " + e.getMessage() + ". \nSTACK TRACE:\n\n" + e.getStackTrace().toString());
+			throw new Exception("Failed in getting implementations by AlgoID: " + e.getMessage());
 		}
 	}
 
@@ -98,28 +96,15 @@ public class ImplementationsDAO {
 				return null;
 
 		} catch (Exception e) {
-			String stackTrace = "";
-			for (StackTraceElement elem : e.getStackTrace()) {
-				stackTrace = stackTrace + "\n" + elem.toString();
-			}
-			throw new Exception("Failed getting implementation for id= " + implementationID + ": " + e.getMessage() + ". \nSTACK TRACE:\n\n" + stackTrace);
+			throw new Exception("Failed getting implementation for id= " + implementationID + ": " + e.getMessage());
 		}
 	}
 
 	public boolean addImplementation(Implementation newImplementation) throws Exception {
 		try {
-			AlgorithmsDAO algorithmsDAO = new AlgorithmsDAO();
-			String algorithmID = newImplementation.getAlgorithmID();
-			Algorithm algorithm = algorithmsDAO.getAlgorithm(algorithmID);
-			String classificationID = algorithm.getClassificationId();
-			String language = newImplementation.getLanguage();
-			Random rand = new Random();
-			Integer idInt = rand.nextInt(10000);
-			String fullID = classificationID + "." + algorithmID + "." + language + "." + idInt.toString();
-			
 			PreparedStatement ps = conn
 					.prepareStatement("INSERT INTO " + tblName + " (implementationID,algorithmID,url,language,details) VALUES (?,?,?,?,?);");
-			ps.setString(1, UUID.randomUUID().toString());
+			ps.setString(1, newImplementation.getId());
 			ps.setString(2, newImplementation.getAlgorithmID());
 			ps.setString(3, newImplementation.getUrl());
 			ps.setString(4, newImplementation.getLanguage());
